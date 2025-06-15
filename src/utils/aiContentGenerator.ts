@@ -9,6 +9,40 @@ export const organicTrafficContent = [
   "⚡ Experience the difference that AI-enhanced organic traffic makes for your business. Our digital products combine artificial intelligence with proven SEO methodologies to deliver exceptional results in search rankings and sustainable traffic growth."
 ];
 
+// Enhanced AI image collection with platform-specific and topic-specific images
+export const platformSpecificImages = {
+  facebook: [
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook marketing
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Social media strategy
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Mobile social engagement
+  ],
+  tiktok: [
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // TikTok style content
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // Video content creation
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Social media marketing
+  ],
+  instagram: [
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Instagram feed
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Visual content
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // Social media icons
+  ],
+  youtube: [
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // Video creation
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // Content creation
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // Video strategy
+  ],
+  affiliate: [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Business analytics
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // Performance tracking
+    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // Marketing tools
+  ],
+  ecommerce: [
+    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format&q=80", // E-commerce setup
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Online shopping
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Business growth
+  ]
+};
+
 // Enhanced AI image collection with advanced, attractive campaign images
 export const aiImagesByCategory = {
   seo: [
@@ -34,7 +68,7 @@ export const aiImagesByCategory = {
   ],
   email: [
     "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=400&fit=crop&auto=format&q=80", // email marketing campaign
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // email on device
+    "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&h=400&fit=crop&auto=format&q=80", // email on device
     "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop&auto=format&q=80", // digital communication
     "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=400&fit=crop&auto=format&q=80", // email newsletter design
     "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop&auto=format&q=80", // email automation
@@ -441,4 +475,88 @@ export const getContentBySearchTerm = (searchTerm: string) => {
   }
   
   return getRandomContent();
+};
+
+// Function to get 3 mockup images based on search query
+export const getMockupImagesBySearchQuery = (searchQuery: string): Array<{url: string, description: string}> => {
+  const lowerQuery = searchQuery.toLowerCase();
+  
+  // Platform-specific matching
+  if (lowerQuery.includes('facebook')) {
+    return [
+      { url: platformSpecificImages.facebook[0], description: "Facebook Marketing Strategy - Engaging audience through targeted content" },
+      { url: platformSpecificImages.facebook[1], description: "Social Media Growth - Building community and increasing reach" },
+      { url: platformSpecificImages.facebook[2], description: "Facebook Ads Optimization - Maximizing ROI through smart targeting" }
+    ];
+  }
+  
+  if (lowerQuery.includes('tiktok')) {
+    return [
+      { url: platformSpecificImages.tiktok[0], description: "TikTok Content Creation - Viral video strategies and trends" },
+      { url: platformSpecificImages.tiktok[1], description: "TikTok Marketing - Reaching Gen Z audience effectively" },
+      { url: platformSpecificImages.tiktok[2], description: "TikTok Monetization - Creator fund and brand partnerships" }
+    ];
+  }
+  
+  if (lowerQuery.includes('instagram')) {
+    return [
+      { url: platformSpecificImages.instagram[0], description: "Instagram Growth - Building followers and engagement" },
+      { url: platformSpecificImages.instagram[1], description: "Instagram Stories & Reels - Creative content strategies" },
+      { url: platformSpecificImages.instagram[2], description: "Instagram Business - Converting followers to customers" }
+    ];
+  }
+  
+  if (lowerQuery.includes('youtube')) {
+    return [
+      { url: platformSpecificImages.youtube[0], description: "YouTube Channel Growth - Subscriber and view optimization" },
+      { url: platformSpecificImages.youtube[1], description: "YouTube Monetization - Ad revenue and sponsorship strategies" },
+      { url: platformSpecificImages.youtube[2], description: "YouTube SEO - Ranking videos and increasing visibility" }
+    ];
+  }
+  
+  if (lowerQuery.includes('affiliate') || lowerQuery.includes('commission')) {
+    return [
+      { url: platformSpecificImages.affiliate[0], description: "Affiliate Marketing Success - High-converting product promotion" },
+      { url: platformSpecificImages.affiliate[1], description: "Commission Tracking - Analytics and performance optimization" },
+      { url: platformSpecificImages.affiliate[2], description: "Affiliate Networks - Finding profitable partnerships" }
+    ];
+  }
+  
+  if (lowerQuery.includes('ecommerce') || lowerQuery.includes('online store')) {
+    return [
+      { url: platformSpecificImages.ecommerce[0], description: "E-commerce Setup - Building profitable online stores" },
+      { url: platformSpecificImages.ecommerce[1], description: "Online Sales - Converting visitors to customers" },
+      { url: platformSpecificImages.ecommerce[2], description: "E-commerce Growth - Scaling your online business" }
+    ];
+  }
+  
+  // General topic matching
+  if (lowerQuery.includes('money') || lowerQuery.includes('income')) {
+    return [
+      { url: aiImagesByCategory.marketing[0], description: "Income Generation - Multiple revenue stream strategies" },
+      { url: aiImagesByCategory.traffic[0], description: "Profit Optimization - Maximizing earning potential" },
+      { url: aiImagesByCategory.ai[0], description: "AI-Powered Income - Automated revenue systems" }
+    ];
+  }
+  
+  // Default mockups based on category
+  const category = determineCategory(lowerQuery);
+  const images = aiImagesByCategory[category] || aiImagesByCategory.ai;
+  
+  return [
+    { url: images[0], description: `Professional ${category} strategy - Advanced techniques and best practices` },
+    { url: images[1] || images[0], description: `${category} optimization - Data-driven approach to success` },
+    { url: images[2] || images[0], description: `${category} automation - AI-powered tools and workflows` }
+  ];
+};
+
+// Helper function to determine category
+const determineCategory = (query: string): string => {
+  if (query.includes('seo') || query.includes('search')) return 'seo';
+  if (query.includes('social') || query.includes('media')) return 'social';
+  if (query.includes('content') || query.includes('blog')) return 'content';
+  if (query.includes('email') || query.includes('newsletter')) return 'email';
+  if (query.includes('marketing') || query.includes('promotion')) return 'marketing';
+  if (query.includes('traffic') || query.includes('organic')) return 'traffic';
+  return 'ai';
 };
