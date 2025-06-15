@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon } from "lucide-react";
+import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown } from "lucide-react";
 import { toast } from "sonner";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 
 interface Campaign {
   id: string;
@@ -22,6 +21,8 @@ interface Campaign {
   impressions: number;
   clicks: number;
   conversions: number;
+  sales: number;
+  leadQualityScore: number;
   startDate: string;
   endDate: string;
   adContent: string;
@@ -35,6 +36,15 @@ interface Campaign {
   objectives?: string;
   seoKeywords?: string[];
   adVariations?: string[];
+  leadQuality?: 'high' | 'medium' | 'low';
+  geographicalPerformance?: {
+    region: string;
+    conversions: number;
+    revenue: number;
+  }[];
+  qualifiedLeads?: number;
+  costPerLead?: number;
+  salesConversionRate?: number;
 }
 
 const CampaignManager = () => {
@@ -49,6 +59,11 @@ const CampaignManager = () => {
       impressions: 12500,
       clicks: 450,
       conversions: 23,
+      sales: 18,
+      leadQualityScore: 85,
+      qualifiedLeads: 15,
+      costPerLead: 25,
+      salesConversionRate: 78.3,
       startDate: '2024-06-10',
       endDate: '2024-06-20',
       adContent: 'Premium digital templates for creative professionals',
@@ -59,8 +74,14 @@ const CampaignManager = () => {
       targetAge: '25-45',
       targetRegion: 'United States',
       objectives: 'Drive traffic and sales',
+      leadQuality: 'high',
       seoKeywords: ['digital templates', 'creative design', 'professional templates'],
-      adVariations: ['Premium digital templates for creative professionals', 'Transform your designs with professional templates', 'Unlock creativity with our digital template collection']
+      adVariations: ['Premium digital templates for creative professionals', 'Transform your designs with professional templates', 'Unlock creativity with our digital template collection'],
+      geographicalPerformance: [
+        { region: 'California', conversions: 8, revenue: 2400 },
+        { region: 'New York', conversions: 5, revenue: 1500 },
+        { region: 'Texas', conversions: 5, revenue: 1350 }
+      ]
     },
     {
       id: '2',
@@ -72,6 +93,11 @@ const CampaignManager = () => {
       impressions: 8900,
       clicks: 267,
       conversions: 15,
+      sales: 12,
+      leadQualityScore: 72,
+      qualifiedLeads: 9,
+      costPerLead: 30.7,
+      salesConversionRate: 80.0,
       startDate: '2024-06-03',
       endDate: '2024-06-18',
       adContent: 'Beautiful printable designs for home and office',
@@ -81,9 +107,15 @@ const CampaignManager = () => {
       productName: 'Printable Designs',
       targetAge: '30-55',
       targetRegion: 'Canada',
+      leadQuality: 'medium',
       objectives: 'Brand awareness',
       seoKeywords: ['printables', 'home decor', 'office organization'],
-      adVariations: ['Beautiful printable designs for home and office', 'Organize your space with stunning printables', 'Download and print beautiful designs instantly']
+      adVariations: ['Beautiful printable designs for home and office', 'Organize your space with stunning printables', 'Download and print beautiful designs instantly'],
+      geographicalPerformance: [
+        { region: 'Ontario', conversions: 6, revenue: 900 },
+        { region: 'British Columbia', conversions: 4, revenue: 600 },
+        { region: 'Quebec', conversions: 5, revenue: 750 }
+      ]
     }
   ]);
 
@@ -112,13 +144,26 @@ const CampaignManager = () => {
   const [seoRecommendations, setSeoRecommendations] = useState<string[]>([]);
 
   const performanceData = [
-    { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3 },
-    { date: 'Day 2', impressions: 1850, clicks: 67, conversions: 5 },
-    { date: 'Day 3', impressions: 2100, clicks: 89, conversions: 8 },
-    { date: 'Day 4', impressions: 1900, clicks: 72, conversions: 6 },
-    { date: 'Day 5', impressions: 2300, clicks: 95, conversions: 12 },
-    { date: 'Day 6', impressions: 2600, clicks: 108, conversions: 15 },
-    { date: 'Day 7', impressions: 2200, clicks: 88, conversions: 10 }
+    { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3, sales: 2, leadQuality: 75 },
+    { date: 'Day 2', impressions: 1850, clicks: 67, conversions: 5, sales: 4, leadQuality: 82 },
+    { date: 'Day 3', impressions: 2100, clicks: 89, conversions: 8, sales: 6, leadQuality: 78 },
+    { date: 'Day 4', impressions: 1900, clicks: 72, conversions: 6, sales: 5, leadQuality: 85 },
+    { date: 'Day 5', impressions: 2300, clicks: 95, conversions: 12, sales: 9, leadQuality: 88 },
+    { date: 'Day 6', impressions: 2600, clicks: 108, conversions: 15, sales: 12, leadQuality: 90 },
+    { date: 'Day 7', impressions: 2200, clicks: 88, conversions: 10, sales: 8, leadQuality: 86 }
+  ];
+
+  const leadQualityData = [
+    { name: 'High Quality', value: 65, color: '#10b981' },
+    { name: 'Medium Quality', value: 25, color: '#f59e0b' },
+    { name: 'Low Quality', value: 10, color: '#ef4444' }
+  ];
+
+  const geographicalData = [
+    { region: 'California', leads: 45, sales: 38, revenue: 11400 },
+    { region: 'New York', leads: 32, sales: 28, revenue: 8400 },
+    { region: 'Texas', leads: 28, sales: 22, revenue: 6600 },
+    { region: 'Florida', leads: 25, sales: 20, revenue: 6000 }
   ];
 
   const generateAIImage = async () => {
@@ -135,7 +180,7 @@ const CampaignManager = () => {
       ];
       const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
       setNewCampaign(prev => ({ ...prev, imageUrl: randomImage }));
-      toast.success('AI-generated ad creative image based on your product!');
+      toast.success('AI-generated high-converting ad creative optimized for lead quality!');
     } catch (error) {
       toast.error('Failed to generate AI image');
     } finally {
@@ -153,14 +198,14 @@ const CampaignManager = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       const contentTemplates = [
-        `🚀 Transform your ${newCampaign.targetAge ? `life at ${newCampaign.targetAge}` : 'experience'} with ${newCampaign.productName}! Visit ${newCampaign.websiteUrl} and discover the difference. ${newCampaign.objectives ? `Perfect for ${newCampaign.objectives.toLowerCase()}.` : ''} Shop now! ✨`,
-        `✨ Discover amazing ${newCampaign.productName} that will revolutionize your daily routine! ${newCampaign.targetAge ? `Designed for ages ${newCampaign.targetAge}.` : ''} Visit ${newCampaign.websiteUrl} today! 🎯`,
-        `🎯 Ready to upgrade? ${newCampaign.productName} is here to help! ${newCampaign.objectives ? `Our mission: ${newCampaign.objectives.toLowerCase()}.` : ''} Get started at ${newCampaign.websiteUrl} 🚀`,
-        `💫 Join thousands who love ${newCampaign.productName}! ${newCampaign.targetRegion ? `Popular in ${newCampaign.targetRegion}.` : ''} Experience the difference at ${newCampaign.websiteUrl} ⭐`
+        `🎯 Transform your ${newCampaign.targetAge ? `business at ${newCampaign.targetAge}` : 'success'} with ${newCampaign.productName}! ${newCampaign.targetRegion ? `Available in ${newCampaign.targetRegion}.` : ''} Visit ${newCampaign.websiteUrl} for premium quality solutions! ⭐`,
+        `✨ Discover premium ${newCampaign.productName} designed for serious buyers! ${newCampaign.targetAge ? `Perfect for ${newCampaign.targetAge} professionals.` : ''} Get instant access at ${newCampaign.websiteUrl} 🚀`,
+        `🏆 Join successful customers using ${newCampaign.productName}! ${newCampaign.objectives ? `Our mission: ${newCampaign.objectives.toLowerCase()}.` : ''} Start your journey at ${newCampaign.websiteUrl} 💼`,
+        `💎 Premium ${newCampaign.productName} for quality-focused customers! ${newCampaign.targetRegion ? `Trusted in ${newCampaign.targetRegion}.` : ''} Experience excellence at ${newCampaign.websiteUrl} 🌟`
       ];
       const randomContent = contentTemplates[Math.floor(Math.random() * contentTemplates.length)];
       setNewCampaign(prev => ({ ...prev, adContent: randomContent }));
-      toast.success('AI-optimized ad content generated!');
+      toast.success('AI-optimized ad content generated for high-quality lead generation!');
     } catch (error) {
       toast.error('Failed to generate AI content');
     } finally {
@@ -178,13 +223,13 @@ const CampaignManager = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       const variations = [
-        `Short & Sweet: "${newCampaign.productName} - Your solution awaits at ${newCampaign.websiteUrl}"`,
-        `Question Hook: "Looking for ${newCampaign.productName}? Find your answer at ${newCampaign.websiteUrl}"`,
-        `Urgency: "Limited time! Get ${newCampaign.productName} now at ${newCampaign.websiteUrl}"`,
-        `Social Proof: "Join thousands using ${newCampaign.productName}! Start at ${newCampaign.websiteUrl}"`
+        `Premium Focus: "Exclusive ${newCampaign.productName} for serious buyers at ${newCampaign.websiteUrl}"`,
+        `Value Proposition: "Transform your results with ${newCampaign.productName} - Visit ${newCampaign.websiteUrl}"`,
+        `Social Proof: "Join 1000+ satisfied customers using ${newCampaign.productName} at ${newCampaign.websiteUrl}"`,
+        `Urgency + Quality: "Limited premium ${newCampaign.productName} available at ${newCampaign.websiteUrl}"`
       ];
       setNewCampaign(prev => ({ ...prev, adVariations: variations }));
-      toast.success('Generated 4 ad variations for A/B testing!');
+      toast.success('Generated 4 high-converting ad variations optimized for quality leads!');
     } catch (error) {
       toast.error('Failed to generate ad variations');
     } finally {
@@ -202,28 +247,27 @@ const CampaignManager = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       const seoTips = [
-        `Use long-tail keywords like "${newCampaign.productName} for ${newCampaign.targetAge || 'professionals'}"`,
-        `Include location-based keywords if targeting ${newCampaign.targetRegion || 'specific regions'}`,
-        `Add emotional triggers like "best", "premium", "exclusive" to your ad copy`,
-        `Use action words: "discover", "transform", "unlock" in your headlines`,
-        `Include your target keyword "${newCampaign.productName}" in the first 125 characters`,
-        `Create urgency with phrases like "limited time", "exclusive offer"`,
-        `Use numbers and stats to build credibility`,
-        `Include local SEO terms if targeting specific regions`
+        `Target high-intent keywords like "buy ${newCampaign.productName}" for quality leads`,
+        `Use geo-specific terms: "${newCampaign.productName} in ${newCampaign.targetRegion || 'your area'}"`,
+        `Include premium qualifiers: "professional", "premium", "certified" to attract quality buyers`,
+        `Add urgency with "limited availability" or "exclusive offer" for immediate action`,
+        `Use buyer intent phrases: "best", "compare", "review" to capture ready-to-purchase leads`,
+        `Include local SEO terms for geographical targeting and higher conversion rates`,
+        `Add trust signals: "verified", "guaranteed", "award-winning" for lead quality`,
+        `Target long-tail keywords with commercial intent for better qualified leads`
       ];
       setSeoRecommendations(seoTips);
       
-      // Auto-generate SEO keywords
       const keywords = [
-        newCampaign.productName.toLowerCase(),
         `best ${newCampaign.productName.toLowerCase()}`,
-        `${newCampaign.productName.toLowerCase()} online`,
-        `buy ${newCampaign.productName.toLowerCase()}`,
-        `${newCampaign.productName.toLowerCase()} ${newCampaign.targetRegion?.toLowerCase() || 'store'}`
+        `buy ${newCampaign.productName.toLowerCase()} online`,
+        `premium ${newCampaign.productName.toLowerCase()}`,
+        `${newCampaign.productName.toLowerCase()} ${newCampaign.targetRegion?.toLowerCase() || 'near me'}`,
+        `professional ${newCampaign.productName.toLowerCase()} services`
       ];
       setNewCampaign(prev => ({ ...prev, seoKeywords: keywords.join(', ') }));
       
-      toast.success('SEO analysis complete with keyword suggestions!');
+      toast.success('SEO analysis complete with high-converting keyword suggestions!');
     } catch (error) {
       toast.error('Failed to analyze SEO');
     } finally {
@@ -247,6 +291,11 @@ const CampaignManager = () => {
       impressions: 0,
       clicks: 0,
       conversions: 0,
+      sales: 0,
+      leadQualityScore: 0,
+      qualifiedLeads: 0,
+      costPerLead: 0,
+      salesConversionRate: 0,
       startDate: newCampaign.startDate,
       endDate: newCampaign.endDate,
       adContent: newCampaign.adContent,
@@ -258,8 +307,10 @@ const CampaignManager = () => {
       targetRegion: newCampaign.targetRegion,
       targetGender: newCampaign.targetGender,
       objectives: newCampaign.objectives,
+      leadQuality: 'high',
       seoKeywords: newCampaign.seoKeywords ? newCampaign.seoKeywords.split(',').map(k => k.trim()) : [],
-      adVariations: newCampaign.adVariations
+      adVariations: newCampaign.adVariations,
+      geographicalPerformance: []
     };
 
     setCampaigns(prev => [...prev, campaign]);
@@ -282,7 +333,7 @@ const CampaignManager = () => {
     });
     setSeoRecommendations([]);
     setShowCreateForm(false);
-    toast.success('AI-powered ad campaign created successfully!');
+    toast.success('High-converting AI campaign created and optimized for quality lead generation!');
   };
 
   const toggleCampaignStatus = (id: string) => {
@@ -302,27 +353,107 @@ const CampaignManager = () => {
     }
   };
 
+  const getLeadQualityColor = (quality: string) => {
+    switch (quality) {
+      case 'high': return 'text-green-600 bg-green-100';
+      case 'medium': return 'text-yellow-600 bg-yellow-100';
+      case 'low': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">AI Ad Creatives Campaign Tool</h2>
-          <p className="text-muted-foreground">Create high-converting ad campaigns with AI-generated content, images, and SEO optimization</p>
+          <h2 className="text-2xl font-bold">AI Lead Generation & Sales Campaign Tool</h2>
+          <p className="text-muted-foreground">Create high-converting campaigns that generate quality leads and drive sales in targeted geographical areas</p>
         </div>
         <Button onClick={() => setShowCreateForm(!showCreateForm)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Create AI Campaign
+          Create Lead Generation Campaign
         </Button>
+      </div>
+
+      {/* Lead Quality & Sales Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-l-4 border-l-green-500">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Quality Leads Generated</CardTitle>
+            <UserCheck className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">24</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-600 flex items-center">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                +35%
+              </span>
+              from last week
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Sales Conversion Rate</CardTitle>
+            <Star className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">78.9%</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-600 flex items-center">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                +5.2%
+              </span>
+              above industry average
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-purple-500">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Cost Per Quality Lead</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">$27.50</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-600 flex items-center">
+                <TrendingDown className="h-3 w-3 mr-1" />
+                -15%
+              </span>
+              cost reduction
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-amber-500">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Lead Quality Score</CardTitle>
+            <Award className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">85/100</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-600 flex items-center">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                Excellent
+              </span>
+              quality rating
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       {showCreateForm && (
         <Card className="border-2 border-purple-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Wand2 className="h-5 w-5" />
-              AI Ad Campaign Builder
+              <Target className="h-5 w-5" />
+              AI Lead Generation Campaign Builder
             </CardTitle>
-            <CardDescription>Let AI create optimized ad content, images, and SEO strategy for your campaign</CardDescription>
+            <CardDescription>Create campaigns optimized for high-quality leads and sales conversion in targeted geographical areas</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Basic Campaign Info */}
@@ -347,12 +478,12 @@ const CampaignManager = () => {
                       <SelectValue placeholder="Select platform" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Facebook">Facebook</SelectItem>
-                      <SelectItem value="Instagram">Instagram</SelectItem>
-                      <SelectItem value="Google Ads">Google Ads</SelectItem>
-                      <SelectItem value="Twitter">Twitter</SelectItem>
-                      <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                      <SelectItem value="TikTok">TikTok</SelectItem>
+                      <SelectItem value="Facebook">Facebook (Best for B2C leads)</SelectItem>
+                      <SelectItem value="Instagram">Instagram (Visual products)</SelectItem>
+                      <SelectItem value="Google Ads">Google Ads (High intent leads)</SelectItem>
+                      <SelectItem value="LinkedIn">LinkedIn (B2B quality leads)</SelectItem>
+                      <SelectItem value="Twitter">Twitter (Engagement leads)</SelectItem>
+                      <SelectItem value="TikTok">TikTok (Young demographic)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -372,11 +503,11 @@ const CampaignManager = () => {
                       <SelectValue placeholder="Select objective" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Drive traffic and sales">Drive Traffic & Sales</SelectItem>
-                      <SelectItem value="Brand awareness">Brand Awareness</SelectItem>
-                      <SelectItem value="Lead generation">Lead Generation</SelectItem>
+                      <SelectItem value="Generate quality leads">Generate Quality Leads</SelectItem>
+                      <SelectItem value="Drive sales conversions">Drive Sales Conversions</SelectItem>
+                      <SelectItem value="Increase brand awareness">Increase Brand Awareness</SelectItem>
                       <SelectItem value="App installs">App Installs</SelectItem>
-                      <SelectItem value="Engagement">Engagement</SelectItem>
+                      <SelectItem value="Build email list">Build Email List</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -409,34 +540,18 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* Targeting Options */}
+            {/* Enhanced Targeting for Lead Quality */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Target Audience
+                <MapPin className="h-4 w-4" />
+                Geographical & Quality Targeting
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Age Range</label>
-                  <Select value={newCampaign.targetAge} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetAge: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select age range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="18-24">18-24</SelectItem>
-                      <SelectItem value="25-34">25-34</SelectItem>
-                      <SelectItem value="35-44">35-44</SelectItem>
-                      <SelectItem value="45-54">45-54</SelectItem>
-                      <SelectItem value="55-64">55-64</SelectItem>
-                      <SelectItem value="65+">65+</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Target Region</label>
+                  <label className="text-sm font-medium">Primary Target Region *</label>
                   <Select value={newCampaign.targetRegion} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetRegion: value }))}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select region" />
+                      <SelectValue placeholder="Select primary region" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="United States">United States</SelectItem>
@@ -445,18 +560,34 @@ const CampaignManager = () => {
                       <SelectItem value="Australia">Australia</SelectItem>
                       <SelectItem value="Germany">Germany</SelectItem>
                       <SelectItem value="France">France</SelectItem>
-                      <SelectItem value="Worldwide">Worldwide</SelectItem>
+                      <SelectItem value="Custom Geographic Area">Custom Geographic Area</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Gender</label>
+                  <label className="text-sm font-medium">Target Age (Quality Focused)</label>
+                  <Select value={newCampaign.targetAge} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetAge: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select age range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="25-34">25-34 (High purchasing power)</SelectItem>
+                      <SelectItem value="35-44">35-44 (Peak earning years)</SelectItem>
+                      <SelectItem value="45-54">45-54 (Established professionals)</SelectItem>
+                      <SelectItem value="55-64">55-64 (High disposable income)</SelectItem>
+                      <SelectItem value="18-24">18-24 (Emerging market)</SelectItem>
+                      <SelectItem value="65+">65+ (Mature market)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Gender Focus</label>
                   <Select value={newCampaign.targetGender} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetGender: value }))}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="All">All</SelectItem>
+                      <SelectItem value="All">All Genders</SelectItem>
                       <SelectItem value="Male">Male</SelectItem>
                       <SelectItem value="Female">Female</SelectItem>
                     </SelectContent>
@@ -469,13 +600,13 @@ const CampaignManager = () => {
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Wand2 className="h-4 w-4" />
-                AI Ad Content Generator
+                AI Ad Content Generator (Lead Quality Optimized)
               </h4>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Primary Ad Content</label>
+                  <label className="text-sm font-medium">Lead Generation Ad Content</label>
                   <Textarea
-                    placeholder="AI will generate optimized ad content, or enter your own"
+                    placeholder="AI will generate lead-focused content optimized for quality and conversions"
                     value={newCampaign.adContent}
                     onChange={(e) => setNewCampaign(prev => ({ ...prev, adContent: e.target.value }))}
                     rows={3}
@@ -489,7 +620,7 @@ const CampaignManager = () => {
                       className="flex items-center gap-2"
                     >
                       <Wand2 className="h-4 w-4" />
-                      {generatingContent ? 'Generating...' : 'Generate AI Content'}
+                      {generatingContent ? 'Generating...' : 'Generate Lead-Focused Content'}
                     </Button>
                     <Button
                       onClick={generateAdVariations}
@@ -499,7 +630,7 @@ const CampaignManager = () => {
                       className="flex items-center gap-2"
                     >
                       <TrendingUp className="h-4 w-4" />
-                      {generatingVariations ? 'Creating...' : 'Create A/B Variations'}
+                      {generatingVariations ? 'Creating...' : 'Create High-Converting Variations'}
                     </Button>
                   </div>
                 </div>
@@ -507,11 +638,11 @@ const CampaignManager = () => {
                 {/* Ad Variations */}
                 {newCampaign.adVariations.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">AI-Generated Ad Variations (A/B Testing)</label>
+                    <label className="text-sm font-medium">Lead Generation Ad Variations</label>
                     <div className="grid gap-2">
                       {newCampaign.adVariations.map((variation, index) => (
-                        <div key={index} className="p-3 bg-gray-50 rounded-md">
-                          <p className="text-sm font-medium text-purple-600">Variation {index + 1}:</p>
+                        <div key={index} className="p-3 bg-green-50 rounded-md border border-green-200">
+                          <p className="text-sm font-medium text-green-600">High-Converting Variation {index + 1}:</p>
                           <p className="text-sm">{variation}</p>
                         </div>
                       ))}
@@ -525,7 +656,7 @@ const CampaignManager = () => {
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <ImageIcon className="h-4 w-4" />
-                AI Ad Creative Images
+                AI Visual Content for Lead Generation
               </h4>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -536,19 +667,19 @@ const CampaignManager = () => {
                     className="flex items-center gap-2"
                   >
                     <Wand2 className="h-4 w-4" />
-                    {generatingImage ? 'Generating...' : 'Generate AI Image'}
+                    {generatingImage ? 'Generating...' : 'Generate Lead-Optimized Image'}
                   </Button>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Upload className="h-4 w-4" />
-                    Or upload your own image
+                    Or upload your own lead magnet image
                   </div>
                 </div>
                 {newCampaign.imageUrl && (
                   <div className="flex items-center gap-4">
-                    <img src={newCampaign.imageUrl} alt="Generated ad creative" className="w-32 h-24 rounded-lg object-cover border-2 border-purple-200" />
+                    <img src={newCampaign.imageUrl} alt="Lead generation creative" className="w-32 h-24 rounded-lg object-cover border-2 border-green-200" />
                     <div className="text-sm">
-                      <p className="font-medium text-green-600">✅ Ad creative ready</p>
-                      <p className="text-muted-foreground">Optimized for {newCampaign.platform || 'social media'}</p>
+                      <p className="font-medium text-green-600">✅ Lead generation creative ready</p>
+                      <p className="text-muted-foreground">Optimized for {newCampaign.platform || 'lead capture'}</p>
                     </div>
                   </div>
                 )}
@@ -559,7 +690,7 @@ const CampaignManager = () => {
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Search className="h-4 w-4" />
-                SEO Optimization & Keywords
+                SEO & Lead Quality Optimization
               </h4>
               <div className="space-y-4">
                 <Button
@@ -569,16 +700,16 @@ const CampaignManager = () => {
                   className="w-full flex items-center gap-2"
                 >
                   <Lightbulb className="h-4 w-4" />
-                  {analyzingSEO ? 'Analyzing...' : 'Analyze SEO & Generate Keywords'}
+                  {analyzingSEO ? 'Analyzing...' : 'Analyze Lead Generation SEO Strategy'}
                 </Button>
 
                 {seoRecommendations.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">SEO Recommendations</label>
+                    <label className="text-sm font-medium">Lead Generation SEO Recommendations</label>
                     <div className="p-4 bg-blue-50 rounded-lg space-y-2">
                       {seoRecommendations.map((tip, index) => (
                         <div key={index} className="flex items-start gap-2">
-                          <Lightbulb className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <Target className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
                           <p className="text-sm">{tip}</p>
                         </div>
                       ))}
@@ -587,9 +718,9 @@ const CampaignManager = () => {
                 )}
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">SEO Keywords (comma-separated)</label>
+                  <label className="text-sm font-medium">High-Intent Keywords (comma-separated)</label>
                   <Textarea
-                    placeholder="AI will suggest keywords, or enter your own"
+                    placeholder="AI will suggest buyer-intent keywords for quality leads"
                     value={newCampaign.seoKeywords}
                     onChange={(e) => setNewCampaign(prev => ({ ...prev, seoKeywords: e.target.value }))}
                     rows={2}
@@ -626,8 +757,8 @@ const CampaignManager = () => {
 
             <div className="flex gap-2">
               <Button onClick={createCampaign} className="flex items-center gap-2">
-                <Wand2 className="h-4 w-4" />
-                Launch AI Campaign
+                <Target className="h-4 w-4" />
+                Launch Lead Generation Campaign
               </Button>
               <Button onClick={() => setShowCreateForm(false)} variant="outline">
                 Cancel
@@ -638,14 +769,16 @@ const CampaignManager = () => {
       )}
 
       <Tabs defaultValue="campaigns" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="campaigns">Active Campaigns</TabsTrigger>
           <TabsTrigger value="analytics">Performance Analytics</TabsTrigger>
+          <TabsTrigger value="leads">Lead Quality</TabsTrigger>
+          <TabsTrigger value="geographical">Geographical Performance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="campaigns" className="space-y-4">
           {campaigns.map((campaign) => (
-            <Card key={campaign.id}>
+            <Card key={campaign.id} className="border-l-4 border-l-green-500">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
@@ -658,6 +791,16 @@ const CampaignManager = () => {
                       <h4 className="font-semibold text-lg">{campaign.title}</h4>
                       <p className="text-sm text-muted-foreground mb-2">{campaign.platform}</p>
                       <p className="text-sm mb-2">{campaign.adContent}</p>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {campaign.leadQuality && (
+                          <Badge className={getLeadQualityColor(campaign.leadQuality)}>
+                            {campaign.leadQuality} quality leads
+                          </Badge>
+                        )}
+                        <Badge variant="outline" className="text-green-600">
+                          {campaign.leadQualityScore}/100 Quality Score
+                        </Badge>
+                      </div>
                       {campaign.seoKeywords && campaign.seoKeywords.length > 0 && (
                         <div className="flex flex-wrap gap-1 mb-2">
                           {campaign.seoKeywords.slice(0, 3).map((keyword, index) => (
@@ -683,7 +826,7 @@ const CampaignManager = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-7 gap-4 mb-4">
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">Budget</p>
                     <p className="font-semibold">${campaign.budget}</p>
@@ -693,16 +836,24 @@ const CampaignManager = () => {
                     <p className="font-semibold">${campaign.spent}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Impressions</p>
-                    <p className="font-semibold">{campaign.impressions.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">Quality Leads</p>
+                    <p className="font-semibold text-green-600">{campaign.qualifiedLeads}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Clicks</p>
-                    <p className="font-semibold">{campaign.clicks}</p>
+                    <p className="text-sm text-muted-foreground">Sales</p>
+                    <p className="font-semibold text-blue-600">{campaign.sales}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Conversions</p>
-                    <p className="font-semibold">{campaign.conversions}</p>
+                    <p className="text-sm text-muted-foreground">Conversion Rate</p>
+                    <p className="font-semibold">{campaign.salesConversionRate}%</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Cost/Lead</p>
+                    <p className="font-semibold">${campaign.costPerLead}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Target Region</p>
+                    <p className="font-semibold text-xs">{campaign.targetRegion}</p>
                   </div>
                 </div>
 
@@ -714,14 +865,16 @@ const CampaignManager = () => {
                   <Progress value={campaign.progress} className="h-2" />
                 </div>
 
-                {campaign.adVariations && campaign.adVariations.length > 0 && (
+                {campaign.geographicalPerformance && campaign.geographicalPerformance.length > 0 && (
                   <div className="mt-4 pt-4 border-t">
-                    <p className="text-sm font-medium mb-2">A/B Test Variations:</p>
-                    <div className="grid gap-1">
-                      {campaign.adVariations.slice(0, 2).map((variation, index) => (
-                        <p key={index} className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
-                          {variation}
-                        </p>
+                    <p className="text-sm font-medium mb-2">Top Performing Regions:</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {campaign.geographicalPerformance.map((region, index) => (
+                        <div key={index} className="text-xs bg-gray-50 p-2 rounded">
+                          <p className="font-medium">{region.region}</p>
+                          <p className="text-green-600">{region.conversions} sales</p>
+                          <p className="text-blue-600">${region.revenue}</p>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -737,9 +890,9 @@ const CampaignManager = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
-                  Campaign Performance
+                  Lead Quality & Sales Performance
                 </CardTitle>
-                <CardDescription>Daily performance metrics across all campaigns</CardDescription>
+                <CardDescription>Daily performance metrics with lead quality scores</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -748,9 +901,9 @@ const CampaignManager = () => {
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
-                    <Line type="monotone" dataKey="impressions" stroke="#8b5cf6" strokeWidth={2} name="Impressions" />
-                    <Line type="monotone" dataKey="clicks" stroke="#f59e0b" strokeWidth={2} name="Clicks" />
-                    <Line type="monotone" dataKey="conversions" stroke="#10b981" strokeWidth={2} name="Conversions" />
+                    <Line type="monotone" dataKey="conversions" stroke="#8b5cf6" strokeWidth={2} name="Conversions" />
+                    <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} name="Sales" />
+                    <Line type="monotone" dataKey="leadQuality" stroke="#f59e0b" strokeWidth={2} name="Lead Quality Score" />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -760,28 +913,153 @@ const CampaignManager = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5" />
-                  Platform Comparison
+                  Platform ROI Comparison
                 </CardTitle>
-                <CardDescription>Performance by social media platform</CardDescription>
+                <CardDescription>Return on investment by platform</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={[
-                    { platform: 'Facebook', conversions: 15, clicks: 267 },
-                    { platform: 'Google Ads', conversions: 23, clicks: 450 },
-                    { platform: 'Instagram', conversions: 8, clicks: 120 },
-                    { platform: 'LinkedIn', conversions: 5, clicks: 89 }
+                    { platform: 'Google Ads', sales: 18, roi: 485, qualityScore: 85 },
+                    { platform: 'Facebook', sales: 12, roi: 320, qualityScore: 72 },
+                    { platform: 'LinkedIn', sales: 8, roi: 280, qualityScore: 90 },
+                    { platform: 'Instagram', sales: 6, roi: 180, qualityScore: 68 }
                   ]}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="platform" />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="clicks" fill="#8b5cf6" name="Clicks" />
-                    <Bar dataKey="conversions" fill="#f59e0b" name="Conversions" />
+                    <Bar dataKey="sales" fill="#10b981" name="Sales" />
+                    <Bar dataKey="roi" fill="#8b5cf6" name="ROI %" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="leads">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserCheck className="h-5 w-5" />
+                  Lead Quality Distribution
+                </CardTitle>
+                <CardDescription>Quality breakdown of generated leads</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={leadQualityData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {leadQualityData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="h-5 w-5" />
+                  Lead Quality Metrics
+                </CardTitle>
+                <CardDescription>Key indicators of lead quality performance</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                  <div>
+                    <p className="font-semibold text-green-700">High Quality Leads</p>
+                    <p className="text-sm text-green-600">Ready to purchase</p>
+                  </div>
+                  <div className="text-2xl font-bold text-green-700">65%</div>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
+                  <div>
+                    <p className="font-semibold text-yellow-700">Medium Quality Leads</p>
+                    <p className="text-sm text-yellow-600">Needs nurturing</p>
+                  </div>
+                  <div className="text-2xl font-bold text-yellow-700">25%</div>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                  <div>
+                    <p className="font-semibold text-red-700">Low Quality Leads</p>
+                    <p className="text-sm text-red-600">Requires re-targeting</p>
+                  </div>
+                  <div className="text-2xl font-bold text-red-700">10%</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="geographical">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Geographical Performance Overview
+                </CardTitle>
+                <CardDescription>Sales and lead performance by geographical region</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={geographicalData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="region" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="leads" fill="#8b5cf6" name="Leads Generated" />
+                    <Bar dataKey="sales" fill="#10b981" name="Sales Closed" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {geographicalData.map((region, index) => (
+                <Card key={index}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold">{region.region}</h4>
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Leads</span>
+                        <span className="font-medium">{region.leads}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Sales</span>
+                        <span className="font-medium text-green-600">{region.sales}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Revenue</span>
+                        <span className="font-medium text-blue-600">${region.revenue}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Conversion</span>
+                        <span className="font-medium">{((region.sales / region.leads) * 100).toFixed(1)}%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </TabsContent>
       </Tabs>
