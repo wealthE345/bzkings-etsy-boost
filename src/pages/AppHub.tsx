@@ -806,6 +806,9 @@ const plans: Plan[] = [
     price: 0,
     features: [
       "Access to 20 Free AI SEO Apps",
+      "AI Ad Campaign Builder (Basic)",
+      "3 ad campaigns per month",
+      "Basic templates & targeting",
       "Basic keyword research",
       "Standard support",
       "5 backlinks per month",
@@ -819,6 +822,11 @@ const plans: Plan[] = [
     features: [
       "All Free features",
       "Access to Premium AI Apps",
+      "AI Ad Campaign Builder (Pro)",
+      "Unlimited ad campaigns",
+      "Advanced AI content generation",
+      "A/B testing & optimization",
+      "Premium templates & targeting",
       "Advanced keyword research",
       "Priority support",
       "100 backlinks per month",
@@ -832,6 +840,10 @@ const plans: Plan[] = [
     features: [
       "All Professional features",
       "Unlimited AI app access",
+      "AI Ad Campaign Builder (Enterprise)",
+      "White-label ad campaigns",
+      "Custom AI models & training",
+      "Multi-account management",
       "Enterprise-grade security",
       "Dedicated account manager",
       "1000 backlinks per month",
