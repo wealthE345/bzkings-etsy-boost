@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,39 +9,57 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Mail, Calendar, Zap, Target } from "lucide-react";
 import { toast } from "sonner";
-import { useEmailCampaign, NewEmail, EmailCampaign } from "@/hooks/useEmailCampaign";
 import { EmailCreationForm } from "@/components/email-campaign/EmailCreationForm";
-import { EmailList } from "@/components/email-campaign/EmailList";
 import { CampaignStats } from "@/components/email-campaign/CampaignStats";
-import { EmailDialogs } from "@/components/email-campaign/EmailDialogs";
+import { SimpleEmailList } from "@/components/email-campaign/SimpleEmailList";
+
+export interface EmailCampaign {
+  id: number;
+  subject: string;
+  content: string;
+  status: "Draft" | "Scheduled" | "Published";
+  sent: number;
+  opens: number;
+  clicks: number;
+  aiGenerated?: boolean;
+  targetAudience?: string;
+  creative?: {
+    type: "image" | "video";
+    url: string;
+    alt: string;
+  };
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface NewEmail {
+  subject?: string;
+  content?: string;
+  creative?: {
+    type: "image" | "video";
+    url: string;
+    alt: string;
+  };
+  aiGenerated?: boolean;
+  targetAudience?: string;
+  recipients?: string[];
+  scheduleDate?: string;
+  startDate?: string;
+  endDate?: string;
+}
 
 export default function EmailCampaignTool() {
   const [activeTab, setActiveTab] = useState("campaigns");
-  const [previewEmail, setPreviewEmail] = useState<EmailCampaign | null>(null);
-  const [editingEmail, setEditingEmail] = useState<EmailCampaign | null>(null);
-  const [analyticsEmail, setAnalyticsEmail] = useState<EmailCampaign | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
-  const [isAnalyticsDialogOpen, setIsAnalyticsDialogOpen] = useState(false);
+  const [emailList, setEmailList] = useState<EmailCampaign[]>([]);
+  const [newEmail, setNewEmail] = useState<NewEmail>({});
+  const [isCreatingEmail, setIsCreatingEmail] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const [platformCredentials, setPlatformCredentials] = useState({
     apiKey: "",
     listId: ""
   });
-
-  const {
-    emailList,
-    setEmailList,
-    newEmail,
-    setNewEmail,
-    isCreatingEmail,
-    isPublishing,
-    handleCreateEmail,
-    handlePublishEmail: originalHandlePublishEmail,
-    handleDeleteEmail: originalHandleDeleteEmail,
-    handleDuplicateEmail: originalHandleDuplicateEmail
-  } = useEmailCampaign();
 
   const emailAnalytics = [
     { name: 'Week 1', sent: 1200, opened: 520, clicked: 156, unsubscribed: 12 },
@@ -58,16 +77,80 @@ export default function EmailCampaignTool() {
     unsubscribeRate: 1.3
   };
 
-  const handlePublishEmailWrapper = (email: EmailCampaign) => {
-    originalHandlePublishEmail(email.id);
+  const handleCreateEmail = () => {
+    if (!newEmail.subject?.trim() || !newEmail.content?.trim()) {
+      toast.error("Please fill in both subject and content");
+      return;
+    }
+
+    setIsCreatingEmail(true);
+    toast.info("🚀 Creating your AI-powered email campaign...");
+
+    setTimeout(() => {
+      const newCampaign: EmailCampaign = {
+        id: emailList.length + 1,
+        subject: newEmail.subject,
+        content: newEmail.content,
+        status: "Draft",
+        sent: 0,
+        opens: 0,
+        clicks: 0,
+        aiGenerated: newEmail.aiGenerated || false,
+        targetAudience: newEmail.targetAudience || "organic-traffic",
+        creative: newEmail.creative,
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+      };
+
+      setEmailList([...emailList, newCampaign]);
+      setNewEmail({});
+      setIsCreatingEmail(false);
+      toast.success("✅ Email campaign created successfully!");
+    }, 2000);
   };
 
-  const handleDeleteEmailWrapper = (email: EmailCampaign) => {
-    originalHandleDeleteEmail(email.id);
+  const handlePublishEmail = (emailId: number) => {
+    const email = emailList.find(e => e.id === emailId);
+    if (!email) return;
+
+    setIsPublishing(true);
+    toast.info(`🚀 Publishing: "${email.subject}"...`);
+
+    setTimeout(() => {
+      setEmailList(emailList.map(e =>
+        e.id === emailId ? { ...e, status: "Published" } : e
+      ));
+      setIsPublishing(false);
+      toast.success(`✅ Published: "${email.subject}"!`);
+    }, 2000);
   };
 
-  const handleDuplicateEmailWrapper = (email: EmailCampaign) => {
-    originalHandleDuplicateEmail(email.id);
+  const handleDeleteEmail = (emailId: number) => {
+    const email = emailList.find(e => e.id === emailId);
+    if (!email) return;
+
+    setEmailList(emailList.filter(e => e.id !== emailId));
+    toast.success(`🗑️ Deleted: "${email.subject}"`);
+  };
+
+  const handleDuplicateEmail = (emailId: number) => {
+    const email = emailList.find(e => e.id === emailId);
+    if (!email) return;
+
+    const duplicatedEmail: EmailCampaign = {
+      ...email,
+      id: emailList.length + 1,
+      subject: `${email.subject} (Copy)`,
+      status: "Draft",
+      sent: 0,
+      opens: 0,
+      clicks: 0,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+    };
+
+    setEmailList([...emailList, duplicatedEmail]);
+    toast.success(`📄 Duplicated: "${email.subject}"`);
   };
 
   const handleIntegratePlatform = () => {
@@ -87,40 +170,6 @@ export default function EmailCampaignTool() {
       toast.success(`✅ Successfully integrated with ${selectedPlatform}!`);
       toast.info("🎯 Your organic traffic audience is now synced");
     }, 2000);
-  };
-
-  const handlePreviewEmail = (email: EmailCampaign) => {
-    setPreviewEmail(email);
-    setIsPreviewDialogOpen(true);
-    toast.info(`👀 Previewing: "${email.subject}"`);
-  };
-
-  const handleEditEmail = (email: EmailCampaign) => {
-    if (email.status === "Published") {
-      toast.error("Cannot edit published campaigns. Create a new campaign instead.");
-      return;
-    }
-    
-    setEditingEmail({ ...email });
-    setIsEditDialogOpen(true);
-    toast.info(`✏️ Editing: "${email.subject}"`);
-  };
-
-  const handleSaveEdit = (email: EmailCampaign) => {
-    setEmailList(emailList.map(e => 
-      e.id === email.id ? email : e
-    ));
-  };
-
-  const handleViewAnalytics = (email: EmailCampaign) => {
-    if (email.status !== "Published") {
-      toast.info("📊 Analytics are only available for published campaigns");
-      return;
-    }
-    
-    setAnalyticsEmail(email);
-    setIsAnalyticsDialogOpen(true);
-    toast.success(`📈 Viewing analytics for: "${email.subject}"`);
   };
 
   return (
@@ -160,15 +209,12 @@ export default function EmailCampaignTool() {
             <CampaignStats campaignStats={campaignStats} />
           </div>
 
-          <EmailList
+          <SimpleEmailList
             emailList={emailList}
             isPublishing={isPublishing}
-            onPublishEmail={handlePublishEmailWrapper}
-            onPreviewEmail={handlePreviewEmail}
-            onEditEmail={handleEditEmail}
-            onViewAnalytics={handleViewAnalytics}
-            onDuplicateEmail={handleDuplicateEmailWrapper}
-            onDeleteEmail={handleDeleteEmailWrapper}
+            onPublishEmail={handlePublishEmail}
+            onDuplicateEmail={handleDuplicateEmail}
+            onDeleteEmail={handleDeleteEmail}
           />
         </TabsContent>
 
@@ -290,22 +336,6 @@ export default function EmailCampaignTool() {
           </Card>
         </TabsContent>
       </Tabs>
-
-      <EmailDialogs
-        previewEmail={previewEmail}
-        editingEmail={editingEmail}
-        analyticsEmail={analyticsEmail}
-        isPreviewDialogOpen={isPreviewDialogOpen}
-        isEditDialogOpen={isEditDialogOpen}
-        isAnalyticsDialogOpen={isAnalyticsDialogOpen}
-        setIsPreviewDialogOpen={setIsPreviewDialogOpen}
-        setIsEditDialogOpen={setIsEditDialogOpen}
-        setIsAnalyticsDialogOpen={setIsAnalyticsDialogOpen}
-        setEditingEmail={setEditingEmail}
-        onSaveEdit={handleSaveEdit}
-        onPublishEmail={handlePublishEmailWrapper}
-        onEditEmail={handleEditEmail}
-      />
     </div>
   );
-};
+}
