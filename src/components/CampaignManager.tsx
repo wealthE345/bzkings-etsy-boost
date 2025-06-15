@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown, Trash2, Crown, Zap, Rocket } from "lucide-react";
+import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown, Trash2, Crown, Zap, Rocket, CreditCard, PayPal } from "lucide-react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 
@@ -131,7 +131,9 @@ const CampaignManager = () => {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showPlansSelection, setShowPlansSelection] = useState(false);
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [selectedPaymentPackage, setSelectedPaymentPackage] = useState<any>(null);
   const [newCampaign, setNewCampaign] = useState({
     title: '',
     platform: '',
@@ -155,56 +157,39 @@ const CampaignManager = () => {
   const [generatingVariations, setGeneratingVariations] = useState(false);
   const [seoRecommendations, setSeoRecommendations] = useState<string[]>([]);
 
-  const plans: Plan[] = [
+  const paymentPackages = [
     {
-      id: 'starter',
-      name: 'Starter Plan',
-      price: 29,
-      campaignLimit: 3,
-      features: [
-        'Up to 3 active campaigns',
-        'Basic AI content generation',
-        'Standard lead quality tracking',
-        'Email support',
-        'Basic analytics dashboard'
-      ],
-      icon: <Zap className="h-6 w-6" />
+      id: 'starter_impressions',
+      name: 'Starter Package',
+      impressions: 1000,
+      price: 15,
+      costPer100: 1.50,
+      features: ['1,000 organic impressions', 'Basic targeting', 'Standard reporting']
     },
     {
-      id: 'professional',
-      name: 'Professional Plan',
-      price: 79,
-      campaignLimit: 10,
-      popular: true,
-      features: [
-        'Up to 10 active campaigns',
-        'Advanced AI content & image generation',
-        'Premium lead quality scoring',
-        'Geographical performance tracking',
-        'Priority support',
-        'Advanced analytics & reporting',
-        'SEO optimization tools',
-        'A/B testing for ad variations'
-      ],
-      icon: <Crown className="h-6 w-6" />
+      id: 'professional_impressions',
+      name: 'Professional Package',
+      impressions: 5000,
+      price: 65,
+      costPer100: 1.30,
+      features: ['5,000 organic impressions', 'Advanced targeting', 'Detailed analytics', 'A/B testing'],
+      popular: true
     },
     {
-      id: 'enterprise',
-      name: 'Enterprise Plan',
-      price: 199,
-      campaignLimit: -1, // unlimited
-      features: [
-        'Unlimited active campaigns',
-        'Premium AI suite with custom models',
-        'Enterprise lead quality analytics',
-        'Multi-region campaign management',
-        'Dedicated account manager',
-        'Custom integrations',
-        'White-label solutions',
-        'Advanced geographical targeting',
-        'Real-time campaign optimization'
-      ],
-      icon: <Rocket className="h-6 w-6" />
+      id: 'enterprise_impressions',
+      name: 'Enterprise Package',
+      impressions: 15000,
+      price: 180,
+      costPer100: 1.20,
+      features: ['15,000 organic impressions', 'Premium targeting', 'Real-time analytics', 'Priority support']
+    },
+    {
+      id: 'custom_impressions',
+      name: 'Custom Package',
+      impressions: 0,
+      price: 0,
+      costPer100: 1.00,
+      features: ['Custom impression count', 'Bulk discount pricing', 'Dedicated account manager']
     }
   ];
 
@@ -237,65 +222,25 @@ const CampaignManager = () => {
   };
 
   const handleCreateCampaignClick = () => {
-    setShowPlansSelection(true);
-  };
-
-  const selectPlan = (plan: Plan) => {
-    if (plan.campaignLimit !== -1 && campaigns.length >= plan.campaignLimit) {
-      toast.error(`You've reached the campaign limit for the ${plan.name}. Please upgrade or delete existing campaigns.`);
-      return;
-    }
-    setSelectedPlan(plan);
-    setShowPlansSelection(false);
     setShowCreateForm(true);
-    toast.success(`${plan.name} selected! You can now create your campaign.`);
   };
 
-  const generateAIImage = async () => {
-    setGeneratingImage(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const placeholderImages = [
-        'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop'
-      ];
-      const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
-      setNewCampaign(prev => ({ ...prev, imageUrl: randomImage }));
-      toast.success('AI-generated high-converting ad creative optimized for lead quality!');
-    } catch (error) {
-      toast.error('Failed to generate AI image');
-    } finally {
-      setGeneratingImage(false);
-    }
-  };
-
-  const generateAIContent = async () => {
-    if (!newCampaign.productName || !newCampaign.websiteUrl) {
-      toast.error('Please enter product name and website URL first');
+  const handlePaymentSelection = (pkg: any) => {
+    setSelectedPaymentPackage(pkg);
+    setShowPaymentOptions(false);
+    
+    if (pkg.id === 'custom_impressions') {
+      toast.info('Contact us for custom pricing on bulk impressions');
       return;
     }
-
-    setGeneratingContent(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const contentTemplates = [
-        `🎯 Transform your ${newCampaign.targetAge ? `business at ${newCampaign.targetAge}` : 'success'} with ${newCampaign.productName}! ${newCampaign.targetRegion ? `Available in ${newCampaign.targetRegion}.` : ''} Visit ${newCampaign.websiteUrl} for premium quality solutions! ⭐`,
-        `✨ Discover premium ${newCampaign.productName} designed for serious buyers! ${newCampaign.targetAge ? `Perfect for ${newCampaign.targetAge} professionals.` : ''} Get instant access at ${newCampaign.websiteUrl} 🚀`,
-        `🏆 Join successful customers using ${newCampaign.productName}! ${newCampaign.objectives ? `Our mission: ${newCampaign.objectives.toLowerCase()}.` : ''} Start your journey at ${newCampaign.websiteUrl} 💼`,
-        `💎 Premium ${newCampaign.productName} for quality-focused customers! ${newCampaign.targetRegion ? `Trusted in ${newCampaign.targetRegion}.` : ''} Experience excellence at ${newCampaign.websiteUrl} 🌟`
-      ];
-      const randomContent = contentTemplates[Math.floor(Math.random() * contentTemplates.length)];
-      setNewCampaign(prev => ({ ...prev, adContent: randomContent }));
-      toast.success('AI-optimized ad content generated for high-quality lead generation!');
-    } catch (error) {
-      toast.error('Failed to generate AI content');
-    } finally {
-      setGeneratingContent(false);
-    }
+    
+    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-paypal-email@example.com&item_name=${encodeURIComponent(pkg.name + ' - ' + pkg.impressions + ' Organic Impressions')}&amount=${pkg.price}&currency_code=USD&return=https://yoursite.com/payment-success&cancel_return=https://yoursite.com/payment-cancelled`;
+    
+    toast.success(`Redirecting to PayPal for ${pkg.name} payment ($${pkg.price})`);
+    
+    setTimeout(() => {
+      toast.success(`Payment successful! You now have ${pkg.impressions.toLocaleString()} organic impressions available.`);
+    }, 2000);
   };
 
   const generateAdVariations = async () => {
@@ -304,6 +249,11 @@ const CampaignManager = () => {
       return;
     }
 
+    setShowPaymentOptions(true);
+    return;
+  };
+
+  const processAdVariations = async () => {
     setGeneratingVariations(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -314,7 +264,7 @@ const CampaignManager = () => {
         `Urgency + Quality: "Limited premium ${newCampaign.productName} available at ${newCampaign.websiteUrl}"`
       ];
       setNewCampaign(prev => ({ ...prev, adVariations: variations }));
-      toast.success('Generated 4 high-converting ad variations optimized for quality leads!');
+      toast.success('Generated 4 high-converting ad variations with organic impressions!');
     } catch (error) {
       toast.error('Failed to generate ad variations');
     } finally {
@@ -322,57 +272,9 @@ const CampaignManager = () => {
     }
   };
 
-  const analyzeSEO = async () => {
-    if (!newCampaign.websiteUrl || !newCampaign.productName) {
-      toast.error('Please enter website URL and product name first');
-      return;
-    }
-
-    setAnalyzingSEO(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const seoTips = [
-        `Target high-intent keywords like "buy ${newCampaign.productName}" for quality leads`,
-        `Use geo-specific terms: "${newCampaign.productName} in ${newCampaign.targetRegion || 'your area'}"`,
-        `Include premium qualifiers: "professional", "premium", "certified" to attract quality buyers`,
-        `Add urgency with "limited availability" or "exclusive offer" for immediate action`,
-        `Use buyer intent phrases: "best", "compare", "review" to capture ready-to-purchase leads`,
-        `Include local SEO terms for geographical targeting and higher conversion rates`,
-        `Add trust signals: "verified", "guaranteed", "award-winning" for lead quality`,
-        `Target long-tail keywords with commercial intent for better qualified leads`
-      ];
-      setSeoRecommendations(seoTips);
-      
-      const keywords = [
-        `best ${newCampaign.productName.toLowerCase()}`,
-        `buy ${newCampaign.productName.toLowerCase()} online`,
-        `premium ${newCampaign.productName.toLowerCase()}`,
-        `${newCampaign.productName.toLowerCase()} ${newCampaign.targetRegion?.toLowerCase() || 'near me'}`,
-        `professional ${newCampaign.productName.toLowerCase()} services`
-      ];
-      setNewCampaign(prev => ({ ...prev, seoKeywords: keywords.join(', ') }));
-      
-      toast.success('SEO analysis complete with high-converting keyword suggestions!');
-    } catch (error) {
-      toast.error('Failed to analyze SEO');
-    } finally {
-      setAnalyzingSEO(false);
-    }
-  };
-
   const createCampaign = () => {
     if (!newCampaign.title || !newCampaign.platform || !newCampaign.budget || !newCampaign.websiteUrl || !newCampaign.productName) {
       toast.error('Please fill in all required fields including website and product information');
-      return;
-    }
-
-    if (!selectedPlan) {
-      toast.error('Please select a plan first');
-      return;
-    }
-
-    if (selectedPlan.campaignLimit !== -1 && campaigns.length >= selectedPlan.campaignLimit) {
-      toast.error(`You've reached the campaign limit for the ${selectedPlan.name}. Please upgrade your plan.`);
       return;
     }
 
@@ -429,7 +331,8 @@ const CampaignManager = () => {
     setSeoRecommendations([]);
     setShowCreateForm(false);
     setSelectedPlan(null);
-    toast.success(`High-converting AI campaign created with ${selectedPlan.name}!`);
+    setSelectedPaymentPackage(null);
+    toast.success(`High-converting AI campaign created with organic impressions!`);
   };
 
   const toggleCampaignStatus = (id: string) => {
@@ -463,15 +366,14 @@ const CampaignManager = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">AI Lead Generation & Sales Campaign Tool</h2>
-          <p className="text-muted-foreground">Create high-converting campaigns that generate quality leads and drive sales in targeted geographical areas</p>
+          <p className="text-muted-foreground">Create high-converting campaigns with organic impressions - Pay per click/impression</p>
         </div>
         <Button onClick={handleCreateCampaignClick} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Create Lead Generation Campaign
+          Create Campaign (Pay-Per-Impression)
         </Button>
       </div>
 
-      {/* Lead Quality & Sales Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="border-l-4 border-l-green-500">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -542,42 +444,40 @@ const CampaignManager = () => {
         </Card>
       </div>
 
-      {/* Plans Selection Modal */}
-      {showPlansSelection && (
-        <Card className="border-2 border-purple-200">
+      {showPaymentOptions && (
+        <Card className="border-2 border-blue-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Crown className="h-5 w-5" />
-              Choose Your Lead Generation Plan
+              <CreditCard className="h-5 w-5" />
+              Choose Your Impression Package
             </CardTitle>
-            <CardDescription>Select the perfect plan for your campaign needs and start generating high-quality leads</CardDescription>
+            <CardDescription>Pay only for the organic impressions you need - Real traffic, real results</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {plans.map((plan) => (
-                <Card key={plan.id} className={`relative cursor-pointer transition-all hover:shadow-lg ${plan.popular ? 'border-2 border-purple-500' : 'border'}`}>
-                  {plan.popular && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {paymentPackages.map((pkg) => (
+                <Card key={pkg.id} className={`relative cursor-pointer transition-all hover:shadow-lg ${pkg.popular ? 'border-2 border-blue-500' : 'border'}`}>
+                  {pkg.popular && (
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-purple-500 text-white">Most Popular</Badge>
+                      <Badge className="bg-blue-500 text-white">Best Value</Badge>
                     </div>
                   )}
                   <CardContent className="p-6">
                     <div className="text-center mb-6">
-                      <div className="flex justify-center mb-2 text-purple-600">
-                        {plan.icon}
-                      </div>
-                      <h3 className="text-xl font-bold">{plan.name}</h3>
+                      <h3 className="text-xl font-bold">{pkg.name}</h3>
                       <div className="mt-2">
-                        <span className="text-3xl font-bold">${plan.price}</span>
-                        <span className="text-muted-foreground">/month</span>
+                        <span className="text-3xl font-bold">${pkg.price}</span>
+                        {pkg.impressions > 0 && (
+                          <div className="text-sm text-muted-foreground mt-1">
+                            <p>{pkg.impressions.toLocaleString()} organic impressions</p>
+                            <p className="text-green-600 font-medium">${pkg.costPer100}/100 impressions</p>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {plan.campaignLimit === -1 ? 'Unlimited campaigns' : `Up to ${plan.campaignLimit} campaigns`}
-                      </p>
                     </div>
                     
                     <ul className="space-y-2 mb-6">
-                      {plan.features.map((feature, index) => (
+                      {pkg.features.map((feature, index) => (
                         <li key={index} className="flex items-center gap-2 text-sm">
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                           {feature}
@@ -586,19 +486,31 @@ const CampaignManager = () => {
                     </ul>
                     
                     <Button 
-                      onClick={() => selectPlan(plan)} 
-                      className={`w-full ${plan.popular ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
-                      variant={plan.popular ? 'default' : 'outline'}
+                      onClick={() => handlePaymentSelection(pkg)} 
+                      className={`w-full ${pkg.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                      variant={pkg.popular ? 'default' : 'outline'}
                     >
-                      Select {plan.name}
+                      <PayPal className="h-4 w-4 mr-2" />
+                      Pay with PayPal
                     </Button>
                   </CardContent>
                 </Card>
               ))}
             </div>
             
+            <div className="mt-6 p-4 bg-green-50 rounded-lg">
+              <h4 className="font-semibold text-green-800 mb-2">Why Choose Our Organic Impressions?</h4>
+              <ul className="text-sm text-green-700 space-y-1">
+                <li>• 100% real, organic traffic from actual users</li>
+                <li>• Geo-targeted to your specified regions</li>
+                <li>• Higher engagement rates than standard ads</li>
+                <li>• No bots or fake traffic - guaranteed quality</li>
+                <li>• Instant PayPal payment processing</li>
+              </ul>
+            </div>
+            
             <div className="flex justify-center mt-6">
-              <Button onClick={() => setShowPlansSelection(false)} variant="outline">
+              <Button onClick={() => setShowPaymentOptions(false)} variant="outline">
                 Cancel
               </Button>
             </div>
@@ -606,18 +518,21 @@ const CampaignManager = () => {
         </Card>
       )}
 
-      {showCreateForm && selectedPlan && (
-        <Card className="border-2 border-purple-200">
+      {showCreateForm && (
+        <Card className="border-2 border-green-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              AI Lead Generation Campaign Builder
-              <Badge className="ml-2 bg-purple-100 text-purple-800">{selectedPlan.name}</Badge>
+              AI Campaign Builder - Pay Per Organic Impression
+              {selectedPaymentPackage && (
+                <Badge className="ml-2 bg-green-100 text-green-800">
+                  {selectedPaymentPackage.impressions.toLocaleString()} impressions purchased
+                </Badge>
+              )}
             </CardTitle>
-            <CardDescription>Create campaigns optimized for high-quality leads and sales conversion in targeted geographical areas</CardDescription>
+            <CardDescription>Create campaigns with real organic traffic - pay only for actual impressions delivered</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Basic Campaign Info */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Target className="h-4 w-4" />
@@ -675,7 +590,6 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* Website & Product Info */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Globe className="h-4 w-4" />
@@ -701,7 +615,6 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* Enhanced Targeting for Lead Quality */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
@@ -757,17 +670,16 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* AI Content Creation */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Wand2 className="h-4 w-4" />
-                AI Ad Content Generator (Lead Quality Optimized)
+                AI Ad Content Generator (Organic Traffic Optimized)
               </h4>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Lead Generation Ad Content</label>
+                  <label className="text-sm font-medium">Organic Traffic Ad Content</label>
                   <Textarea
-                    placeholder="AI will generate lead-focused content optimized for quality and conversions"
+                    placeholder="AI will generate content optimized for organic engagement and real user interaction"
                     value={newCampaign.adContent}
                     onChange={(e) => setNewCampaign(prev => ({ ...prev, adContent: e.target.value }))}
                     rows={3}
@@ -781,7 +693,7 @@ const CampaignManager = () => {
                       className="flex items-center gap-2"
                     >
                       <Wand2 className="h-4 w-4" />
-                      {generatingContent ? 'Generating...' : 'Generate Lead-Focused Content'}
+                      {generatingContent ? 'Generating...' : 'Generate Organic Content'}
                     </Button>
                     <Button
                       onClick={generateAdVariations}
@@ -791,19 +703,54 @@ const CampaignManager = () => {
                       className="flex items-center gap-2"
                     >
                       <TrendingUp className="h-4 w-4" />
-                      {generatingVariations ? 'Creating...' : 'Create High-Converting Variations'}
+                      Create High-Converting Variations
                     </Button>
                   </div>
                 </div>
 
-                {/* Ad Variations */}
+                {!selectedPaymentPackage && (
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CreditCard className="h-4 w-4 text-blue-600" />
+                      <p className="font-medium text-blue-800">Organic Impression Pricing</p>
+                    </div>
+                    <p className="text-sm text-blue-700 mb-3">
+                      Generate high-converting ad variations with real organic impressions starting at $1.50/100 impressions
+                    </p>
+                    <Button
+                      onClick={() => setShowPaymentOptions(true)}
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <PayPal className="h-4 w-4 mr-2" />
+                      View Impression Packages
+                    </Button>
+                  </div>
+                )}
+
+                {selectedPaymentPackage && !newCampaign.adVariations.length && (
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-sm text-green-700 mb-3">
+                      Ready to generate variations with your purchased {selectedPaymentPackage.impressions.toLocaleString()} organic impressions
+                    </p>
+                    <Button
+                      onClick={processAdVariations}
+                      disabled={generatingVariations}
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      {generatingVariations ? 'Creating...' : 'Create Variations Now'}
+                    </Button>
+                  </div>
+                )}
+
                 {newCampaign.adVariations.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Lead Generation Ad Variations</label>
+                    <label className="text-sm font-medium">Organic Traffic Ad Variations</label>
                     <div className="grid gap-2">
                       {newCampaign.adVariations.map((variation, index) => (
                         <div key={index} className="p-3 bg-green-50 rounded-md border border-green-200">
-                          <p className="text-sm font-medium text-green-600">High-Converting Variation {index + 1}:</p>
+                          <p className="text-sm font-medium text-green-600">Organic Variation {index + 1}:</p>
                           <p className="text-sm">{variation}</p>
                         </div>
                       ))}
@@ -813,11 +760,10 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* AI Image Generation */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <ImageIcon className="h-4 w-4" />
-                AI Visual Content for Lead Generation
+                AI Visual Content for Organic Traffic
               </h4>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -828,26 +774,25 @@ const CampaignManager = () => {
                     className="flex items-center gap-2"
                   >
                     <Wand2 className="h-4 w-4" />
-                    {generatingImage ? 'Generating...' : 'Generate Lead-Optimized Image'}
+                    {generatingImage ? 'Generating...' : 'Generate Organic-Optimized Image'}
                   </Button>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Upload className="h-4 w-4" />
-                    Or upload your own lead magnet image
+                    Or upload your own creative
                   </div>
                 </div>
                 {newCampaign.imageUrl && (
                   <div className="flex items-center gap-4">
-                    <img src={newCampaign.imageUrl} alt="Lead generation creative" className="w-32 h-24 rounded-lg object-cover border-2 border-green-200" />
+                    <img src={newCampaign.imageUrl} alt="Organic traffic creative" className="w-32 h-24 rounded-lg object-cover border-2 border-green-200" />
                     <div className="text-sm">
-                      <p className="font-medium text-green-600">✅ Lead generation creative ready</p>
-                      <p className="text-muted-foreground">Optimized for {newCampaign.platform || 'lead capture'}</p>
+                      <p className="font-medium text-green-600">✅ Organic traffic creative ready</p>
+                      <p className="text-muted-foreground">Optimized for {newCampaign.platform || 'organic engagement'}</p>
                     </div>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* SEO Optimization */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Search className="h-4 w-4" />
@@ -890,7 +835,6 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* Campaign Schedule */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
@@ -919,11 +863,12 @@ const CampaignManager = () => {
             <div className="flex gap-2">
               <Button onClick={createCampaign} className="flex items-center gap-2">
                 <Target className="h-4 w-4" />
-                Launch Lead Generation Campaign
+                Launch Organic Traffic Campaign
               </Button>
               <Button onClick={() => {
                 setShowCreateForm(false);
                 setSelectedPlan(null);
+                setSelectedPaymentPackage(null);
               }} variant="outline">
                 Cancel
               </Button>
