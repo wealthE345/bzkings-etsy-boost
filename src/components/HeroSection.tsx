@@ -25,7 +25,7 @@ const HeroSection = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-            Maximize your <span className="font-semibold text-purple-700">BZ Kings Digital Mall</span> revenue with our proven SEO strategies. 
+            Maximize your <span className="font-semibold text-purple-700">website and store</span> revenue with our proven SEO strategies. 
             Our advanced backlink generation system creates 2000+ high-quality backlinks from 50+ authority domains, 
             driving targeted organic traffic that converts browsers into buyers. Boost your Etsy store rankings, 
             increase visibility in search results, and watch your sales grow with our comprehensive digital marketing toolkit 
