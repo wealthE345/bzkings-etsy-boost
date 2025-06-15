@@ -37,9 +37,9 @@ export default function EmailCampaignTool() {
     isCreatingEmail,
     isPublishing,
     handleCreateEmail,
-    handlePublishEmail,
-    handleDeleteEmail,
-    handleDuplicateEmail
+    handlePublishEmail: originalHandlePublishEmail,
+    handleDeleteEmail: originalHandleDeleteEmail,
+    handleDuplicateEmail: originalHandleDuplicateEmail
   } = useEmailCampaign();
 
   const emailAnalytics = [
@@ -56,6 +56,18 @@ export default function EmailCampaignTool() {
     openRate: 46.7,
     clickRate: 14.0,
     unsubscribeRate: 1.3
+  };
+
+  const handlePublishEmailWrapper = (email: EmailCampaign) => {
+    originalHandlePublishEmail(email.id);
+  };
+
+  const handleDeleteEmailWrapper = (email: EmailCampaign) => {
+    originalHandleDeleteEmail(email.id);
+  };
+
+  const handleDuplicateEmailWrapper = (email: EmailCampaign) => {
+    originalHandleDuplicateEmail(email.id);
   };
 
   const handleIntegratePlatform = () => {
@@ -151,12 +163,12 @@ export default function EmailCampaignTool() {
           <EmailList
             emailList={emailList}
             isPublishing={isPublishing}
-            onPublishEmail={handlePublishEmail}
+            onPublishEmail={handlePublishEmailWrapper}
             onPreviewEmail={handlePreviewEmail}
             onEditEmail={handleEditEmail}
             onViewAnalytics={handleViewAnalytics}
-            onDuplicateEmail={handleDuplicateEmail}
-            onDeleteEmail={handleDeleteEmail}
+            onDuplicateEmail={handleDuplicateEmailWrapper}
+            onDeleteEmail={handleDeleteEmailWrapper}
           />
         </TabsContent>
 
@@ -291,7 +303,7 @@ export default function EmailCampaignTool() {
         setIsAnalyticsDialogOpen={setIsAnalyticsDialogOpen}
         setEditingEmail={setEditingEmail}
         onSaveEdit={handleSaveEdit}
-        onPublishEmail={handlePublishEmail}
+        onPublishEmail={handlePublishEmailWrapper}
         onEditEmail={handleEditEmail}
       />
     </div>
