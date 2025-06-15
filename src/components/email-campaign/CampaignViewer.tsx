@@ -3,17 +3,26 @@ import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles } from "lucide-react";
 import { EmailCampaign } from "@/hooks/useEmailCampaign";
+import { generateEmailContent } from "@/utils/aiContentGenerator";
+import { toast } from "sonner";
 
 interface CampaignViewerProps {
   campaign: EmailCampaign | null;
   isOpen: boolean;
   onClose: () => void;
+  onSave?: (campaign: EmailCampaign) => void;
+  isEditable?: boolean;
 }
 
-export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProps) => {
+export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable = false }: CampaignViewerProps) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isEditing, setIsEditing] = useState(isEditable);
+  const [editedCampaign, setEditedCampaign] = useState<EmailCampaign | null>(null);
+  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -22,7 +31,9 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
       setIsVideoPlaying(false);
       videoRef.current.currentTime = 0;
     }
-  }, [campaign]);
+    setEditedCampaign(campaign);
+    setIsEditing(isEditable);
+  }, [campaign, isEditable]);
 
   const toggleVideoPlayback = () => {
     const video = videoRef.current;
@@ -49,73 +60,161 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
     setIsVideoPlaying(false);
   };
 
+  const handleGenerateContent = async () => {
+    if (!editedCampaign) return;
+    
+    setIsGeneratingContent(true);
+    toast.info("🤖 Generating AI-powered email content...");
+    
+    // Simulate AI content generation
+    setTimeout(() => {
+      const searchTerm = editedCampaign.subject || "digital marketing";
+      const newContent = generateEmailContent(searchTerm);
+      
+      setEditedCampaign({
+        ...editedCampaign,
+        content: newContent
+      });
+      
+      setIsGeneratingContent(false);
+      toast.success("✨ AI content generated successfully!");
+    }, 2000);
+  };
+
+  const handleSave = () => {
+    if (!editedCampaign) return;
+    
+    if (!editedCampaign.subject.trim() || !editedCampaign.content.trim()) {
+      toast.error("Please fill in both subject and content");
+      return;
+    }
+
+    if (onSave) {
+      onSave(editedCampaign);
+    }
+    setIsEditing(false);
+    toast.success("✅ Campaign saved successfully!");
+  };
+
   if (!campaign) return null;
+
+  const currentCampaign = editedCampaign || campaign;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div>
               <DialogTitle className="flex items-center gap-2">
                 <Eye className="h-5 w-5 text-blue-600" />
-                Campaign View
+                {isEditing ? "Edit Campaign" : "Campaign View"}
+                {isEditing && (
+                  <Badge variant="outline" className="text-purple-600 border-purple-300">
+                    <Edit className="h-3 w-3 mr-1" />
+                    Editing Mode
+                  </Badge>
+                )}
               </DialogTitle>
               <DialogDescription>
-                Full campaign preview with interactive 30-second AI-generated intro video
+                {isEditing 
+                  ? "Edit your campaign with AI-powered content generation"
+                  : "Full campaign preview with interactive 30-second AI-generated intro video"
+                }
               </DialogDescription>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              {!isEditing && isEditable && (
+                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              )}
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* Campaign Header */}
           <div className="border-b pb-4">
-            <h2 className="text-2xl font-bold mb-2">{campaign.subject}</h2>
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant={
-                campaign.status === "Published" ? "default" : 
-                campaign.status === "Scheduled" ? "secondary" : "outline"
-              }>
-                {campaign.status}
-              </Badge>
-              {campaign.aiGenerated && (
-                <Badge variant="outline" className="text-purple-600 border-purple-300">
-                  <Wand2 className="h-3 w-3 mr-1" />
-                  AI Generated
-                </Badge>
-              )}
-              {campaign.targetAudience === "organic-traffic" && (
-                <Badge variant="outline" className="text-green-600 border-green-300">
-                  <Target className="h-3 w-3 mr-1" />
-                  Organic Traffic Audience
-                </Badge>
-              )}
-            </div>
+            {isEditing ? (
+              <div className="space-y-3">
+                <Input
+                  value={currentCampaign.subject}
+                  onChange={(e) => setEditedCampaign(prev => prev ? {...prev, subject: e.target.value} : null)}
+                  placeholder="Email Subject"
+                  className="text-xl font-bold"
+                />
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge variant={
+                    currentCampaign.status === "Published" ? "default" : 
+                    currentCampaign.status === "Scheduled" ? "secondary" : "outline"
+                  }>
+                    {currentCampaign.status}
+                  </Badge>
+                  {currentCampaign.aiGenerated && (
+                    <Badge variant="outline" className="text-purple-600 border-purple-300">
+                      <Wand2 className="h-3 w-3 mr-1" />
+                      AI Generated
+                    </Badge>
+                  )}
+                  {currentCampaign.targetAudience === "organic-traffic" && (
+                    <Badge variant="outline" className="text-green-600 border-green-300">
+                      <Target className="h-3 w-3 mr-1" />
+                      Organic Traffic Audience
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold mb-2">{currentCampaign.subject}</h2>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge variant={
+                    currentCampaign.status === "Published" ? "default" : 
+                    currentCampaign.status === "Scheduled" ? "secondary" : "outline"
+                  }>
+                    {currentCampaign.status}
+                  </Badge>
+                  {currentCampaign.aiGenerated && (
+                    <Badge variant="outline" className="text-purple-600 border-purple-300">
+                      <Wand2 className="h-3 w-3 mr-1" />
+                      AI Generated
+                    </Badge>
+                  )}
+                  {currentCampaign.targetAudience === "organic-traffic" && (
+                    <Badge variant="outline" className="text-green-600 border-green-300">
+                      <Target className="h-3 w-3 mr-1" />
+                      Organic Traffic Audience
+                    </Badge>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Campaign Stats */}
-          {campaign.status === "Published" && (
+          {currentCampaign.status === "Published" && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{campaign.sent.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-blue-600">{currentCampaign.sent.toLocaleString()}</div>
                 <div className="text-sm text-gray-600">Sent</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{campaign.opens}</div>
+                <div className="text-2xl font-bold text-green-600">{currentCampaign.opens}</div>
                 <div className="text-sm text-gray-600">Opens</div>
-                <div className="text-xs text-gray-500">{((campaign.opens / campaign.sent) * 100).toFixed(1)}%</div>
+                <div className="text-xs text-gray-500">{((currentCampaign.opens / currentCampaign.sent) * 100).toFixed(1)}%</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{campaign.clicks}</div>
+                <div className="text-2xl font-bold text-purple-600">{currentCampaign.clicks}</div>
                 <div className="text-sm text-gray-600">Clicks</div>
-                <div className="text-xs text-gray-500">{((campaign.clicks / campaign.opens) * 100).toFixed(1)}%</div>
+                <div className="text-xs text-gray-500">{((currentCampaign.clicks / currentCampaign.opens) * 100).toFixed(1)}%</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{Math.floor(campaign.sent * 0.015)}</div>
+                <div className="text-2xl font-bold text-orange-600">{Math.floor(currentCampaign.sent * 0.015)}</div>
                 <div className="text-sm text-gray-600">Unsubscribes</div>
                 <div className="text-xs text-gray-500">1.5%</div>
               </div>
@@ -123,15 +222,15 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
           )}
 
           {/* AI Creative Content with Enhanced Video Playback */}
-          {campaign.creative?.url && (
+          {currentCampaign.creative?.url && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">30-Second AI-Generated Intro</h3>
               <div className="relative">
-                {campaign.creative.type === "video" ? (
+                {currentCampaign.creative.type === "video" ? (
                   <div className="relative w-full max-w-2xl mx-auto group">
                     <video 
                       ref={videoRef}
-                      src={campaign.creative.url} 
+                      src={currentCampaign.creative.url} 
                       className="w-full h-80 object-cover rounded-lg shadow-lg"
                       muted
                       preload="metadata"
@@ -172,8 +271,8 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
                 ) : (
                   <div className="relative w-full max-w-2xl mx-auto">
                     <img 
-                      src={campaign.creative.url} 
-                      alt={campaign.creative.alt}
+                      src={currentCampaign.creative.url} 
+                      alt={currentCampaign.creative.alt}
                       className="w-full h-80 object-cover rounded-lg shadow-lg"
                     />
                     <Badge 
@@ -186,9 +285,9 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
                   </div>
                 )}
                 <p className="text-sm text-gray-600 mt-2 text-center italic">
-                  {campaign.creative.alt}
+                  {currentCampaign.creative.alt}
                 </p>
-                {campaign.creative.type === "video" && (
+                {currentCampaign.creative.type === "video" && (
                   <p className="text-xs text-gray-500 mt-1 text-center">
                     Click play to watch the full 30-second AI-generated intro video
                   </p>
@@ -199,13 +298,37 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
 
           {/* Email Content */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Email Content</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Email Content</h3>
+              {isEditing && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerateContent}
+                  disabled={isGeneratingContent}
+                  className="text-purple-600 border-purple-300"
+                >
+                  <Sparkles className="h-4 w-4 mr-1" />
+                  {isGeneratingContent ? "Generating..." : "Generate AI Content"}
+                </Button>
+              )}
+            </div>
             <div className="p-6 border rounded-lg bg-white shadow-sm">
-              <div className="prose max-w-none">
-                <p className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-                  {campaign.content}
-                </p>
-              </div>
+              {isEditing ? (
+                <Textarea
+                  value={currentCampaign.content}
+                  onChange={(e) => setEditedCampaign(prev => prev ? {...prev, content: e.target.value} : null)}
+                  placeholder="Email content..."
+                  rows={12}
+                  className="min-h-[300px] resize-none"
+                />
+              ) : (
+                <div className="prose max-w-none">
+                  <p className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+                    {currentCampaign.content}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -216,17 +339,30 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium text-gray-900">Target Audience</h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  {campaign.targetAudience === "organic-traffic" ? "Organic Traffic Subscribers" : campaign.targetAudience}
+                  {currentCampaign.targetAudience === "organic-traffic" ? "Organic Traffic Subscribers" : currentCampaign.targetAudience}
                 </p>
               </div>
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium text-gray-900">Content Generation</h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  {campaign.aiGenerated ? "AI-Powered Content & 30s Intro Video" : "Manual Content Creation"}
+                  {currentCampaign.aiGenerated ? "AI-Powered Content & 30s Intro Video" : "Manual Content Creation"}
                 </p>
               </div>
             </div>
           </div>
+
+          {/* Action Buttons */}
+          {isEditing && (
+            <div className="flex gap-2 justify-end pt-4 border-t">
+              <Button variant="outline" onClick={() => setIsEditing(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700">
+                <Save className="h-4 w-4 mr-1" />
+                Save Changes
+              </Button>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

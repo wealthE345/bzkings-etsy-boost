@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { getVideoBySubject } from "@/utils/aiContentGenerator";
+import { getIntroVideoBySubject, generateEmailContent } from "@/utils/aiContentGenerator";
 
 export interface EmailCampaign {
   id: number;
@@ -48,7 +48,7 @@ const initialEmailList: EmailCampaign[] = [
     content: "Discover how AI-powered digital products can transform your organic traffic strategy. Our comprehensive suite includes SEO optimization tools, content generation platforms, and traffic analytics dashboards designed specifically for organic growth. Join thousands of successful entrepreneurs who have mastered sustainable online growth with our proven digital solutions.",
     creative: {
       type: "video",
-      url: getVideoBySubject("AI-Generated: Boost Your Organic Traffic with Our Digital Toolkit"),
+      url: getIntroVideoBySubject("AI-Generated: Boost Your Organic Traffic with Our Digital Toolkit"),
       alt: "AI-generated video showcasing organic traffic growth strategies and digital marketing tools"
     },
     aiGenerated: true,
@@ -84,7 +84,7 @@ const initialEmailList: EmailCampaign[] = [
     content: "Join our exclusive AI-enhanced masterclass on generating organic traffic that converts. Learn cutting-edge strategies powered by artificial intelligence, advanced SEO techniques, and proven content marketing methods used by top digital marketers to build sustainable online businesses. This comprehensive training includes AI tools, templates, and step-by-step guidance.",
     creative: {
       type: "video",
-      url: getVideoBySubject("AI-Powered: Exclusive Organic Traffic Generation Masterclass"),
+      url: getIntroVideoBySubject("AI-Powered: Exclusive Organic Traffic Generation Masterclass"),
       alt: "AI-generated video presenting organic traffic masterclass with digital marketing strategies"
     },
     aiGenerated: true,

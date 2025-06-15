@@ -1,553 +1,235 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target, Search, Play, Calendar, Eye } from "lucide-react";
-import { toast } from "sonner";
-import { NewEmail } from "@/hooks/useEmailCampaign";
-import { 
-  getRandomContent, 
-  getImageBySearchQuery, 
-  getVideoBySearchQuery, 
-  getContentBySearchTerm,
-  generateAITitle
-} from "@/utils/aiContentGenerator";
+import { Badge } from "@/components/ui/badge";
+import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon } from "lucide-react";
+import { EmailCampaign } from "@/hooks/useEmailCampaign";
+import { generateAITitle, getMockupImagesBySearchQuery, getIntroVideoBySubject, generateEmailContent } from "@/utils/aiContentGenerator";
 import { ImageMockupSelector } from "./ImageMockupSelector";
-import { CampaignPreview } from "./CampaignPreview";
+import { CampaignViewer } from "./CampaignViewer";
+import { toast } from "sonner";
 
 interface EmailCreationFormProps {
-  newEmail: NewEmail;
-  setNewEmail: (email: NewEmail) => void;
+  newEmail: Partial<EmailCampaign>;
+  setNewEmail: (email: Partial<EmailCampaign>) => void;
   isCreatingEmail: boolean;
   onCreateEmail: () => void;
 }
 
 export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCreateEmail }: EmailCreationFormProps) => {
-  const [isGeneratingContent, setIsGeneratingContent] = useState(false);
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [showMockups, setShowMockups] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [mockupImages, setMockupImages] = useState<Array<{url: string, description: string}>>([]);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [previewCampaign, setPreviewCampaign] = useState<EmailCampaign | null>(null);
 
-  const handleSearch = async () => {
+  const handleSearchCampaignIdeas = () => {
     if (!searchTerm.trim()) {
       toast.error("Please enter a search term");
       return;
     }
 
-    setIsSearching(true);
-    toast.info(`🔍 Searching for campaign ideas related to "${searchTerm}"...`);
-
-    setTimeout(() => {
-      const aiSubject = generateAITitle(searchTerm);
-      
-      setNewEmail({
-        ...newEmail,
-        subject: aiSubject
-      });
-
-      setShowMockups(true);
-      setIsSearching(false);
-      toast.success(`✨ Generated AI title for "${searchTerm}"!`);
-      toast.info("📸 Check out the AI mockup images below and select one for your campaign");
-    }, 2000);
-  };
-
-  const handleMockupImageSelect = (imageUrl: string, description: string) => {
+    toast.info(`🔍 Searching for campaign ideas: "${searchTerm}"`);
+    
+    // Generate AI title based on search term
+    const aiTitle = generateAITitle(searchTerm);
+    
+    // Get mockup images
+    const images = getMockupImagesBySearchQuery(searchTerm);
+    setMockupImages(images);
+    setShowMockups(true);
+    
+    // Update email with AI-generated title
     setNewEmail({
       ...newEmail,
-      creative: {
-        type: "image",
-        url: imageUrl,
-        alt: description
-      },
-      aiGenerated: true
+      subject: aiTitle
     });
-    toast.success("🖼️ Mockup image added to your campaign!");
-  };
 
-  const handleViewCampaign = () => {
-    if (!newEmail.subject && !newEmail.content) {
-      toast.error("Please add a subject or content to preview your campaign");
-      return;
-    }
-    setShowPreview(true);
-    toast.info("👀 Viewing your campaign preview");
+    toast.success(`✨ Found ${images.length} creative ideas for "${searchTerm}"`);
   };
 
   const handleGenerateAIContent = async () => {
-    if (!newEmail.subject.trim()) {
-      toast.error("Please enter a subject first to generate AI content");
+    if (!newEmail.subject?.trim()) {
+      toast.error("Please add a subject first or search for campaign ideas");
       return;
     }
 
-    setIsGeneratingContent(true);
-    toast.info("🤖 AI is generating optimized content and advanced creatives...");
+    setIsGeneratingAI(true);
+    toast.info("🤖 Generating AI-powered email content and creative...");
 
-    setTimeout(() => {
-      const searchContext = newEmail.subject || searchTerm || "organic traffic";
-      const contentBasedOnSearch = getContentBySearchTerm(searchContext);
-      const isVideoCreative = Math.random() > 0.3; // Higher chance for video
-      let randomCreative;
-
-      if (isVideoCreative) {
-        const introVideo = getVideoBySearchQuery(searchContext);
-        randomCreative = {
-          type: "video" as const,
-          url: introVideo.url,
-          alt: `AI 30-second intro: ${introVideo.title} - ${introVideo.description}`
-        };
-        toast.info(`🎬 Generated advanced 30-second intro: "${introVideo.title}"`);
-      } else {
-        randomCreative = {
-          type: "image" as const,
-          url: getImageBySearchQuery(searchContext),
-          alt: `AI-generated advanced image for ${searchContext} featuring professional visual content`
-        };
-      }
+    try {
+      // Generate email content
+      const content = generateEmailContent(searchTerm || newEmail.subject);
+      
+      // Generate intro video
+      const video = getIntroVideoBySubject(newEmail.subject);
+      
+      // Simulate AI processing time
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       setNewEmail({
         ...newEmail,
-        content: contentBasedOnSearch,
-        creative: randomCreative,
+        content,
+        creative: {
+          type: "video",
+          url: video.url,
+          alt: video.description
+        },
         aiGenerated: true,
         targetAudience: "organic-traffic"
       });
 
-      setIsGeneratingContent(false);
-      toast.success("✨ AI content and advanced creative generated successfully!");
-      toast.info("🎯 Content optimized for organic traffic and maximum engagement");
-    }, 3000);
-  };
-
-  const handleGenerateAIImage = async () => {
-    setIsGeneratingImage(true);
-    const searchContext = newEmail.subject || searchTerm || "organic traffic";
-    toast.info(`🎨 AI is generating an advanced, professional image for "${searchContext}"...`);
-
-    setTimeout(() => {
-      const optimizedImage = getImageBySearchQuery(searchContext);
-      
-      setNewEmail({
-        ...newEmail,
-        creative: {
-          type: "image",
-          url: optimizedImage,
-          alt: `AI-generated professional image for ${searchContext} optimized for maximum engagement`
-        },
-        aiGenerated: true
-      });
-
-      setIsGeneratingImage(false);
-      toast.success("🎨 Advanced AI image generated successfully!");
-      toast.info(`📊 Professional image optimized for "${searchContext}" campaigns`);
-    }, 2500);
-  };
-
-  const handleGenerateAIVideo = async () => {
-    setIsGeneratingVideo(true);
-    const searchContext = newEmail.subject || searchTerm || "AI digital marketing";
-    toast.info(`🎬 AI is generating an advanced 30-second intro video for "${searchContext}"...`);
-
-    setTimeout(() => {
-      const introVideo = getVideoBySearchQuery(searchContext);
-      
-      setNewEmail({
-        ...newEmail,
-        creative: {
-          type: "video",
-          url: introVideo.url,
-          alt: `Advanced 30-second AI intro: ${introVideo.title} - ${introVideo.description}`
-        },
-        aiGenerated: true
-      });
-
-      setIsGeneratingVideo(false);
-      toast.success(`🎥 Advanced 30-second intro video generated: "${introVideo.title}"!`);
-      toast.info(`📈 Professional video optimized for "${searchContext}" conversion (${introVideo.duration})`);
-    }, 4000);
-  };
-
-  const handleRegenerateCreative = async () => {
-    if (!newEmail.creative.url) {
-      toast.error("No creative to regenerate. Generate one first!");
-      return;
+      setIsGeneratingAI(false);
+      toast.success("✅ AI content and 30-second intro video generated!");
+    } catch (error) {
+      setIsGeneratingAI(false);
+      toast.error("Failed to generate AI content. Please try again.");
     }
+  };
 
-    const isCurrentVideo = newEmail.creative.type === "video";
-    const searchContext = newEmail.subject || searchTerm || "AI digital marketing";
-    
-    if (isCurrentVideo) {
-      setIsGeneratingVideo(true);
-      toast.info("🔄 Regenerating advanced 30-second AI intro video...");
-    } else {
-      setIsGeneratingImage(true);
-      toast.info("🔄 Regenerating advanced AI image creative...");
-    }
-
-    setTimeout(() => {
-      if (isCurrentVideo) {
-        const introVideo = getVideoBySearchQuery(searchContext);
-        
-        setNewEmail({
-          ...newEmail,
-          creative: {
-            type: "video",
-            url: introVideo.url,
-            alt: `Advanced 30-second AI regenerated intro: ${introVideo.title} - ${introVideo.description}`
-          }
-        });
-        
-        setIsGeneratingVideo(false);
-        toast.success(`🎬 Advanced 30-second intro video regenerated: "${introVideo.title}"!`);
-      } else {
-        const optimizedImage = getImageBySearchQuery(searchContext);
-        
-        setNewEmail({
-          ...newEmail,
-          creative: {
-            type: "image",
-            url: optimizedImage,
-            alt: `AI-regenerated professional image for ${searchContext} optimized for maximum engagement`
-          }
-        });
-        
-        setIsGeneratingImage(false);
-        toast.success("🖼️ Advanced AI image regenerated successfully!");
+  const handleSelectMockup = (mockup: {url: string, description: string}) => {
+    setNewEmail({
+      ...newEmail,
+      creative: {
+        type: "image",
+        url: mockup.url,
+        alt: mockup.description
       }
-    }, 3000);
+    });
+    setShowMockups(false);
+    toast.success(`🎨 Selected creative: ${mockup.description}`);
   };
 
-  const handleUploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast.error("Please select a valid image file");
+  const handleViewCampaign = () => {
+    if (!newEmail.subject?.trim() || !newEmail.content?.trim()) {
+      toast.error("Please add subject and content before viewing campaign");
       return;
     }
 
-    setIsUploadingImage(true);
-    toast.info("📤 Uploading your custom image...");
+    // Create a preview campaign object
+    const preview: EmailCampaign = {
+      id: 0,
+      subject: newEmail.subject,
+      content: newEmail.content,
+      status: "Draft",
+      sent: 0,
+      opens: 0,
+      clicks: 0,
+      aiGenerated: newEmail.aiGenerated || false,
+      targetAudience: newEmail.targetAudience || "organic-traffic",
+      creative: newEmail.creative
+    };
 
-    setTimeout(() => {
-      const imageUrl = URL.createObjectURL(file);
-      
-      setNewEmail({
-        ...newEmail,
-        creative: {
-          type: "image",
-          url: imageUrl,
-          alt: `Custom uploaded image for ${newEmail.subject || 'email campaign'}`
-        },
-        aiGenerated: false
-      });
-
-      setIsUploadingImage(false);
-      toast.success("✅ Image uploaded successfully!");
-    }, 2000);
+    setPreviewCampaign(preview);
+    setIsViewerOpen(true);
+    toast.info("👀 Opening campaign preview...");
   };
 
-  const handleUploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('video/')) {
-      toast.error("Please select a valid video file");
-      return;
-    }
-
-    setIsUploadingVideo(true);
-    toast.info("📹 Uploading your custom video...");
-
-    setTimeout(() => {
-      const videoUrl = URL.createObjectURL(file);
-      
-      setNewEmail({
-        ...newEmail,
-        creative: {
-          type: "video",
-          url: videoUrl,
-          alt: `Custom uploaded video for ${newEmail.subject || 'email campaign'}`
-        },
-        aiGenerated: false
-      });
-
-      setIsUploadingVideo(false);
-      toast.success("✅ Video uploaded successfully!");
-    }, 3000);
+  const handleSaveFromViewer = (updatedCampaign: EmailCampaign) => {
+    setNewEmail({
+      subject: updatedCampaign.subject,
+      content: updatedCampaign.content,
+      creative: updatedCampaign.creative,
+      aiGenerated: updatedCampaign.aiGenerated,
+      targetAudience: updatedCampaign.targetAudience
+    });
+    toast.success("✅ Campaign updated from viewer!");
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="w-full">
+    <>
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Wand2 className="h-5 w-5 text-purple-600" />
             AI Email Campaign Creator
             <Badge variant="outline" className="text-green-600 border-green-300">
               <Target className="h-3 w-3 mr-1" />
-              Organic Traffic
-            </Badge>
-            <Badge variant="outline" className="text-blue-600 border-blue-300">
-              <Play className="h-3 w-3 mr-1" />
-              Advanced Creatives
+              Organic Traffic Focus
             </Badge>
           </CardTitle>
-          <CardDescription>Generate AI-powered email campaigns with intelligent content and creatives optimized for organic traffic audiences</CardDescription>
-          
-          <div className="flex gap-2 pt-2">
-            <Button 
-              onClick={handleViewCampaign}
-              variant="outline"
-              size="sm"
-              className="text-blue-600 border-blue-300 hover:bg-blue-50"
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              View Campaign
-            </Button>
-          </div>
+          <CardDescription>Create AI-powered email campaigns optimized for organic traffic audiences</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Search Section */}
-          <div className="space-y-3">
-            <div className="text-sm font-medium text-gray-700">Search for Campaign Ideas:</div>
+        <CardContent className="space-y-4">
+          {/* Search for Campaign Ideas */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Search for Campaign Ideas:</label>
             <div className="flex gap-2">
               <Input
-                placeholder="Search for topics (e.g., make money on Facebook, TikTok marketing...)"
+                placeholder="e.g., make money with clickbank, facebook ads, tiktok marketing..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1"
+                onKeyPress={(e) => e.key === 'Enter' && handleSearchCampaignIdeas()}
               />
-              <Button 
-                onClick={handleSearch}
-                disabled={isSearching}
-                variant="outline"
-                className="text-blue-600 border-blue-300 hover:bg-blue-50"
-              >
-                {isSearching ? (
-                  <>
-                    <Clock className="mr-2 h-4 w-4 animate-spin" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search className="mr-2 h-4 w-4" />
-                    Search & Generate
-                  </>
-                )}
+              <Button onClick={handleSearchCampaignIdeas} variant="outline">
+                <Sparkles className="h-4 w-4 mr-1" />
+                Search Ideas
               </Button>
             </div>
           </div>
 
-          {/* Email Subject */}
+          {/* Subject Line */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Email Subject:</label>
+            <label className="text-sm font-medium">Email Subject:</label>
             <Input
-              placeholder="Email Subject (or use search above to generate AI title)"
-              value={newEmail.subject}
+              placeholder="Enter email subject or search for ideas above..."
+              value={newEmail.subject || ""}
               onChange={(e) => setNewEmail({ ...newEmail, subject: e.target.value })}
             />
           </div>
-          
-          {/* AI Content Generation */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Button 
-              onClick={handleGenerateAIContent}
-              disabled={isGeneratingContent || !newEmail.subject.trim()}
-              variant="outline"
-              className="text-purple-600 border-purple-300 hover:bg-purple-50"
-            >
-              {isGeneratingContent ? (
-                <>
-                  <Clock className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  Generate AI Content + Creative
-                </>
-              )}
-            </Button>
 
-            {newEmail.creative.url && (
-              <Button 
-                onClick={handleRegenerateCreative}
-                disabled={isGeneratingImage || isGeneratingVideo}
-                variant="outline"
-                className="text-blue-600 border-blue-300 hover:bg-blue-50"
-              >
-                {(isGeneratingImage || isGeneratingVideo) ? (
-                  <>
-                    <Clock className="mr-2 h-4 w-4 animate-spin" />
-                    Regenerating...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Regenerate Creative
-                  </>
-                )}
-              </Button>
-            )}
+          {/* Target Audience */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Target Audience:</label>
+            <Select value={newEmail.targetAudience || "organic-traffic"} onValueChange={(value) => setNewEmail({ ...newEmail, targetAudience: value })}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="organic-traffic">Organic Traffic Subscribers</SelectItem>
+                <SelectItem value="all-subscribers">All Subscribers</SelectItem>
+                <SelectItem value="high-engagement">High Engagement Segment</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* AI Creative Generation */}
-          <div className="space-y-3">
-            <div className="text-sm font-medium text-gray-700">AI Creative Generation:</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Button 
-                onClick={handleGenerateAIImage}
-                disabled={isGeneratingImage}
-                variant="outline"
-                className="text-green-600 border-green-300 hover:bg-green-50"
-              >
-                {isGeneratingImage ? (
-                  <>
-                    <Clock className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <ImageIcon className="mr-2 h-4 w-4" />
-                    AI Professional Image
-                  </>
-                )}
-              </Button>
-
-              <Button 
-                onClick={handleGenerateAIVideo}
-                disabled={isGeneratingVideo}
-                variant="outline"
-                className="text-red-600 border-red-300 hover:bg-red-50"
-              >
-                {isGeneratingVideo ? (
-                  <>
-                    <Clock className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Video className="mr-2 h-4 w-4" />
-                    AI 30s Video
-                  </>
-                )}
-              </Button>
-            </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">AI Creative Generation:</label>
+            <Button 
+              onClick={handleGenerateAIContent}
+              disabled={isGeneratingAI || !newEmail.subject?.trim()}
+              className="w-full bg-purple-600 hover:bg-purple-700"
+            >
+              <Wand2 className="mr-2 h-4 w-4" />
+              {isGeneratingAI ? "Generating AI Content & Video..." : "Generate AI Content & 30s Intro Video"}
+            </Button>
           </div>
 
-          {/* Upload Section */}
-          <div className="space-y-3">
-            <div className="text-sm font-medium text-gray-700">Upload Your Own:</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleUploadImage}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  disabled={isUploadingImage}
-                />
-                <Button 
-                  disabled={isUploadingImage}
-                  variant="outline"
-                  className="w-full text-blue-600 border-blue-300 hover:bg-blue-50"
-                >
-                  {isUploadingImage ? (
-                    <>
-                      <Clock className="mr-2 h-4 w-4 animate-spin" />
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload Image
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleUploadVideo}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  disabled={isUploadingVideo}
-                />
-                <Button 
-                  disabled={isUploadingVideo}
-                  variant="outline"
-                  className="w-full text-orange-600 border-orange-300 hover:bg-orange-50"
-                >
-                  {isUploadingVideo ? (
-                    <>
-                      <Clock className="mr-2 h-4 w-4 animate-spin" />
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload Video
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Campaign Schedule */}
-          <div className="space-y-3">
-            <div className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Campaign Schedule:
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs text-gray-600">Start Date & Time</label>
-                <Input
-                  type="datetime-local"
-                  value={newEmail.startDate}
-                  onChange={(e) => setNewEmail({ ...newEmail, startDate: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="text-xs text-gray-600">End Date & Time</label>
-                <Input
-                  type="datetime-local"
-                  value={newEmail.endDate}
-                  onChange={(e) => setNewEmail({ ...newEmail, endDate: e.target.value })}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Creative Preview */}
-          {newEmail.creative.url && (
-            <div className="space-y-3">
-              <label className="text-sm font-medium text-gray-700">Creative Preview:</label>
+          {/* Current Creative Preview */}
+          {newEmail.creative && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Current Creative:</label>
               <div className="relative">
                 {newEmail.creative.type === "video" ? (
                   <div className="relative">
                     <video 
                       src={newEmail.creative.url} 
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-32 object-cover rounded-lg"
                       controls
-                      muted
                       poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                     />
-                    <Badge variant="secondary" className="absolute top-2 right-2">
+                    <Badge 
+                      variant="secondary"
+                      className="absolute top-2 right-2"
+                    >
                       <Video className="h-3 w-3 mr-1" />
-                      Video
+                      AI Generated Video
                     </Badge>
                   </div>
                 ) : (
@@ -555,96 +237,73 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                     <img 
                       src={newEmail.creative.url} 
                       alt={newEmail.creative.alt}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-32 object-cover rounded-lg"
                     />
-                    <Badge variant="secondary" className="absolute top-2 right-2">
+                    <Badge 
+                      variant="default"
+                      className="absolute top-2 right-2"
+                    >
                       <ImageIcon className="h-3 w-3 mr-1" />
-                      Image
+                      AI Generated Image
                     </Badge>
                   </div>
                 )}
-                {newEmail.aiGenerated && (
-                  <Badge variant="outline" className="absolute top-2 left-2 bg-purple-50 text-purple-600 border-purple-300">
-                    <Wand2 className="h-3 w-3 mr-1" />
-                    AI Generated
-                  </Badge>
-                )}
               </div>
+              <p className="text-sm text-gray-600">{newEmail.creative.alt}</p>
             </div>
           )}
 
           {/* Email Content */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Email Content:</label>
+            <label className="text-sm font-medium">Email Content:</label>
             <Textarea
-              placeholder="Email Content (or generate with AI)..."
-              rows={8}
-              value={newEmail.content}
+              placeholder="Email content will be generated by AI or you can write your own..."
+              rows={6}
+              value={newEmail.content || ""}
               onChange={(e) => setNewEmail({ ...newEmail, content: e.target.value })}
             />
           </div>
-          
-          {/* Recipients */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Recipients:</label>
-            <Select value={newEmail.recipients} onValueChange={(value) => setNewEmail({ ...newEmail, recipients: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select recipients" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="organic-traffic">Organic Traffic Subscribers</SelectItem>
-                <SelectItem value="seo-focused">SEO-Focused Customers</SelectItem>
-                <SelectItem value="content-marketers">Content Marketers</SelectItem>
-                <SelectItem value="all">All Subscribers</SelectItem>
-              </SelectContent>
-            </Select>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 pt-4">
+            <Button 
+              onClick={handleViewCampaign}
+              variant="outline"
+              className="flex-1"
+              disabled={!newEmail.subject?.trim() || !newEmail.content?.trim()}
+            >
+              <Eye className="mr-2 h-4 w-4" />
+              View Campaign
+            </Button>
+            <Button 
+              onClick={onCreateEmail}
+              disabled={isCreatingEmail || !newEmail.subject?.trim() || !newEmail.content?.trim()}
+              className="flex-1 bg-blue-600 hover:bg-blue-700"
+            >
+              <Send className="mr-2 h-4 w-4" />
+              {isCreatingEmail ? "Creating..." : "Create Campaign"}
+            </Button>
           </div>
-          
-          {/* Schedule Date */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Schedule Date (Optional):</label>
-            <Input
-              type="datetime-local"
-              value={newEmail.scheduleDate}
-              onChange={(e) => setNewEmail({ ...newEmail, scheduleDate: e.target.value })}
-            />
-          </div>
-          
-          {/* Create Button */}
-          <Button 
-            onClick={onCreateEmail}
-            disabled={isCreatingEmail}
-            className="w-full bg-purple-600 hover:bg-purple-700"
-          >
-            {isCreatingEmail ? (
-              <>
-                <Clock className="mr-2 h-4 w-4 animate-spin" />
-                Creating AI Campaign...
-              </>
-            ) : (
-              <>
-                <Wand2 className="mr-2 h-4 w-4" />
-                Create AI Email Campaign
-              </>
-            )}
-          </Button>
         </CardContent>
       </Card>
 
-      {/* Campaign Preview */}
-      {showPreview && (
-        <CampaignPreview 
-          campaign={newEmail}
-          onEditClick={() => setShowPreview(false)}
-        />
-      )}
-
-      {/* Image Mockup Selector */}
-      <ImageMockupSelector 
+      {/* Mockup Selector */}
+      <ImageMockupSelector
+        isOpen={showMockups}
+        onClose={() => setShowMockups(false)}
+        mockups={mockupImages}
+        onSelect={handleSelectMockup}
         searchTerm={searchTerm}
-        onImageSelect={handleMockupImageSelect}
-        isVisible={showMockups}
       />
-    </div>
+
+      {/* Campaign Viewer */}
+      <CampaignViewer
+        campaign={previewCampaign}
+        isOpen={isViewerOpen}
+        onClose={() => setIsViewerOpen(false)}
+        onSave={handleSaveFromViewer}
+        isEditable={true}
+      />
+    </>
   );
 };

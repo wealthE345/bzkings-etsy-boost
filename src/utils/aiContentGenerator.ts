@@ -1,3 +1,4 @@
+
 // Enhanced AI content generation with search-based matching and advanced images
 
 export const organicTrafficContent = [
@@ -26,6 +27,11 @@ export const contextualImages = {
     "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=400&fit=crop&auto=format&q=80", // investment growth chart
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // financial analytics
     "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // passive income streams
+  ],
+  "make money with clickbank": [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // affiliate marketing dashboard
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // clickbank affiliate success
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // digital product sales
   ],
 
   // Facebook related searches
@@ -125,6 +131,76 @@ export const contextualImages = {
   ]
 };
 
+// Add missing image categories
+export const aiImagesByCategory = {
+  ai: [
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80"
+  ],
+  seo: [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80"
+  ],
+  social: [
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80"
+  ],
+  content: [
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80"
+  ],
+  email: [
+    "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80"
+  ],
+  marketing: [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80"
+  ],
+  traffic: [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80"
+  ]
+};
+
+// Add missing video categories
+export const videosByCategory = {
+  ai: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "AI Marketing Revolution", description: "Transform your business with AI", duration: "30s" }
+  ],
+  seo: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "SEO Mastery Guide", description: "Dominate search rankings", duration: "30s" }
+  ],
+  social: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "Social Media Success", description: "Build your social presence", duration: "30s" }
+  ],
+  content: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "Content Creation Pro", description: "Create engaging content", duration: "30s" }
+  ],
+  email: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "Email Marketing Magic", description: "Boost email conversions", duration: "30s" }
+  ],
+  marketing: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "Marketing Mastery", description: "Advanced marketing strategies", duration: "30s" }
+  ],
+  traffic: [
+    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "Traffic Generation", description: "Drive organic traffic", duration: "30s" }
+  ]
+};
+
+// Add missing AI intro videos
+export const aiIntroVideos = [
+  { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "AI Marketing Revolution", description: "Transform your business with AI", duration: "30s" },
+  { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", title: "Digital Success Blueprint", description: "Your path to online success", duration: "30s" }
+];
+
 // Enhanced platform-specific images
 export const platformSpecificImages = {
   facebook: [
@@ -157,6 +233,31 @@ export const platformSpecificImages = {
     "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Online shopping
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Business growth
   ]
+};
+
+// Add missing export functions
+export const generateAITitle = (searchTerm: string): string => {
+  const lowerSearchTerm = searchTerm.toLowerCase();
+  
+  if (lowerSearchTerm.includes('facebook')) {
+    return `🚀 Master Facebook Success: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('tiktok')) {
+    return `🎵 TikTok Money Mastery: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('instagram')) {
+    return `📸 Instagram Growth Blueprint: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('youtube')) {
+    return `▶️ YouTube Success Formula: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('clickbank')) {
+    return `💰 ClickBank Profit System: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('affiliate')) {
+    return `🤝 Affiliate Marketing Pro: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('crypto') || lowerSearchTerm.includes('bitcoin')) {
+    return `₿ Crypto Success Guide: ${searchTerm}`;
+  } else if (lowerSearchTerm.includes('make money') || lowerSearchTerm.includes('income')) {
+    return `💸 Income Generation: ${searchTerm}`;
+  }
+  
+  return `🚀 AI-Powered Success: ${searchTerm}`;
 };
 
 // Enhanced function to get images based on search query with exact matching
@@ -400,4 +501,97 @@ export const getRandomImage = () => {
 export const getRandomVideo = () => {
   const randomIntro = aiIntroVideos[Math.floor(Math.random() * aiIntroVideos.length)];
   return randomIntro.url;
+};
+
+// Email content generator function
+export const generateEmailContent = (searchTerm: string, targetAudience: string = "organic-traffic"): string => {
+  const lowerSearchTerm = searchTerm.toLowerCase();
+  
+  if (lowerSearchTerm.includes('facebook')) {
+    return `🚀 Ready to transform your Facebook presence into a money-making machine?
+
+Our exclusive Facebook Marketing Blueprint reveals the exact strategies used by top entrepreneurs to generate consistent income through Facebook. Whether you're looking to master Facebook ads, build a profitable page, or leverage Facebook groups for business growth, this comprehensive guide has everything you need.
+
+✨ What You'll Discover:
+• Advanced Facebook advertising techniques that convert
+• Organic growth strategies to build a loyal following
+• Monetization methods that work in 2024
+• Step-by-step tutorials from successful Facebook marketers
+• Exclusive tools and templates for immediate implementation
+
+🎯 Perfect for organic traffic audiences who want to diversify their income streams and tap into Facebook's massive user base.
+
+Ready to unlock Facebook's profit potential? Click below to get started!`;
+  }
+  
+  if (lowerSearchTerm.includes('tiktok')) {
+    return `🎵 Turn your TikTok passion into profit with our comprehensive TikTok monetization system!
+
+Discover how everyday creators are earning $1,000+ monthly through TikTok using proven strategies that work. From viral content creation to brand partnerships, we'll show you exactly how to monetize your TikTok presence.
+
+✨ Inside This Complete System:
+• Viral content formulas that guarantee engagement
+• Creator Fund optimization strategies
+• Brand partnership negotiation tactics
+• Affiliate marketing through TikTok
+• Live streaming monetization techniques
+• Advanced analytics and growth hacking
+
+🎯 Designed specifically for organic traffic audiences ready to tap into the TikTok goldmine.
+
+Start your TikTok money journey today!`;
+  }
+  
+  if (lowerSearchTerm.includes('clickbank')) {
+    return `💰 Unlock the ClickBank profit system that's generating $500+ daily for smart affiliates!
+
+ClickBank remains one of the most lucrative affiliate platforms, and our proven system shows you exactly how to tap into this goldmine. Learn the insider strategies that top ClickBank affiliates use to generate consistent commissions.
+
+✨ Your Complete ClickBank Arsenal:
+• High-converting product selection strategies
+• Traffic generation methods that work
+• Email marketing funnels for ClickBank success
+• Advanced promotion techniques
+• Commission optimization tactics
+• Scaling strategies for maximum profits
+
+🎯 Perfect for organic traffic audiences looking to build a sustainable affiliate income.
+
+Ready to claim your share of ClickBank profits? Get started now!`;
+  }
+  
+  if (lowerSearchTerm.includes('make money from home')) {
+    return `🏠 Transform your home into a profit-generating headquarters with our comprehensive work-from-home system!
+
+Say goodbye to the daily commute and hello to financial freedom. Our proven system reveals multiple income streams you can build from the comfort of your home, perfect for anyone seeking location independence.
+
+✨ Your Home-Based Business Toolkit:
+• 7 proven online business models
+• Step-by-step setup guides for each income stream
+• Tools and resources for maximum efficiency
+• Time management strategies for work-life balance
+• Scaling techniques to increase your earnings
+• Legal and tax considerations for home businesses
+
+🎯 Ideal for organic traffic audiences ready to take control of their financial future.
+
+Start building your home-based empire today!`;
+  }
+  
+  // Default content for other search terms
+  return `🚀 Discover the AI-powered strategies that are revolutionizing ${searchTerm}!
+
+Our comprehensive system combines cutting-edge artificial intelligence with proven marketing techniques to help you achieve unprecedented results in the ${searchTerm} space.
+
+✨ What Makes This Different:
+• AI-enhanced optimization for maximum performance
+• Data-driven strategies based on real results
+• Step-by-step implementation guides
+• Exclusive tools and resources
+• Community support from fellow entrepreneurs
+• Regular updates with the latest techniques
+
+🎯 Specifically designed for organic traffic audiences who want to leverage technology for business growth.
+
+Ready to transform your ${searchTerm} results? Get started today!`;
 };
