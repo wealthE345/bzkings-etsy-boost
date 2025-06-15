@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign } from "lucide-react";
+import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 
@@ -27,6 +26,12 @@ interface Campaign {
   adContent: string;
   imageUrl: string;
   progress: number;
+  websiteUrl?: string;
+  productName?: string;
+  targetAge?: string;
+  targetRegion?: string;
+  targetGender?: string;
+  objectives?: string;
 }
 
 const CampaignManager = () => {
@@ -45,7 +50,12 @@ const CampaignManager = () => {
       endDate: '2024-06-20',
       adContent: 'Premium digital templates for creative professionals',
       imageUrl: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop',
-      progress: 75
+      progress: 75,
+      websiteUrl: 'https://example.com',
+      productName: 'Digital Templates',
+      targetAge: '25-45',
+      targetRegion: 'United States',
+      objectives: 'Drive traffic and sales'
     },
     {
       id: '2',
@@ -61,7 +71,12 @@ const CampaignManager = () => {
       endDate: '2024-06-18',
       adContent: 'Beautiful printable designs for home and office',
       imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop',
-      progress: 92
+      progress: 92,
+      websiteUrl: 'https://printables.com',
+      productName: 'Printable Designs',
+      targetAge: '30-55',
+      targetRegion: 'Canada',
+      objectives: 'Brand awareness'
     }
   ]);
 
@@ -73,9 +88,16 @@ const CampaignManager = () => {
     adContent: '',
     startDate: '',
     endDate: '',
-    imageUrl: ''
+    imageUrl: '',
+    websiteUrl: '',
+    productName: '',
+    targetAge: '',
+    targetRegion: '',
+    targetGender: '',
+    objectives: ''
   });
   const [generatingImage, setGeneratingImage] = useState(false);
+  const [generatingContent, setGeneratingContent] = useState(false);
 
   const performanceData = [
     { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3 },
@@ -90,7 +112,7 @@ const CampaignManager = () => {
   const generateAIImage = async () => {
     setGeneratingImage(true);
     try {
-      // Simulate AI image generation
+      // Simulate AI image generation based on product/campaign info
       await new Promise(resolve => setTimeout(resolve, 2000));
       const placeholderImages = [
         'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
@@ -100,7 +122,7 @@ const CampaignManager = () => {
       ];
       const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
       setNewCampaign(prev => ({ ...prev, imageUrl: randomImage }));
-      toast.success('AI image generated successfully!');
+      toast.success('AI image generated based on your product!');
     } catch (error) {
       toast.error('Failed to generate AI image');
     } finally {
@@ -108,9 +130,28 @@ const CampaignManager = () => {
     }
   };
 
+  const generateAIContent = async () => {
+    if (!newCampaign.productName || !newCampaign.websiteUrl) {
+      toast.error('Please enter product name and website URL first');
+      return;
+    }
+
+    setGeneratingContent(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const aiContent = `Discover amazing ${newCampaign.productName} at ${newCampaign.websiteUrl}! Perfect for ${newCampaign.targetAge ? `ages ${newCampaign.targetAge}` : 'everyone'}. ${newCampaign.objectives ? `Our goal: ${newCampaign.objectives.toLowerCase()}.` : ''} Shop now and transform your experience!`;
+      setNewCampaign(prev => ({ ...prev, adContent: aiContent }));
+      toast.success('AI content generated based on your product info!');
+    } catch (error) {
+      toast.error('Failed to generate AI content');
+    } finally {
+      setGeneratingContent(false);
+    }
+  };
+
   const createCampaign = () => {
-    if (!newCampaign.title || !newCampaign.platform || !newCampaign.budget) {
-      toast.error('Please fill in all required fields');
+    if (!newCampaign.title || !newCampaign.platform || !newCampaign.budget || !newCampaign.websiteUrl || !newCampaign.productName) {
+      toast.error('Please fill in all required fields including website and product information');
       return;
     }
 
@@ -128,13 +169,33 @@ const CampaignManager = () => {
       endDate: newCampaign.endDate,
       adContent: newCampaign.adContent,
       imageUrl: newCampaign.imageUrl || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop',
-      progress: 0
+      progress: 0,
+      websiteUrl: newCampaign.websiteUrl,
+      productName: newCampaign.productName,
+      targetAge: newCampaign.targetAge,
+      targetRegion: newCampaign.targetRegion,
+      targetGender: newCampaign.targetGender,
+      objectives: newCampaign.objectives
     };
 
     setCampaigns(prev => [...prev, campaign]);
-    setNewCampaign({ title: '', platform: '', budget: '', adContent: '', startDate: '', endDate: '', imageUrl: '' });
+    setNewCampaign({ 
+      title: '', 
+      platform: '', 
+      budget: '', 
+      adContent: '', 
+      startDate: '', 
+      endDate: '', 
+      imageUrl: '',
+      websiteUrl: '',
+      productName: '',
+      targetAge: '',
+      targetRegion: '',
+      targetGender: '',
+      objectives: ''
+    });
     setShowCreateForm(false);
-    toast.success('Campaign created successfully!');
+    toast.success('Campaign created successfully with targeting options!');
   };
 
   const toggleCampaignStatus = (id: string) => {
@@ -159,7 +220,7 @@ const CampaignManager = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Campaign Management</h2>
-          <p className="text-muted-foreground">Track and manage your marketing campaigns</p>
+          <p className="text-muted-foreground">Create targeted campaigns to promote your website and products</p>
         </div>
         <Button onClick={() => setShowCreateForm(!showCreateForm)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -170,80 +231,223 @@ const CampaignManager = () => {
       {showCreateForm && (
         <Card className="border-2 border-purple-200">
           <CardHeader>
-            <CardTitle>Create New Campaign</CardTitle>
-            <CardDescription>Set up a new marketing campaign with AI-generated content</CardDescription>
+            <CardTitle>Create New Ad Campaign</CardTitle>
+            <CardDescription>Build targeted campaigns to promote your website and products with AI-powered content</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Campaign Title *</label>
-                <Input
-                  placeholder="Enter campaign title"
-                  value={newCampaign.title}
-                  onChange={(e) => setNewCampaign(prev => ({ ...prev, title: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Platform *</label>
-                <Select value={newCampaign.platform} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, platform: value }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select platform" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Facebook">Facebook</SelectItem>
-                    <SelectItem value="Instagram">Instagram</SelectItem>
-                    <SelectItem value="Google Ads">Google Ads</SelectItem>
-                    <SelectItem value="Twitter">Twitter</SelectItem>
-                    <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                    <SelectItem value="TikTok">TikTok</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Budget ($) *</label>
-                <Input
-                  type="number"
-                  placeholder="Enter budget"
-                  value={newCampaign.budget}
-                  onChange={(e) => setNewCampaign(prev => ({ ...prev, budget: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Start Date</label>
-                <Input
-                  type="date"
-                  value={newCampaign.startDate}
-                  onChange={(e) => setNewCampaign(prev => ({ ...prev, startDate: e.target.value }))}
-                />
+          <CardContent className="space-y-6">
+            {/* Basic Campaign Info */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Campaign Details
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Campaign Title *</label>
+                  <Input
+                    placeholder="Enter campaign title"
+                    value={newCampaign.title}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, title: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Platform *</label>
+                  <Select value={newCampaign.platform} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, platform: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select platform" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Facebook">Facebook</SelectItem>
+                      <SelectItem value="Instagram">Instagram</SelectItem>
+                      <SelectItem value="Google Ads">Google Ads</SelectItem>
+                      <SelectItem value="Twitter">Twitter</SelectItem>
+                      <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                      <SelectItem value="TikTok">TikTok</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Budget ($) *</label>
+                  <Input
+                    type="number"
+                    placeholder="Enter budget"
+                    value={newCampaign.budget}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, budget: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Campaign Objective</label>
+                  <Select value={newCampaign.objectives} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, objectives: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select objective" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Drive traffic and sales">Drive Traffic & Sales</SelectItem>
+                      <SelectItem value="Brand awareness">Brand Awareness</SelectItem>
+                      <SelectItem value="Lead generation">Lead Generation</SelectItem>
+                      <SelectItem value="App installs">App Installs</SelectItem>
+                      <SelectItem value="Engagement">Engagement</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Ad Content</label>
-              <Textarea
-                placeholder="Enter your ad content and description"
-                value={newCampaign.adContent}
-                onChange={(e) => setNewCampaign(prev => ({ ...prev, adContent: e.target.value }))}
-                rows={3}
-              />
+
+            {/* Website & Product Info */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                Website & Product Information
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Website URL *</label>
+                  <Input
+                    placeholder="https://yourwebsite.com"
+                    value={newCampaign.websiteUrl}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, websiteUrl: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Product/Service Name *</label>
+                  <Input
+                    placeholder="Enter product or service name"
+                    value={newCampaign.productName}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, productName: e.target.value }))}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Campaign Image</label>
-              <div className="flex gap-2">
+
+            {/* Targeting Options */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Target Audience
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Age Range</label>
+                  <Select value={newCampaign.targetAge} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetAge: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select age range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="18-24">18-24</SelectItem>
+                      <SelectItem value="25-34">25-34</SelectItem>
+                      <SelectItem value="35-44">35-44</SelectItem>
+                      <SelectItem value="45-54">45-54</SelectItem>
+                      <SelectItem value="55-64">55-64</SelectItem>
+                      <SelectItem value="65+">65+</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Target Region</label>
+                  <Select value={newCampaign.targetRegion} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetRegion: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select region" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="United States">United States</SelectItem>
+                      <SelectItem value="Canada">Canada</SelectItem>
+                      <SelectItem value="United Kingdom">United Kingdom</SelectItem>
+                      <SelectItem value="Australia">Australia</SelectItem>
+                      <SelectItem value="Germany">Germany</SelectItem>
+                      <SelectItem value="France">France</SelectItem>
+                      <SelectItem value="Worldwide">Worldwide</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Gender</label>
+                  <Select value={newCampaign.targetGender} onValueChange={(value) => setNewCampaign(prev => ({ ...prev, targetGender: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="All">All</SelectItem>
+                      <SelectItem value="Male">Male</SelectItem>
+                      <SelectItem value="Female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Creation */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Image className="h-4 w-4" />
+                Ad Creative
+              </h4>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Ad Content</label>
+                <Textarea
+                  placeholder="Enter your ad content and description, or generate with AI"
+                  value={newCampaign.adContent}
+                  onChange={(e) => setNewCampaign(prev => ({ ...prev, adContent: e.target.value }))}
+                  rows={3}
+                />
                 <Button
-                  onClick={generateAIImage}
-                  disabled={generatingImage}
+                  onClick={generateAIContent}
+                  disabled={generatingContent}
                   variant="outline"
-                  className="flex items-center gap-2"
+                  size="sm"
+                  className="w-full"
                 >
-                  <Image className="h-4 w-4" />
-                  {generatingImage ? 'Generating...' : 'Generate AI Image'}
+                  {generatingContent ? 'Generating...' : 'Generate AI Content from Product Info'}
                 </Button>
               </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Campaign Image</label>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={generateAIImage}
+                    disabled={generatingImage}
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <Image className="h-4 w-4" />
+                    {generatingImage ? 'Generating...' : 'Generate AI Image'}
+                  </Button>
+                  {newCampaign.imageUrl && (
+                    <img src={newCampaign.imageUrl} alt="Generated" className="w-16 h-16 rounded object-cover" />
+                  )}
+                </div>
+              </div>
             </div>
+
+            {/* Campaign Schedule */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Campaign Schedule
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Start Date</label>
+                  <Input
+                    type="date"
+                    value={newCampaign.startDate}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, startDate: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">End Date</label>
+                  <Input
+                    type="date"
+                    value={newCampaign.endDate}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, endDate: e.target.value }))}
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="flex gap-2">
               <Button onClick={createCampaign} className="flex items-center gap-2">
                 <Target className="h-4 w-4" />
-                Create Campaign
+                Create Targeted Campaign
               </Button>
               <Button onClick={() => setShowCreateForm(false)} variant="outline">
                 Cancel
