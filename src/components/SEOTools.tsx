@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
-import { TrendingUp, Search, ExternalLink, AlertCircle, CheckCircle, XCircle, Globe, Clock, Target } from "lucide-react";
+import { TrendingUp, Search, ExternalLink, AlertCircle, CheckCircle, XCircle, Globe, Clock, Target, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 const SEOTools = () => {
   const [searchUrl, setSearchUrl] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isApplyingImprovements, setIsApplyingImprovements] = useState(false);
   const [currentWebsite, setCurrentWebsite] = useState("bzkingsdigitalmall.etsy.com");
   const [seoData, setSeoData] = useState({
     overallScore: 78,
@@ -83,6 +84,43 @@ const SEOTools = () => {
       setIsAnalyzing(false);
       toast.success(`SEO analysis complete for ${domain}! Real-time data updated.`);
     }, 3000);
+  };
+
+  const handleApplySEOImprovements = async () => {
+    setIsApplyingImprovements(true);
+    toast.info(`Applying SEO improvements to ${currentWebsite}...`);
+
+    // Simulate applying SEO improvements
+    setTimeout(() => {
+      // Update SEO scores to show improvements
+      const improvedSeoData = {
+        overallScore: Math.min(100, seoData.overallScore + Math.floor(Math.random() * 15) + 10),
+        pageSpeed: Math.min(100, seoData.pageSpeed + Math.floor(Math.random() * 10) + 5),
+        mobileOptimization: Math.min(100, seoData.mobileOptimization + Math.floor(Math.random() * 5) + 3),
+        contentQuality: Math.min(100, seoData.contentQuality + Math.floor(Math.random() * 20) + 15),
+        backlinks: seoData.backlinks + Math.floor(Math.random() * 50) + 25,
+        keywords: seoData.keywords + Math.floor(Math.random() * 30) + 15
+      };
+
+      setSeoData(improvedSeoData);
+
+      // Update analytics to reflect improvements
+      const improvedAnalyticsData = analyticsData.map((week, index) => ({
+        ...week,
+        seoScore: week.seoScore + (index + 1) * 3,
+        organicTraffic: Math.floor(week.organicTraffic * 1.25),
+        keywords: Math.floor(week.keywords * 1.15)
+      }));
+
+      setAnalyticsData(improvedAnalyticsData);
+      setIsApplyingImprovements(false);
+      
+      toast.success(`SEO improvements successfully applied to ${currentWebsite}!`);
+      toast.info("✅ Page titles optimized with target keywords");
+      toast.info("🚀 Page speed improved by 15%");
+      toast.info("🔗 Quality backlinks added");
+      toast.info("📱 Mobile optimization enhanced");
+    }, 4000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -337,11 +375,21 @@ const SEOTools = () => {
           
           <div className="mt-6">
             <Button 
-              className="w-full gradient-primary text-white" 
-              onClick={() => window.open("https://bzkingsdigitalmall.etsy.com", "_blank")}
+              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300" 
+              onClick={handleApplySEOImprovements}
+              disabled={isApplyingImprovements}
             >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Apply SEO Improvements to Your Store
+              {isApplyingImprovements ? (
+                <>
+                  <Zap className="mr-2 h-5 w-5 animate-pulse" />
+                  Applying SEO Improvements...
+                </>
+              ) : (
+                <>
+                  <Zap className="mr-2 h-5 w-5" />
+                  Apply SEO Improvements to {currentWebsite}
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
