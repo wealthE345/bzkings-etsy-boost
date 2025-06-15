@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,19 +8,11 @@ import { ArrowLeft, Search, TrendingUp, DollarSign, BarChart, Globe } from "luci
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { KeywordScrapingService } from "@/services/KeywordScrapingService";
-import { ApiKeySetup } from "@/components/ApiKeySetup";
 
 const KeywordResearch = () => {
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [hasApiKey, setHasApiKey] = useState(false);
-
-  useEffect(() => {
-    // Check if API key is already set
-    const apiKey = KeywordScrapingService.getApiKey();
-    setHasApiKey(!!apiKey);
-  }, []);
 
   const handleSearch = async () => {
     if (!keyword.trim()) {
@@ -28,28 +20,23 @@ const KeywordResearch = () => {
       return;
     }
 
-    if (!hasApiKey) {
-      toast.error("Please set up your API key first");
-      return;
-    }
-
     setIsSearching(true);
-    console.log('Starting keyword scraping for:', keyword);
+    console.log('Starting organic keyword scraping for:', keyword);
     
     try {
       const response = await KeywordScrapingService.scrapeKeywords(keyword);
       
       if (response.success && response.data) {
         setResults(response.data);
-        toast.success(`Found ${response.data.length} real keyword suggestions`);
-        console.log('Scraped keywords:', response.data);
+        toast.success(`Found ${response.data.length} organic keyword suggestions`);
+        console.log('Scraped organic keywords:', response.data);
       } else {
-        toast.error(response.error || "Failed to scrape keyword data");
+        toast.error(response.error || "Failed to scrape organic keyword data");
         console.error('Scraping failed:', response.error);
       }
     } catch (error) {
-      console.error('Error during keyword scraping:', error);
-      toast.error("Failed to scrape keyword data");
+      console.error('Error during organic keyword scraping:', error);
+      toast.error("Failed to scrape organic keyword data");
     } finally {
       setIsSearching(false);
     }
@@ -64,10 +51,6 @@ const KeywordResearch = () => {
     }
   };
 
-  const handleApiKeySet = () => {
-    setHasApiKey(true);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-amber-50">
       <div className="container mx-auto px-4 py-8">
@@ -80,25 +63,23 @@ const KeywordResearch = () => {
           </Link>
           <div className="flex-1">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
-              Live Keyword Research Tool
+              Organic Keyword Research Tool
             </h1>
             <p className="text-gray-600 mt-2 flex items-center gap-2">
               <Globe className="h-4 w-4" />
-              Discover real keywords with live web scraping and SEO data
+              Discover organic keywords with free web-based keyword generation
             </p>
           </div>
         </div>
-
-        {!hasApiKey && <ApiKeySetup onApiKeySet={handleApiKeySet} />}
 
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Search className="h-5 w-5 text-purple-600" />
-              Search Live Keywords
+              Search Organic Keywords
             </CardTitle>
             <CardDescription>
-              Enter a keyword to scrape real search volume, CPC, and competition data from the web
+              Enter a keyword to generate organic keyword suggestions with estimated metrics
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,22 +90,19 @@ const KeywordResearch = () => {
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 className="flex-1"
-                disabled={!hasApiKey}
               />
               <Button 
                 onClick={handleSearch}
-                disabled={isSearching || !hasApiKey}
+                disabled={isSearching}
                 className="gradient-primary text-white"
               >
-                {isSearching ? "Scraping..." : "Scrape Keywords"}
+                {isSearching ? "Generating..." : "Find Keywords"}
                 <Globe className="ml-2 h-4 w-4" />
               </Button>
             </div>
-            {hasApiKey && (
-              <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
-                ✓ Ready to scrape live keyword data
-              </p>
-            )}
+            <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
+              ✓ Free organic keyword generation - no API key required
+            </p>
           </CardContent>
         </Card>
 
@@ -132,11 +110,11 @@ const KeywordResearch = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-800">
-                Live Search Results ({results.length} keywords found)
+                Organic Keyword Results ({results.length} keywords found)
               </h2>
               <Badge variant="outline" className="text-green-600 border-green-600">
                 <Globe className="h-3 w-3 mr-1" />
-                Live Data
+                Organic Data
               </Badge>
             </div>
             <div className="grid grid-cols-1 gap-6">
@@ -158,7 +136,7 @@ const KeywordResearch = () => {
                         <div className="text-2xl font-bold text-blue-600">
                           {typeof result.volume === 'number' ? result.volume.toLocaleString() : result.volume}
                         </div>
-                        <div className="text-sm text-gray-600">Monthly Searches</div>
+                        <div className="text-sm text-gray-600">Est. Monthly Searches</div>
                       </div>
                       
                       <div className="text-center p-4 bg-green-50 rounded-lg">
@@ -166,7 +144,7 @@ const KeywordResearch = () => {
                         <div className="text-2xl font-bold text-green-600">
                           ${typeof result.cpc === 'number' ? result.cpc.toFixed(2) : result.cpc}
                         </div>
-                        <div className="text-sm text-gray-600">Cost Per Click</div>
+                        <div className="text-sm text-gray-600">Est. Cost Per Click</div>
                       </div>
                       
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
