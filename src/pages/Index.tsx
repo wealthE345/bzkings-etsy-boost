@@ -2,12 +2,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { TrendingUp, Users, Target, Zap, Star, ArrowRight, BarChart3, Mail, Share2 } from "lucide-react";
+import { TrendingUp, Users, Target, Zap, Star, ArrowRight, BarChart3, Share2, Download, Search } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import LeadCaptureForm from "@/components/LeadCaptureForm";
 import TrafficDashboard from "@/components/TrafficDashboard";
@@ -20,6 +20,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-amber-50">
+      <Navigation />
       <HeroSection />
       
       <div className="container mx-auto px-4 py-16">
@@ -31,8 +32,56 @@ const Index = () => {
             Drive Qualified Traffic to Your Etsy Store
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Turn visitors into buyers with our comprehensive lead generation and traffic optimization platform
+            Transform your <span className="font-semibold text-purple-700">BZ Kings Digital Mall</span> into a lead-generating powerhouse. 
+            Get qualified buyers, not just visitors.
           </p>
+        </div>
+
+        {/* Quick Action Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <Link to="/app-hub">
+            <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-purple-100 hover:border-purple-300">
+              <CardContent className="p-6 text-center">
+                <Download className="h-8 w-8 text-purple-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">AI App Hub</h3>
+                <p className="text-sm text-gray-600">Download free & premium AI apps</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/keyword-research">
+            <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-blue-100 hover:border-blue-300">
+              <CardContent className="p-6 text-center">
+                <Search className="h-8 w-8 text-blue-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Keyword Research</h3>
+                <p className="text-sm text-gray-600">SEO keyword analysis tool</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/reviews">
+            <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-amber-100 hover:border-amber-300">
+              <CardContent className="p-6 text-center">
+                <Star className="h-8 w-8 text-amber-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Customer Reviews</h3>
+                <p className="text-sm text-gray-600">See what others say</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Button
+            onClick={() => window.open("https://bzkingsdigitalmall.etsy.com", "_blank")}
+            className="h-full"
+            variant="outline"
+          >
+            <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-green-100 hover:border-green-300 w-full">
+              <CardContent className="p-6 text-center">
+                <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Visit Store</h3>
+                <p className="text-sm text-gray-600">Go to Etsy store</p>
+              </CardContent>
+            </Card>
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -123,18 +172,30 @@ const Index = () => {
               <p className="text-lg mb-6 opacity-90">
                 Join thousands of successful Etsy sellers who are already using our platform to drive traffic and increase sales.
               </p>
-              <Button 
-                size="lg" 
-                variant="secondary"
-                className="bg-white text-purple-700 hover:bg-gray-100"
-                onClick={() => {
-                  toast.success("🎉 Welcome to Etsy Traffic Booster Pro!");
-                  window.open("https://bzkingsdigitalmall.etsy.com", "_blank");
-                }}
-              >
-                Visit BZ Kings Digital Mall
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg" 
+                  variant="secondary"
+                  className="bg-white text-purple-700 hover:bg-gray-100"
+                  onClick={() => {
+                    toast.success("🎉 Welcome to Etsy Traffic Booster Pro!");
+                    window.open("https://bzkingsdigitalmall.etsy.com", "_blank");
+                  }}
+                >
+                  Visit BZ Kings Digital Mall
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+                <Link to="/app-hub">
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="bg-transparent border-white text-white hover:bg-white hover:text-purple-700"
+                  >
+                    Explore AI Apps
+                    <Download className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </div>
