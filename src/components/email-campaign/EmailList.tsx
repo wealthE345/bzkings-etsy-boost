@@ -141,7 +141,7 @@ export const EmailList = ({
                               className="bg-white/90 hover:bg-white text-black border-none shadow-lg"
                               onClick={() => toggleVideoPlayback(email.id)}
                             >
-                              {isVideoPlaying[emailId] ? (
+                              {isVideoPlaying[email.id] ? (
                                 <Pause className="h-6 w-6" />
                               ) : (
                                 <Play className="h-6 w-6" />
