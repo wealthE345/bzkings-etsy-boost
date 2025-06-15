@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Mail, Send, Users, TrendingUp, Clock, Settings, Plus, Eye, Edit, Trash2, Calendar, Zap } from "lucide-react";
 import { toast } from "sonner";
@@ -16,10 +16,15 @@ const EmailCampaignTool = () => {
   const [activeTab, setActiveTab] = useState("campaigns");
   const [isCreatingEmail, setIsCreatingEmail] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [previewEmail, setPreviewEmail] = useState(null);
+  const [editingEmail, setEditingEmail] = useState(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
+  
   const [emailList, setEmailList] = useState([
-    { id: 1, subject: "Welcome to BZ Kings Digital Mall", status: "Published", opens: 245, clicks: 67, sent: 1000 },
-    { id: 2, subject: "New Digital Products Available", status: "Draft", opens: 0, clicks: 0, sent: 0 },
-    { id: 3, subject: "Exclusive Etsy Store Discount", status: "Scheduled", opens: 0, clicks: 0, sent: 850 },
+    { id: 1, subject: "Welcome to BZ Kings Digital Mall", status: "Published", opens: 245, clicks: 67, sent: 1000, content: "Welcome to our digital marketplace! Discover amazing digital products and tools." },
+    { id: 2, subject: "New Digital Products Available", status: "Draft", opens: 0, clicks: 0, sent: 0, content: "Check out our latest collection of digital products designed to boost your business." },
+    { id: 3, subject: "Exclusive Etsy Store Discount", status: "Scheduled", opens: 0, clicks: 0, sent: 850, content: "Get 20% off on all digital products in our Etsy store. Limited time offer!" },
   ]);
 
   const [newEmail, setNewEmail] = useState({
@@ -78,7 +83,8 @@ const EmailCampaignTool = () => {
         status: newEmail.scheduleDate ? "Scheduled" : "Draft",
         opens: 0,
         clicks: 0,
-        sent: 0
+        sent: 0,
+        content: newEmail.content
       };
 
       setEmailList([newEmailItem, ...emailList]);
@@ -89,7 +95,7 @@ const EmailCampaignTool = () => {
     }, 2000);
   };
 
-  const handlePublishEmail = (emailId: number) => {
+  const handlePublishEmail = (emailId) => {
     setIsPublishing(true);
     toast.info("Publishing email campaign...");
 
@@ -103,6 +109,43 @@ const EmailCampaignTool = () => {
       toast.success("Email campaign published successfully!");
       toast.info("📧 Sending to all subscribers...");
     }, 3000);
+  };
+
+  const handlePreviewEmail = (email) => {
+    setPreviewEmail(email);
+    setIsPreviewDialogOpen(true);
+    toast.info(`Previewing: ${email.subject}`);
+  };
+
+  const handleEditEmail = (email) => {
+    setEditingEmail({ ...email });
+    setIsEditDialogOpen(true);
+    toast.info(`Editing: ${email.subject}`);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingEmail.subject.trim() || !editingEmail.content.trim()) {
+      toast.error("Please fill in both subject and content");
+      return;
+    }
+
+    setEmailList(emailList.map(email => 
+      email.id === editingEmail.id ? editingEmail : email
+    ));
+    setIsEditDialogOpen(false);
+    setEditingEmail(null);
+    toast.success("Email campaign updated successfully!");
+  };
+
+  const handleDeleteEmail = (emailId) => {
+    const emailToDelete = emailList.find(email => email.id === emailId);
+    if (emailToDelete && emailToDelete.status === "Published") {
+      toast.error("Cannot delete published campaigns");
+      return;
+    }
+
+    setEmailList(emailList.filter(email => email.id !== emailId));
+    toast.success("Email campaign deleted successfully!");
   };
 
   const handleIntegratePlatform = () => {
@@ -251,11 +294,28 @@ const EmailCampaignTool = () => {
                         {email.status}
                       </Badge>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handlePreviewEmail(email)}
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleEditEmail(email)}
+                          disabled={email.status === "Published"}
+                        >
                           <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleDeleteEmail(email.id)}
+                          disabled={email.status === "Published"}
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                         {email.status === "Draft" && (
                           <Button 
@@ -407,6 +467,60 @@ const EmailCampaignTool = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Preview Dialog */}
+      <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Email Preview</DialogTitle>
+            <DialogDescription>Preview how your email will look to recipients</DialogDescription>
+          </DialogHeader>
+          {previewEmail && (
+            <div className="space-y-4">
+              <div className="border-b pb-2">
+                <h3 className="font-semibold">Subject: {previewEmail.subject}</h3>
+                <p className="text-sm text-gray-600">Status: {previewEmail.status}</p>
+              </div>
+              <div className="p-4 border rounded-lg bg-gray-50">
+                <p className="whitespace-pre-wrap">{previewEmail.content}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Email Campaign</DialogTitle>
+            <DialogDescription>Modify your email campaign details</DialogDescription>
+          </DialogHeader>
+          {editingEmail && (
+            <div className="space-y-4">
+              <Input
+                placeholder="Email Subject"
+                value={editingEmail.subject}
+                onChange={(e) => setEditingEmail({ ...editingEmail, subject: e.target.value })}
+              />
+              <Textarea
+                placeholder="Email Content..."
+                rows={8}
+                value={editingEmail.content}
+                onChange={(e) => setEditingEmail({ ...editingEmail, content: e.target.value })}
+              />
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveEdit} className="bg-purple-600 hover:bg-purple-700">
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
