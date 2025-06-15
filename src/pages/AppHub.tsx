@@ -811,7 +811,7 @@ const plans: Plan[] = [
       "Basic templates & targeting",
       "Basic keyword research",
       "Standard support",
-      "5 backlinks per month",
+      "500 backlinks from 50+ domains",
       "Basic analytics"
     ]
   },
@@ -829,7 +829,7 @@ const plans: Plan[] = [
       "Premium templates & targeting",
       "Advanced keyword research",
       "Priority support",
-      "100 backlinks per month",
+      "1500 backlinks from 100+ domains",
       "Advanced analytics",
       "Mobile app access"
     ]
@@ -846,7 +846,7 @@ const plans: Plan[] = [
       "Multi-account management",
       "Enterprise-grade security",
       "Dedicated account manager",
-      "1000 backlinks per month",
+      "5000 backlinks from 100+ premium domains",
       "Custom integrations",
       "White-label options"
     ]
