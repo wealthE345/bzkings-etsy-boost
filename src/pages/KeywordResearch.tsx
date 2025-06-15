@@ -4,15 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, TrendingUp, DollarSign, BarChart, Globe } from "lucide-react";
+import { ArrowLeft, Search, TrendingUp, DollarSign, BarChart, Globe, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { KeywordScrapingService } from "@/services/KeywordScrapingService";
 
 const KeywordResearch = () => {
   const [keyword, setKeyword] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [allResults, setAllResults] = useState<any[]>([]);
+  const [displayedResults, setDisplayedResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasSearched, setHasSearched] = useState(false);
+  const RESULTS_PER_PAGE = 20;
 
   const handleSearch = async () => {
     if (!keyword.trim()) {
@@ -21,13 +26,18 @@ const KeywordResearch = () => {
     }
 
     setIsSearching(true);
+    setCurrentPage(0);
+    setHasSearched(false);
     console.log('Starting organic keyword scraping for:', keyword);
     
     try {
       const response = await KeywordScrapingService.scrapeKeywords(keyword);
       
       if (response.success && response.data) {
-        setResults(response.data);
+        setAllResults(response.data);
+        setDisplayedResults(response.data.slice(0, RESULTS_PER_PAGE));
+        setCurrentPage(1);
+        setHasSearched(true);
         toast.success(`Found ${response.data.length} organic keyword suggestions`);
         console.log('Scraped organic keywords:', response.data);
       } else {
@@ -42,6 +52,31 @@ const KeywordResearch = () => {
     }
   };
 
+  const handleShowMore = async () => {
+    setIsLoadingMore(true);
+    
+    try {
+      // Generate more keywords for the same search term
+      const response = await KeywordScrapingService.scrapeKeywords(keyword);
+      
+      if (response.success && response.data) {
+        const newResults = response.data.slice(currentPage * RESULTS_PER_PAGE, (currentPage + 1) * RESULTS_PER_PAGE);
+        if (newResults.length > 0) {
+          setDisplayedResults(prev => [...prev, ...newResults]);
+          setCurrentPage(prev => prev + 1);
+          toast.success(`Loaded ${newResults.length} more keywords`);
+        } else {
+          toast.info("No more keywords available");
+        }
+      }
+    } catch (error) {
+      console.error('Error loading more keywords:', error);
+      toast.error("Failed to load more keywords");
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "Low": return "text-green-600 bg-green-50 border-green-200";
@@ -50,6 +85,8 @@ const KeywordResearch = () => {
       default: return "text-gray-600 bg-gray-50 border-gray-200";
     }
   };
+
+  const canShowMore = hasSearched && displayedResults.length >= RESULTS_PER_PAGE;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-amber-50">
@@ -106,11 +143,11 @@ const KeywordResearch = () => {
           </CardContent>
         </Card>
 
-        {results.length > 0 && (
+        {displayedResults.length > 0 && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-800">
-                Organic Keyword Results ({results.length} keywords found)
+                Organic Keyword Results ({displayedResults.length} keywords shown)
               </h2>
               <Badge variant="outline" className="text-green-600 border-green-600">
                 <Globe className="h-3 w-3 mr-1" />
@@ -118,7 +155,7 @@ const KeywordResearch = () => {
               </Badge>
             </div>
             <div className="grid grid-cols-1 gap-6">
-              {results.map((result, index) => (
+              {displayedResults.map((result, index) => (
                 <Card key={index} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-purple-500">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
@@ -166,6 +203,21 @@ const KeywordResearch = () => {
                 </Card>
               ))}
             </div>
+
+            {canShowMore && (
+              <div className="flex justify-center mt-8">
+                <Button 
+                  onClick={handleShowMore}
+                  disabled={isLoadingMore}
+                  variant="outline"
+                  size="lg"
+                  className="bg-white hover:bg-purple-50 border-purple-200 text-purple-700"
+                >
+                  {isLoadingMore ? "Loading..." : "Show More Keywords"}
+                  <Plus className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
