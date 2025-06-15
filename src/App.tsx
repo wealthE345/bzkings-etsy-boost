@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +13,7 @@ import Reviews from "./pages/Reviews";
 import Disclaimer from "./pages/Disclaimer";
 import NotFound from "./pages/NotFound";
 import AboutUs from "./pages/AboutUs";
+import BacklinkGenerator from "./pages/BacklinkGenerator";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/keyword-research" element={<KeywordResearch />} />
+          <Route path="/backlink-generator" element={<BacklinkGenerator />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/disclaimer" element={<Disclaimer />} />

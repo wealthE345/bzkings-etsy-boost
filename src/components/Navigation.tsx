@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +15,7 @@ const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white/80 backdrop-blur-sm border-b border-purple-100 sticky top-0 z-50">
+    <header className="bg-white/20 backdrop-blur-sm border-b border-purple-100/30 sticky top-0 z-50 glass-effect">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
@@ -33,16 +32,16 @@ const Navigation = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <Link to="/" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-purple-700 transition-colors">
+                  <Link to="/" className="flex items-center gap-2 px-4 py-2 text-white hover:text-purple-300 transition-colors">
                     <Home className="h-4 w-4" />
                     Home
                   </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>AI Apps</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="text-white">AI Apps</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[400px]">
+                    <div className="grid gap-3 p-6 w-[400px] bg-white/95 backdrop-blur-sm">
                       <NavigationMenuLink asChild>
                         <Link
                           to="/app-hub"
@@ -67,14 +66,26 @@ const Navigation = () => {
                           </div>
                         </Link>
                       </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/backlink-generator"
+                          className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 transition-colors"
+                        >
+                          <Shield className="h-5 w-5 text-purple-600" />
+                          <div>
+                            <div className="font-medium">Backlink Generator</div>
+                            <div className="text-sm text-gray-600">Generate high-quality organic backlinks</div>
+                          </div>
+                        </Link>
+                      </NavigationMenuLink>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Mobile Apps</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="text-white">Mobile Apps</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[350px]">
+                    <div className="grid gap-3 p-6 w-[350px] bg-white/95 backdrop-blur-sm">
                       <NavigationMenuLink asChild>
                         <Link
                           to="/app-hub?tab=mobile"
@@ -92,16 +103,16 @@ const Navigation = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Link to="/about" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-purple-700 transition-colors">
+                  <Link to="/about" className="flex items-center gap-2 px-4 py-2 text-white hover:text-purple-300 transition-colors">
                     <Users className="h-4 w-4" />
                     About Us
                   </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Support</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="text-white">Support</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-[300px]">
+                    <div className="grid gap-3 p-6 w-[300px] bg-white/95 backdrop-blur-sm">
                       <NavigationMenuLink asChild>
                         <Link
                           to="/reviews"
@@ -134,7 +145,7 @@ const Navigation = () => {
 
             <div className="flex items-center gap-4">
               <Link to="/login">
-                <Button variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50">
+                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 glass-effect">
                   Log In
                 </Button>
               </Link>
@@ -150,7 +161,7 @@ const Navigation = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className="md:hidden text-white hover:bg-white/10"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -159,11 +170,11 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-purple-100">
+          <div className="md:hidden py-4 border-t border-white/20">
             <div className="space-y-4">
               <Link
                 to="/"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Home className="h-4 w-4" />
@@ -171,7 +182,7 @@ const Navigation = () => {
               </Link>
               <Link
                 to="/app-hub"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Download className="h-4 w-4" />
@@ -179,7 +190,7 @@ const Navigation = () => {
               </Link>
               <Link
                 to="/keyword-research"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Search className="h-4 w-4" />
@@ -187,7 +198,7 @@ const Navigation = () => {
               </Link>
               <Link
                 to="/about"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Users className="h-4 w-4" />
@@ -195,7 +206,7 @@ const Navigation = () => {
               </Link>
               <Link
                 to="/reviews"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Star className="h-4 w-4" />
@@ -203,15 +214,23 @@ const Navigation = () => {
               </Link>
               <Link
                 to="/disclaimer"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Shield className="h-4 w-4" />
                 Terms & Disclaimer
               </Link>
+              <Link
+                to="/backlink-generator"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Shield className="h-4 w-4" />
+                Backlink Generator
+              </Link>
               <div className="flex flex-col gap-2 px-4">
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-purple-300 text-purple-700">
+                  <Button variant="outline" className="w-full border-white/30 text-white">
                     Log In
                   </Button>
                 </Link>
