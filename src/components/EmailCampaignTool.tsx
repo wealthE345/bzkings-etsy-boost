@@ -92,35 +92,57 @@ const EmailCampaignTool = () => {
       setIsCreatingEmail(false);
       
       toast.success("Email campaign created successfully!");
+      toast.info("📧 Campaign added to your list - you can now preview, edit, or publish it!");
     }, 2000);
   };
 
   const handlePublishEmail = (emailId) => {
+    const emailToPublish = emailList.find(email => email.id === emailId);
+    if (!emailToPublish) {
+      toast.error("Email not found");
+      return;
+    }
+
+    if (emailToPublish.status === "Published") {
+      toast.info("This email campaign is already published!");
+      return;
+    }
+
     setIsPublishing(true);
-    toast.info("Publishing email campaign...");
+    toast.info(`Publishing "${emailToPublish.subject}"...`);
+    toast.info("🚀 Sending to all subscribers in your list...");
 
     setTimeout(() => {
+      const randomSent = Math.floor(Math.random() * 500) + 500;
+      const randomOpens = Math.floor(randomSent * 0.3);
+      const randomClicks = Math.floor(randomOpens * 0.2);
+
       setEmailList(emailList.map(email => 
         email.id === emailId 
-          ? { ...email, status: "Published", sent: Math.floor(Math.random() * 500) + 500 }
+          ? { ...email, status: "Published", sent: randomSent, opens: randomOpens, clicks: randomClicks }
           : email
       ));
       setIsPublishing(false);
-      toast.success("Email campaign published successfully!");
-      toast.info("📧 Sending to all subscribers...");
+      toast.success(`"${emailToPublish.subject}" published successfully!`);
+      toast.success(`📊 Campaign sent to ${randomSent.toLocaleString()} subscribers!`);
     }, 3000);
   };
 
   const handlePreviewEmail = (email) => {
     setPreviewEmail(email);
     setIsPreviewDialogOpen(true);
-    toast.info(`Previewing: ${email.subject}`);
+    toast.info(`👀 Previewing: "${email.subject}"`);
   };
 
   const handleEditEmail = (email) => {
+    if (email.status === "Published") {
+      toast.error("Cannot edit published campaigns. Create a new campaign instead.");
+      return;
+    }
+    
     setEditingEmail({ ...email });
     setIsEditDialogOpen(true);
-    toast.info(`Editing: ${email.subject}`);
+    toast.info(`✏️ Editing: "${email.subject}"`);
   };
 
   const handleSaveEdit = () => {
@@ -134,18 +156,69 @@ const EmailCampaignTool = () => {
     ));
     setIsEditDialogOpen(false);
     setEditingEmail(null);
-    toast.success("Email campaign updated successfully!");
+    toast.success(`✅ "${editingEmail.subject}" updated successfully!`);
   };
 
   const handleDeleteEmail = (emailId) => {
     const emailToDelete = emailList.find(email => email.id === emailId);
-    if (emailToDelete && emailToDelete.status === "Published") {
-      toast.error("Cannot delete published campaigns");
+    if (!emailToDelete) {
+      toast.error("Email not found");
+      return;
+    }
+
+    if (emailToDelete.status === "Published") {
+      toast.error("❌ Cannot delete published campaigns");
       return;
     }
 
     setEmailList(emailList.filter(email => email.id !== emailId));
-    toast.success("Email campaign deleted successfully!");
+    toast.success(`🗑️ "${emailToDelete.subject}" deleted successfully!`);
+  };
+
+  const handleDuplicateEmail = (email) => {
+    const duplicatedEmail = {
+      id: emailList.length + 1,
+      subject: `Copy of ${email.subject}`,
+      status: "Draft",
+      opens: 0,
+      clicks: 0,
+      sent: 0,
+      content: email.content
+    };
+
+    setEmailList([duplicatedEmail, ...emailList]);
+    toast.success(`📋 Email duplicated: "Copy of ${email.subject}"`);
+  };
+
+  const handleViewAnalytics = (email) => {
+    if (email.status !== "Published") {
+      toast.info("📊 Analytics are only available for published campaigns");
+      return;
+    }
+    
+    toast.success(`📈 Viewing analytics for: "${email.subject}"`);
+    toast.info(`Opens: ${email.opens} | Clicks: ${email.clicks} | Sent: ${email.sent}`);
+    
+    // Switch to analytics tab to show relevant data
+    setActiveTab("analytics");
+  };
+
+  const handleScheduleEmail = (email) => {
+    if (email.status === "Published") {
+      toast.error("This campaign is already published");
+      return;
+    }
+
+    const scheduleDate = new Date();
+    scheduleDate.setHours(scheduleDate.getHours() + 1); // Schedule for 1 hour from now
+
+    setEmailList(emailList.map(e => 
+      e.id === email.id 
+        ? { ...e, status: "Scheduled" }
+        : e
+    ));
+
+    toast.success(`📅 "${email.subject}" scheduled for ${scheduleDate.toLocaleTimeString()}`);
   };
 
   const handleIntegratePlatform = () => {
@@ -279,11 +352,16 @@ const EmailCampaignTool = () => {
             <CardContent>
               <div className="space-y-3">
                 {emailList.map((email) => (
-                  <div key={email.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={email.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex-1">
-                      <div className="font-medium">{email.subject}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="font-medium text-lg">{email.subject}</div>
+                      <div className="text-sm text-gray-600 mt-1">
                         Sent: {email.sent.toLocaleString()} | Opens: {email.opens} | Clicks: {email.clicks}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {email.status === "Published" && `Published • Active campaign`}
+                        {email.status === "Draft" && `Draft • Ready to edit or publish`}
+                        {email.status === "Scheduled" && `Scheduled • Will be sent automatically`}
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -294,35 +372,75 @@ const EmailCampaignTool = () => {
                         {email.status}
                       </Badge>
                       <div className="flex gap-2">
+                        {/* Preview Button */}
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => handlePreviewEmail(email)}
+                          className="hover:bg-blue-50 hover:border-blue-300"
+                          title="Preview email content"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+
+                        {/* Edit Button */}
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => handleEditEmail(email)}
                           disabled={email.status === "Published"}
+                          className="hover:bg-yellow-50 hover:border-yellow-300 disabled:opacity-50"
+                          title={email.status === "Published" ? "Cannot edit published campaigns" : "Edit email content"}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
+
+                        {/* Analytics Button (for published emails) */}
+                        {email.status === "Published" && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleViewAnalytics(email)}
+                            className="hover:bg-green-50 hover:border-green-300"
+                            title="View email analytics"
+                          >
+                            <TrendingUp className="h-4 w-4" />
+                          </Button>
+                        )}
+
+                        {/* Schedule Button (for draft emails) */}
+                        {email.status === "Draft" && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleScheduleEmail(email)}
+                            className="hover:bg-purple-50 hover:border-purple-300"
+                            title="Schedule email for later"
+                          >
+                            <Calendar className="h-4 w-4" />
+                          </Button>
+                        )}
+
+                        {/* Delete Button */}
                         <Button 
                           size="sm" 
                           variant="outline"
                           onClick={() => handleDeleteEmail(email.id)}
                           disabled={email.status === "Published"}
+                          className="hover:bg-red-50 hover:border-red-300 disabled:opacity-50"
+                          title={email.status === "Published" ? "Cannot delete published campaigns" : "Delete email campaign"}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                        {email.status === "Draft" && (
+
+                        {/* Publish Button (for draft and scheduled emails) */}
+                        {(email.status === "Draft" || email.status === "Scheduled") && (
                           <Button 
                             size="sm" 
                             onClick={() => handlePublishEmail(email.id)}
                             disabled={isPublishing}
                             className="bg-green-600 hover:bg-green-700 text-white"
+                            title="Publish and send email campaign"
                           >
                             <Send className="h-4 w-4" />
                           </Button>
@@ -331,6 +449,13 @@ const EmailCampaignTool = () => {
                     </div>
                   </div>
                 ))}
+
+                {emailList.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Mail className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <p>No email campaigns yet. Create your first campaign above!</p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -472,17 +597,46 @@ const EmailCampaignTool = () => {
       <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Email Preview</DialogTitle>
+            <DialogTitle>📧 Email Preview</DialogTitle>
             <DialogDescription>Preview how your email will look to recipients</DialogDescription>
           </DialogHeader>
           {previewEmail && (
             <div className="space-y-4">
               <div className="border-b pb-2">
-                <h3 className="font-semibold">Subject: {previewEmail.subject}</h3>
-                <p className="text-sm text-gray-600">Status: {previewEmail.status}</p>
+                <h3 className="font-semibold text-lg">Subject: {previewEmail.subject}</h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant={
+                    previewEmail.status === "Published" ? "default" : 
+                    previewEmail.status === "Scheduled" ? "secondary" : "outline"
+                  }>
+                    {previewEmail.status}
+                  </Badge>
+                  {previewEmail.status === "Published" && (
+                    <span className="text-sm text-gray-600">
+                      Sent to {previewEmail.sent.toLocaleString()} subscribers
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="p-4 border rounded-lg bg-gray-50">
                 <p className="whitespace-pre-wrap">{previewEmail.content}</p>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setIsPreviewDialogOpen(false)}>
+                  Close Preview
+                </Button>
+                {previewEmail.status !== "Published" && (
+                  <Button 
+                    onClick={() => {
+                      setIsPreviewDialogOpen(false);
+                      handleEditEmail(previewEmail);
+                    }}
+                    className="bg-purple-600 hover:bg-purple-700"
+                  >
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit Email
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -493,7 +647,7 @@ const EmailCampaignTool = () => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Email Campaign</DialogTitle>
+            <DialogTitle>✏️ Edit Email Campaign</DialogTitle>
             <DialogDescription>Modify your email campaign details</DialogDescription>
           </DialogHeader>
           {editingEmail && (
@@ -514,6 +668,7 @@ const EmailCampaignTool = () => {
                   Cancel
                 </Button>
                 <Button onClick={handleSaveEdit} className="bg-purple-600 hover:bg-purple-700">
+                  <Edit className="mr-2 h-4 w-4" />
                   Save Changes
                 </Button>
               </div>
