@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
-import { Mail, Send, Users, TrendingUp, Clock, Settings, Plus, Eye, Edit, Trash2, Calendar, Zap, Wand2, Image as ImageIcon, Video, Copy, BarChart3 } from "lucide-react";
+import { Mail, Send, Users, TrendingUp, Clock, Settings, Plus, Eye, Edit, Trash2, Calendar, Zap, Wand2, Image as ImageIcon, Video, Copy, BarChart3, Upload, RefreshCw, Target } from "lucide-react";
 import { toast } from "sonner";
 
 const EmailCampaignTool = () => {
@@ -18,6 +17,10 @@ const EmailCampaignTool = () => {
   const [isCreatingEmail, setIsCreatingEmail] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [previewEmail, setPreviewEmail] = useState(null);
   const [editingEmail, setEditingEmail] = useState(null);
   const [analyticsEmail, setAnalyticsEmail] = useState(null);
@@ -28,62 +31,66 @@ const EmailCampaignTool = () => {
   const [emailList, setEmailList] = useState([
     { 
       id: 1, 
-      subject: "Welcome to BZ Kings Digital Mall", 
+      subject: "Welcome to BZ Kings Digital Mall - Organic Traffic Special", 
       status: "Published", 
-      opens: 245, 
-      clicks: 67, 
-      sent: 1000, 
-      content: "Welcome to our digital marketplace! Discover amazing digital products and tools that will transform your business.",
+      opens: 845, 
+      clicks: 267, 
+      sent: 2500, 
+      content: "Welcome to our digital marketplace! Discover amazing digital products and tools that will transform your business. Our organic traffic strategies have helped thousands of entrepreneurs succeed online.",
       creative: {
         type: "image",
         url: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=400&fit=crop",
-        alt: "Welcome to digital marketplace"
+        alt: "Welcome to digital marketplace with organic traffic focus"
       },
-      aiGenerated: true
+      aiGenerated: true,
+      targetAudience: "organic-traffic"
     },
     { 
       id: 2, 
-      subject: "New Digital Products Available", 
+      subject: "SEO Boost: New Digital Products for Organic Growth", 
       status: "Draft", 
       opens: 0, 
       clicks: 0, 
       sent: 0, 
-      content: "Check out our latest collection of digital products designed to boost your business productivity and success.",
-      creative: {
-        type: "image",
-        url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop",
-        alt: "New digital products"
-      },
-      aiGenerated: true
-    },
-    { 
-      id: 3, 
-      subject: "Exclusive Etsy Store Discount", 
-      status: "Scheduled", 
-      opens: 0, 
-      clicks: 0, 
-      sent: 850, 
-      content: "Get 20% off on all digital products in our Etsy store. Limited time offer - don't miss out!",
+      content: "Supercharge your organic traffic with our latest collection of SEO-optimized digital products. From keyword research tools to content templates, everything you need for sustainable growth.",
       creative: {
         type: "video",
         url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop",
-        alt: "Exclusive discount offer"
+        alt: "SEO and digital marketing tools showcase"
       },
-      aiGenerated: false
+      aiGenerated: true,
+      targetAudience: "organic-traffic"
+    },
+    { 
+      id: 3, 
+      subject: "Exclusive Offer: Traffic Generation Masterclass", 
+      status: "Scheduled", 
+      opens: 0, 
+      clicks: 0, 
+      sent: 1850, 
+      content: "Join our exclusive masterclass on generating organic traffic that converts. Learn proven strategies used by top digital marketers to build sustainable online businesses.",
+      creative: {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop",
+        alt: "Digital marketing masterclass for organic traffic"
+      },
+      aiGenerated: true,
+      targetAudience: "organic-traffic"
     },
   ]);
 
   const [newEmail, setNewEmail] = useState({
     subject: "",
     content: "",
-    recipients: "all",
+    recipients: "organic-traffic",
     scheduleDate: "",
     creative: {
       type: "image",
       url: "",
       alt: ""
     },
-    aiGenerated: false
+    aiGenerated: false,
+    targetAudience: "organic-traffic"
   });
 
   const [selectedPlatform, setSelectedPlatform] = useState("");
@@ -94,25 +101,25 @@ const EmailCampaignTool = () => {
 
   // Analytics data for email performance
   const emailAnalytics = [
-    { name: 'Week 1', sent: 800, opened: 320, clicked: 96, unsubscribed: 8 },
-    { name: 'Week 2', sent: 950, opened: 418, clicked: 125, unsubscribed: 12 },
-    { name: 'Week 3', sent: 1100, opened: 528, clicked: 159, unsubscribed: 15 },
-    { name: 'Week 4', sent: 1250, opened: 625, clicked: 200, unsubscribed: 18 },
+    { name: 'Week 1', sent: 1200, opened: 520, clicked: 156, unsubscribed: 12 },
+    { name: 'Week 2', sent: 1450, opened: 638, clicked: 191, unsubscribed: 18 },
+    { name: 'Week 3', sent: 1600, opened: 768, clicked: 230, unsubscribed: 22 },
+    { name: 'Week 4', sent: 1850, opened: 925, clicked: 278, unsubscribed: 25 },
   ];
 
   const campaignStats = {
-    totalSent: 4100,
-    totalOpened: 1891,
-    totalClicked: 580,
-    openRate: 46.1,
-    clickRate: 14.1,
+    totalSent: 6100,
+    totalOpened: 2851,
+    totalClicked: 855,
+    openRate: 46.7,
+    clickRate: 14.0,
     unsubscribeRate: 1.3
   };
 
   const emailSequences = [
-    { id: 1, name: "Welcome Series", emails: 5, status: "Active", subscribers: 1200 },
-    { id: 2, name: "Product Launch", emails: 3, status: "Paused", subscribers: 850 },
-    { id: 3, name: "Re-engagement", emails: 4, status: "Draft", subscribers: 0 },
+    { id: 1, name: "Organic Traffic Welcome Series", emails: 5, status: "Active", subscribers: 1800 },
+    { id: 2, name: "SEO Product Launch", emails: 3, status: "Paused", subscribers: 1200 },
+    { id: 3, name: "Traffic Re-engagement", emails: 4, status: "Draft", subscribers: 0 },
   ];
 
   const supportedPlatforms = [
@@ -120,11 +127,23 @@ const EmailCampaignTool = () => {
   ];
 
   const creativeTemplates = [
-    { id: 1, name: "Welcome Message", type: "image", url: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=400&fit=crop" },
-    { id: 2, name: "Product Showcase", type: "image", url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop" },
-    { id: 3, name: "Tech Innovation", type: "image", url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop" },
-    { id: 4, name: "Coding Theme", type: "image", url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop" },
-    { id: 5, name: "Digital Workspace", type: "video", url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop" },
+    { id: 1, name: "Organic Traffic Growth", type: "image", url: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=800&h=400&fit=crop" },
+    { id: 2, name: "SEO Tools Showcase", type: "image", url: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop" },
+    { id: 3, name: "Digital Marketing Hub", type: "image", url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop" },
+    { id: 4, name: "Traffic Analytics", type: "image", url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop" },
+    { id: 5, name: "Content Strategy", type: "video", url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop" },
+    { id: 6, name: "SEO Success Story", type: "video", url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop" },
+    { id: 7, name: "Traffic Optimization", type: "image", url: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&h=400&fit=crop" },
+    { id: 8, name: "Digital Growth", type: "video", url: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=400&fit=crop" },
+  ];
+
+  const organicTrafficContent = [
+    "Transform your organic traffic with our proven SEO strategies and digital tools. Join thousands of successful entrepreneurs who have mastered the art of sustainable online growth.",
+    "Discover the secrets to generating consistent organic traffic that converts. Our comprehensive suite of digital products includes everything from keyword research tools to content optimization guides.",
+    "Boost your website's organic visibility with our expert-curated collection of SEO resources. Learn how to attract high-quality traffic that actually engages with your content and converts.",
+    "Master the art of organic traffic generation with our step-by-step digital products. From technical SEO to content marketing, we have the tools you need to dominate search results.",
+    "Unlock the power of sustainable organic growth. Our digital marketplace offers proven strategies, templates, and tools that help businesses build lasting online success through organic traffic.",
+    "Experience the difference that quality organic traffic makes for your business. Our digital products are designed by SEO experts who understand what it takes to rank higher and convert better."
   ];
 
   const handleGenerateAIContent = async () => {
@@ -134,18 +153,10 @@ const EmailCampaignTool = () => {
     }
 
     setIsGeneratingContent(true);
-    toast.info("🤖 Generating AI content and creative...");
+    toast.info("🤖 Generating AI content optimized for organic traffic...");
 
     setTimeout(() => {
-      // Simulate AI content generation
-      const aiContents = [
-        "Transform your business with our cutting-edge digital solutions. Our expert team has curated the perfect collection of tools and resources to help you succeed in today's competitive market.",
-        "Discover the power of digital innovation with our premium collection. Each product is carefully selected to provide maximum value and impact for your business growth.",
-        "Join thousands of successful entrepreneurs who trust our digital marketplace for their business needs. Experience the difference quality makes.",
-        "Unlock your potential with our comprehensive suite of digital products. From SEO tools to marketing templates, we have everything you need to thrive online."
-      ];
-
-      const randomContent = aiContents[Math.floor(Math.random() * aiContents.length)];
+      const randomContent = organicTrafficContent[Math.floor(Math.random() * organicTrafficContent.length)];
       const randomCreative = creativeTemplates[Math.floor(Math.random() * creativeTemplates.length)];
 
       setNewEmail({
@@ -154,15 +165,170 @@ const EmailCampaignTool = () => {
         creative: {
           type: randomCreative.type,
           url: randomCreative.url,
-          alt: `AI generated creative for ${newEmail.subject}`
+          alt: `AI generated ${randomCreative.type} for ${newEmail.subject} - Organic Traffic Focus`
+        },
+        aiGenerated: true,
+        targetAudience: "organic-traffic"
+      });
+
+      setIsGeneratingContent(false);
+      toast.success("✨ AI content and creative generated for organic traffic audience!");
+      toast.info("📝 Content optimized for SEO and organic traffic engagement");
+    }, 3000);
+  };
+
+  const handleGenerateAIImage = async () => {
+    setIsGeneratingImage(true);
+    toast.info("🎨 Generating AI image optimized for organic traffic campaigns...");
+
+    setTimeout(() => {
+      const imageTemplates = creativeTemplates.filter(t => t.type === "image");
+      const randomImage = imageTemplates[Math.floor(Math.random() * imageTemplates.length)];
+
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "image",
+          url: randomImage.url,
+          alt: `AI generated image for ${newEmail.subject || 'email campaign'} - Organic Traffic Focus`
         },
         aiGenerated: true
       });
 
-      setIsGeneratingContent(false);
-      toast.success("✨ AI content and creative generated successfully!");
-      toast.info("📝 Review and customize the generated content before creating your campaign");
+      setIsGeneratingImage(false);
+      toast.success("🖼️ AI image generated successfully!");
+      toast.info("Image optimized for organic traffic audience engagement");
+    }, 2500);
+  };
+
+  const handleGenerateAIVideo = async () => {
+    setIsGeneratingVideo(true);
+    toast.info("🎬 Generating AI video creative for organic traffic campaigns...");
+
+    setTimeout(() => {
+      const videoTemplates = creativeTemplates.filter(t => t.type === "video");
+      const randomVideo = videoTemplates[Math.floor(Math.random() * videoTemplates.length)];
+
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "video",
+          url: randomVideo.url,
+          alt: `AI generated video for ${newEmail.subject || 'email campaign'} - Organic Traffic Focus`
+        },
+        aiGenerated: true
+      });
+
+      setIsGeneratingVideo(false);
+      toast.success("🎥 AI video creative generated successfully!");
+      toast.info("Video content optimized for organic traffic engagement");
+    }, 3500);
+  };
+
+  const handleUploadImage = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("Please select a valid image file");
+      return;
+    }
+
+    setIsUploadingImage(true);
+    toast.info("📤 Uploading your image...");
+
+    // Simulate upload process
+    setTimeout(() => {
+      const imageUrl = URL.createObjectURL(file);
+      
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "image",
+          url: imageUrl,
+          alt: `Uploaded image for ${newEmail.subject || 'email campaign'}`
+        },
+        aiGenerated: false
+      });
+
+      setIsUploadingImage(false);
+      toast.success("✅ Image uploaded successfully!");
+      toast.info("Your custom image is ready for the campaign");
+    }, 2000);
+  };
+
+  const handleUploadVideo = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('video/')) {
+      toast.error("Please select a valid video file");
+      return;
+    }
+
+    setIsUploadingVideo(true);
+    toast.info("📹 Uploading your video...");
+
+    // Simulate upload process
+    setTimeout(() => {
+      const videoUrl = URL.createObjectURL(file);
+      
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "video",
+          url: videoUrl,
+          alt: `Uploaded video for ${newEmail.subject || 'email campaign'}`
+        },
+        aiGenerated: false
+      });
+
+      setIsUploadingVideo(false);
+      toast.success("✅ Video uploaded successfully!");
+      toast.info("Your custom video is ready for the campaign");
     }, 3000);
+  };
+
+  const handleRegenerateCreative = async () => {
+    if (!newEmail.creative.url) {
+      toast.error("No creative to regenerate. Generate one first!");
+      return;
+    }
+
+    const isVideo = newEmail.creative.type === "video";
+    
+    if (isVideo) {
+      setIsGeneratingVideo(true);
+      toast.info("🔄 Regenerating AI video creative...");
+    } else {
+      setIsGeneratingImage(true);
+      toast.info("🔄 Regenerating AI image creative...");
+    }
+
+    setTimeout(() => {
+      const filteredTemplates = creativeTemplates.filter(t => t.type === newEmail.creative.type);
+      const randomCreative = filteredTemplates[Math.floor(Math.random() * filteredTemplates.length)];
+
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: newEmail.creative.type,
+          url: randomCreative.url,
+          alt: `Regenerated AI ${newEmail.creative.type} for ${newEmail.subject || 'email campaign'} - Organic Traffic Focus`
+        },
+        aiGenerated: true
+      });
+
+      if (isVideo) {
+        setIsGeneratingVideo(false);
+        toast.success("🎬 AI video regenerated successfully!");
+      } else {
+        setIsGeneratingImage(false);
+        toast.success("🖼️ AI image regenerated successfully!");
+      }
+      
+      toast.info("New creative optimized for organic traffic engagement");
+    }, 2500);
   };
 
   const handleCreateEmail = () => {
@@ -172,7 +338,7 @@ const EmailCampaignTool = () => {
     }
 
     setIsCreatingEmail(true);
-    toast.info("Creating new email campaign...");
+    toast.info("Creating new email campaign for organic traffic audience...");
 
     setTimeout(() => {
       const newEmailItem = {
@@ -184,22 +350,24 @@ const EmailCampaignTool = () => {
         sent: 0,
         content: newEmail.content,
         creative: newEmail.creative,
-        aiGenerated: newEmail.aiGenerated
+        aiGenerated: newEmail.aiGenerated,
+        targetAudience: newEmail.targetAudience
       };
 
       setEmailList([newEmailItem, ...emailList]);
       setNewEmail({ 
         subject: "", 
         content: "", 
-        recipients: "all", 
+        recipients: "organic-traffic", 
         scheduleDate: "",
         creative: { type: "image", url: "", alt: "" },
-        aiGenerated: false
+        aiGenerated: false,
+        targetAudience: "organic-traffic"
       });
       setIsCreatingEmail(false);
       
-      toast.success("Email campaign created successfully!");
-      toast.info("📧 Campaign added to your list - you can now preview, edit, or publish it!");
+      toast.success("📧 Email campaign created for organic traffic!");
+      toast.info("Campaign ready to engage your SEO-focused audience");
     }, 2000);
   };
 
@@ -216,13 +384,13 @@ const EmailCampaignTool = () => {
     }
 
     setIsPublishing(true);
-    toast.info(`Publishing "${emailToPublish.subject}"...`);
-    toast.info("🚀 Sending to all subscribers in your list...");
+    toast.info(`🚀 Publishing "${emailToPublish.subject}" to organic traffic audience...`);
+    toast.info("Sending to subscribers interested in SEO and organic growth...");
 
     setTimeout(() => {
-      const randomSent = Math.floor(Math.random() * 500) + 500;
-      const randomOpens = Math.floor(randomSent * 0.3);
-      const randomClicks = Math.floor(randomOpens * 0.2);
+      const randomSent = Math.floor(Math.random() * 800) + 1200; // Higher numbers for organic traffic
+      const randomOpens = Math.floor(randomSent * 0.45); // Better open rates for targeted content
+      const randomClicks = Math.floor(randomOpens * 0.25); // Better click rates for relevant content
 
       setEmailList(emailList.map(email => 
         email.id === emailId 
@@ -230,15 +398,16 @@ const EmailCampaignTool = () => {
           : email
       ));
       setIsPublishing(false);
-      toast.success(`"${emailToPublish.subject}" published successfully!`);
-      toast.success(`📊 Campaign sent to ${randomSent.toLocaleString()} subscribers!`);
+      toast.success(`✅ "${emailToPublish.subject}" published successfully!`);
+      toast.success(`📊 Campaign sent to ${randomSent.toLocaleString()} organic traffic subscribers!`);
+      toast.info("📈 Targeting users interested in SEO and digital marketing");
     }, 3000);
   };
 
   const handlePreviewEmail = (email) => {
     setPreviewEmail(email);
     setIsPreviewDialogOpen(true);
-    toast.info(`👀 Previewing: "${email.subject}"`);
+    toast.info(`👀 Previewing: "${email.subject}" - Organic Traffic Campaign`);
   };
 
   const handleEditEmail = (email) => {
@@ -249,7 +418,7 @@ const EmailCampaignTool = () => {
     
     setEditingEmail({ ...email });
     setIsEditDialogOpen(true);
-    toast.info(`✏️ Editing: "${email.subject}"`);
+    toast.info(`✏️ Editing: "${email.subject}" - Organic Traffic Focus`);
   };
 
   const handleSaveEdit = () => {
@@ -292,7 +461,8 @@ const EmailCampaignTool = () => {
       sent: 0,
       content: email.content,
       creative: { ...email.creative },
-      aiGenerated: email.aiGenerated
+      aiGenerated: email.aiGenerated,
+      targetAudience: email.targetAudience
     };
 
     setEmailList([duplicatedEmail, ...emailList]);
@@ -345,9 +515,13 @@ const EmailCampaignTool = () => {
           <CardTitle className="flex items-center gap-2">
             <Mail className="h-6 w-6 text-purple-600" />
             Email Campaign Manager
+            <Badge variant="outline" className="ml-2 text-green-600 border-green-300">
+              <Target className="h-3 w-3 mr-1" />
+              Organic Traffic Focus
+            </Badge>
           </CardTitle>
           <CardDescription>
-            Create, manage, and track your email marketing campaigns with AI-generated content
+            Create, manage, and track your email marketing campaigns with AI-generated content optimized for organic traffic audiences
           </CardDescription>
         </CardHeader>
       </Card>
@@ -368,22 +542,26 @@ const EmailCampaignTool = () => {
                 <CardTitle className="flex items-center gap-2">
                   <Plus className="h-5 w-5 text-green-600" />
                   Create New Email Campaign
+                  <Badge variant="outline" className="text-green-600 border-green-300">
+                    <Target className="h-3 w-3 mr-1" />
+                    Organic Traffic
+                  </Badge>
                 </CardTitle>
-                <CardDescription>Use AI to generate engaging content and creatives</CardDescription>
+                <CardDescription>Use AI to generate engaging content and creatives for organic traffic audiences</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Input
-                  placeholder="Email Subject"
+                  placeholder="Email Subject (e.g., SEO Boost: New Digital Products)"
                   value={newEmail.subject}
                   onChange={(e) => setNewEmail({ ...newEmail, subject: e.target.value })}
                 />
                 
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <Button 
                     onClick={handleGenerateAIContent}
                     disabled={isGeneratingContent || !newEmail.subject.trim()}
                     variant="outline"
-                    className="flex-1"
+                    className="text-purple-600 border-purple-300"
                   >
                     {isGeneratingContent ? (
                       <>
@@ -397,30 +575,162 @@ const EmailCampaignTool = () => {
                       </>
                     )}
                   </Button>
+
+                  {newEmail.creative.url && (
+                    <Button 
+                      onClick={handleRegenerateCreative}
+                      disabled={isGeneratingImage || isGeneratingVideo}
+                      variant="outline"
+                      className="text-blue-600 border-blue-300"
+                    >
+                      {(isGeneratingImage || isGeneratingVideo) ? (
+                        <>
+                          <Clock className="mr-2 h-4 w-4 animate-spin" />
+                          Regenerating...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                          Regenerate Creative
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+
+                {/* AI Creative Generation Buttons */}
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-gray-700">AI Creative Generation:</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button 
+                      onClick={handleGenerateAIImage}
+                      disabled={isGeneratingImage}
+                      variant="outline"
+                      className="text-green-600 border-green-300"
+                    >
+                      {isGeneratingImage ? (
+                        <>
+                          <Clock className="mr-2 h-4 w-4 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon className="mr-2 h-4 w-4" />
+                          AI Image
+                        </>
+                      )}
+                    </Button>
+
+                    <Button 
+                      onClick={handleGenerateAIVideo}
+                      disabled={isGeneratingVideo}
+                      variant="outline"
+                      className="text-red-600 border-red-300"
+                    >
+                      {isGeneratingVideo ? (
+                        <>
+                          <Clock className="mr-2 h-4 w-4 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Video className="mr-2 h-4 w-4" />
+                          AI Video
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Upload Buttons */}
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-gray-700">Upload Your Own:</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleUploadImage}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        disabled={isUploadingImage}
+                      />
+                      <Button 
+                        disabled={isUploadingImage}
+                        variant="outline"
+                        className="w-full text-blue-600 border-blue-300"
+                      >
+                        {isUploadingImage ? (
+                          <>
+                            <Clock className="mr-2 h-4 w-4 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="mr-2 h-4 w-4" />
+                            Upload Image
+                          </>
+                        )}
+                      </Button>
+                    </div>
+
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="video/*"
+                        onChange={handleUploadVideo}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        disabled={isUploadingVideo}
+                      />
+                      <Button 
+                        disabled={isUploadingVideo}
+                        variant="outline"
+                        className="w-full text-orange-600 border-orange-300"
+                      >
+                        {isUploadingVideo ? (
+                          <>
+                            <Clock className="mr-2 h-4 w-4 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="mr-2 h-4 w-4" />
+                            Upload Video
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
 
                 {newEmail.creative.url && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Generated Creative:</label>
+                    <label className="text-sm font-medium">Current Creative:</label>
                     <div className="relative">
                       <img 
                         src={newEmail.creative.url} 
                         alt={newEmail.creative.alt}
                         className="w-full h-32 object-cover rounded-lg"
                       />
-                      <Badge 
-                        variant={newEmail.creative.type === "video" ? "secondary" : "default"}
-                        className="absolute top-2 right-2"
-                      >
-                        {newEmail.creative.type === "video" ? <Video className="h-3 w-3 mr-1" /> : <ImageIcon className="h-3 w-3 mr-1" />}
-                        {newEmail.creative.type}
-                      </Badge>
-                      {newEmail.aiGenerated && (
-                        <Badge variant="outline" className="absolute top-2 left-2 bg-purple-50">
-                          <Wand2 className="h-3 w-3 mr-1" />
-                          AI Generated
+                      <div className="absolute top-2 right-2 flex gap-1">
+                        <Badge 
+                          variant={newEmail.creative.type === "video" ? "secondary" : "default"}
+                        >
+                          {newEmail.creative.type === "video" ? <Video className="h-3 w-3 mr-1" /> : <ImageIcon className="h-3 w-3 mr-1" />}
+                          {newEmail.creative.type}
                         </Badge>
-                      )}
+                      </div>
+                      <div className="absolute top-2 left-2 flex gap-1">
+                        {newEmail.aiGenerated && (
+                          <Badge variant="outline" className="bg-purple-50 text-purple-600 border-purple-300">
+                            <Wand2 className="h-3 w-3 mr-1" />
+                            AI Generated
+                          </Badge>
+                        )}
+                        <Badge variant="outline" className="bg-green-50 text-green-600 border-green-300">
+                          <Target className="h-3 w-3 mr-1" />
+                          Organic Traffic
+                        </Badge>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -437,9 +747,10 @@ const EmailCampaignTool = () => {
                     <SelectValue placeholder="Select recipients" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="organic-traffic">Organic Traffic Subscribers</SelectItem>
+                    <SelectItem value="seo-focused">SEO-Focused Customers</SelectItem>
+                    <SelectItem value="content-marketers">Content Marketers</SelectItem>
                     <SelectItem value="all">All Subscribers</SelectItem>
-                    <SelectItem value="active">Active Customers</SelectItem>
-                    <SelectItem value="new">New Subscribers</SelectItem>
                   </SelectContent>
                 </Select>
                 
@@ -469,13 +780,14 @@ const EmailCampaignTool = () => {
               </CardContent>
             </Card>
 
-            {/* Email Performance Overview */}
+            {/* Email Performance Overview for Organic Traffic */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-blue-600" />
-                  Campaign Performance
+                  Organic Traffic Campaign Performance
                 </CardTitle>
+                <CardDescription>Performance metrics for SEO-focused email campaigns</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
@@ -483,19 +795,23 @@ const EmailCampaignTool = () => {
                     <div className="text-2xl font-bold text-blue-600">{campaignStats.openRate}%</div>
                     <div className="text-sm text-gray-600">Open Rate</div>
                     <Progress value={campaignStats.openRate} className="mt-2" />
+                    <div className="text-xs text-green-600 mt-1">+5% vs industry avg</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-600">{campaignStats.clickRate}%</div>
                     <div className="text-sm text-gray-600">Click Rate</div>
                     <Progress value={campaignStats.clickRate} className="mt-2" />
+                    <div className="text-xs text-green-600 mt-1">+3% vs industry avg</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-purple-600">{campaignStats.totalSent.toLocaleString()}</div>
                     <div className="text-sm text-gray-600">Emails Sent</div>
+                    <div className="text-xs text-gray-500 mt-1">To organic traffic subscribers</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-red-600">{campaignStats.unsubscribeRate}%</div>
                     <div className="text-sm text-gray-600">Unsubscribe Rate</div>
+                    <div className="text-xs text-green-600 mt-1">-1% vs industry avg</div>
                   </div>
                 </div>
               </CardContent>
@@ -505,8 +821,14 @@ const EmailCampaignTool = () => {
           {/* Email List */}
           <Card>
             <CardHeader>
-              <CardTitle>Email Campaigns ({emailList.length}/10)</CardTitle>
-              <CardDescription>Manage your email campaigns with AI-generated content</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                Email Campaigns ({emailList.length}/10)
+                <Badge variant="outline" className="text-green-600 border-green-300">
+                  <Target className="h-3 w-3 mr-1" />
+                  Organic Traffic Optimized
+                </Badge>
+              </CardTitle>
+              <CardDescription>Manage your email campaigns with AI-generated content for organic traffic audiences</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -521,6 +843,12 @@ const EmailCampaignTool = () => {
                             AI Generated
                           </Badge>
                         )}
+                        {email.targetAudience === "organic-traffic" && (
+                          <Badge variant="outline" className="text-green-600 border-green-300">
+                            <Target className="h-3 w-3 mr-1" />
+                            Organic Traffic
+                          </Badge>
+                        )}
                         {email.creative?.type && (
                           <Badge variant="secondary">
                             {email.creative.type === "video" ? <Video className="h-3 w-3 mr-1" /> : <ImageIcon className="h-3 w-3 mr-1" />}
@@ -529,12 +857,12 @@ const EmailCampaignTool = () => {
                         )}
                       </div>
                       <div className="text-sm text-gray-600 mt-1">
-                        Sent: {email.sent.toLocaleString()} | Opens: {email.opens} | Clicks: {email.clicks}
+                        Sent: {email.sent.toLocaleString()} | Opens: {email.opens} ({email.sent > 0 ? ((email.opens / email.sent) * 100).toFixed(1) : 0}%) | Clicks: {email.clicks} ({email.opens > 0 ? ((email.clicks / email.opens) * 100).toFixed(1) : 0}%)
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
-                        {email.status === "Published" && `Published • Active campaign`}
-                        {email.status === "Draft" && `Draft • Ready to edit or publish`}
-                        {email.status === "Scheduled" && `Scheduled • Will be sent automatically`}
+                        {email.status === "Published" && `Published • Active campaign targeting organic traffic audience`}
+                        {email.status === "Draft" && `Draft • Ready to edit or publish for SEO-focused subscribers`}
+                        {email.status === "Scheduled" && `Scheduled • Will be sent to organic traffic subscribers`}
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -633,7 +961,7 @@ const EmailCampaignTool = () => {
                 {emailList.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     <Mail className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <p>No email campaigns yet. Create your first AI-powered campaign above!</p>
+                    <p>No email campaigns yet. Create your first AI-powered campaign for organic traffic above!</p>
                   </div>
                 )}
               </div>
@@ -645,7 +973,7 @@ const EmailCampaignTool = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Email Performance Trends</CardTitle>
+                <CardTitle>Organic Traffic Email Performance Trends</CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -686,8 +1014,12 @@ const EmailCampaignTool = () => {
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-purple-600" />
                 Email Sequences
+                <Badge variant="outline" className="text-green-600 border-green-300">
+                  <Target className="h-3 w-3 mr-1" />
+                  Organic Traffic Optimized
+                </Badge>
               </CardTitle>
-              <CardDescription>Automated email sequences and drip campaigns</CardDescription>
+              <CardDescription>Automated email sequences and drip campaigns for organic traffic audiences</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -766,6 +1098,7 @@ const EmailCampaignTool = () => {
                   <li>• Import campaign templates</li>
                   <li>• Unified analytics dashboard</li>
                   <li>• Automated subscriber management</li>
+                  <li>• Organic traffic audience segmentation</li>
                 </ul>
               </div>
             </CardContent>
@@ -777,8 +1110,8 @@ const EmailCampaignTool = () => {
       <Dialog open={isPreviewDialogOpen} onOpenChange={setIsPreviewDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>📧 Email Preview</DialogTitle>
-            <DialogDescription>Preview how your email will look to recipients</DialogDescription>
+            <DialogTitle>📧 Email Preview - Organic Traffic Campaign</DialogTitle>
+            <DialogDescription>Preview how your email will look to organic traffic subscribers</DialogDescription>
           </DialogHeader>
           {previewEmail && (
             <div className="space-y-4">
@@ -797,9 +1130,15 @@ const EmailCampaignTool = () => {
                       AI Generated
                     </Badge>
                   )}
+                  {previewEmail.targetAudience === "organic-traffic" && (
+                    <Badge variant="outline" className="text-green-600 border-green-300">
+                      <Target className="h-3 w-3 mr-1" />
+                      Organic Traffic
+                    </Badge>
+                  )}
                   {previewEmail.status === "Published" && (
                     <span className="text-sm text-gray-600">
-                      Sent to {previewEmail.sent.toLocaleString()} subscribers
+                      Sent to {previewEmail.sent.toLocaleString()} organic traffic subscribers
                     </span>
                   )}
                 </div>
@@ -854,8 +1193,8 @@ const EmailCampaignTool = () => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>✏️ Edit Email Campaign</DialogTitle>
-            <DialogDescription>Modify your email campaign details</DialogDescription>
+            <DialogTitle>✏️ Edit Email Campaign - Organic Traffic Focus</DialogTitle>
+            <DialogDescription>Modify your email campaign details for organic traffic audience</DialogDescription>
           </DialogHeader>
           {editingEmail && (
             <div className="space-y-4">
@@ -910,8 +1249,8 @@ const EmailCampaignTool = () => {
       <Dialog open={isAnalyticsDialogOpen} onOpenChange={setIsAnalyticsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>📊 Email Analytics</DialogTitle>
-            <DialogDescription>Detailed performance metrics for your email campaign</DialogDescription>
+            <DialogTitle>📊 Email Analytics - Organic Traffic Campaign</DialogTitle>
+            <DialogDescription>Detailed performance metrics for your organic traffic email campaign</DialogDescription>
           </DialogHeader>
           {analyticsEmail && (
             <div className="space-y-6">
@@ -925,6 +1264,10 @@ const EmailCampaignTool = () => {
                       AI Generated
                     </Badge>
                   )}
+                  <Badge variant="outline" className="text-green-600 border-green-300">
+                    <Target className="h-3 w-3 mr-1" />
+                    Organic Traffic
+                  </Badge>
                 </div>
               </div>
 
@@ -932,6 +1275,7 @@ const EmailCampaignTool = () => {
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">{analyticsEmail.sent.toLocaleString()}</div>
                   <div className="text-sm text-gray-600">Total Sent</div>
+                  <div className="text-xs text-green-600">Organic traffic subscribers</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-green-600">{analyticsEmail.opens}</div>
@@ -944,9 +1288,9 @@ const EmailCampaignTool = () => {
                   <div className="text-xs text-gray-500">{((analyticsEmail.clicks / analyticsEmail.opens) * 100).toFixed(1)}% rate</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-orange-600">{Math.floor(analyticsEmail.sent * 0.02)}</div>
+                  <div className="text-2xl font-bold text-orange-600">{Math.floor(analyticsEmail.sent * 0.015)}</div>
                   <div className="text-sm text-gray-600">Unsubscribes</div>
-                  <div className="text-xs text-gray-500">2.0% rate</div>
+                  <div className="text-xs text-gray-500">1.5% rate</div>
                 </div>
               </div>
 
