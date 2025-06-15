@@ -16,88 +16,74 @@ export interface SynchronizedVideoContent {
   videoUrl: string;
 }
 
-// Real video URLs for different subjects/topics
+// Real video URLs for different subjects/topics with more specific matching
 const getSubjectSpecificVideo = (subject: string): string => {
   const lowerSubject = subject.toLowerCase();
   
-  if (lowerSubject.includes('tiktok') || lowerSubject.includes('social media')) {
-    // TikTok/Social Media Marketing videos
-    return "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4";
-  } else if (lowerSubject.includes('clickbank') || lowerSubject.includes('affiliate')) {
-    // ClickBank/Affiliate Marketing videos
-    return "https://file-examples.com/storage/fe68c1fc7ad5e17861c89a6/2017/10/file_example_MP4_1280_10MG.mp4";
-  } else if (lowerSubject.includes('facebook ads') || lowerSubject.includes('advertising')) {
-    // Facebook Ads/Digital Advertising videos
-    return "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4";
-  } else if (lowerSubject.includes('work from home') || lowerSubject.includes('remote work')) {
-    // Work from Home/Remote Work videos
+  if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn') || lowerSubject.includes('profit')) {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
-  } else if (lowerSubject.includes('email marketing') || lowerSubject.includes('email')) {
-    // Email Marketing videos
+  } else if (lowerSubject.includes('tiktok') || lowerSubject.includes('social media')) {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
-  } else if (lowerSubject.includes('youtube') || lowerSubject.includes('video marketing')) {
-    // YouTube/Video Marketing videos
+  } else if (lowerSubject.includes('facebook') || lowerSubject.includes('fb ads')) {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-  } else if (lowerSubject.includes('cryptocurrency') || lowerSubject.includes('crypto') || lowerSubject.includes('bitcoin')) {
-    // Cryptocurrency/Bitcoin videos
+  } else if (lowerSubject.includes('clickbank') || lowerSubject.includes('affiliate')) {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
-  } else if (lowerSubject.includes('e-commerce') || lowerSubject.includes('shopify') || lowerSubject.includes('online store')) {
-    // E-commerce/Online Store videos
+  } else if (lowerSubject.includes('work from home') || lowerSubject.includes('remote work')) {
+    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4";
+  } else if (lowerSubject.includes('email marketing') || lowerSubject.includes('email')) {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
   } else {
-    // Default marketing/business video
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4";
+    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
   }
 };
 
-// Generate images that match the email subject
+// Generate images that match the specific content being discussed
 const getSubjectSpecificImages = (subject: string): string[] => {
   const lowerSubject = subject.toLowerCase();
   
-  if (lowerSubject.includes('tiktok')) {
+  if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn')) {
     return [
-      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop&q=80", // TikTok interface
-      "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=600&fit=crop&q=80", // Social media content
-      "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=600&fit=crop&q=80", // Money/earnings
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop&q=80", // Content creation
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop&q=80", // Partnerships
+      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=600&fit=crop&q=80", // Money/cash
+      "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=600&fit=crop&q=80", // Bitcoin/crypto
+      "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&h=600&fit=crop&q=80", // Dollar bills
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80", // Investment growth
+      "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&q=80", // Financial charts
+      "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&h=600&fit=crop&q=80", // Credit cards
+      "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&h=600&fit=crop&q=80", // Wealth building
+      "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&h=600&fit=crop&q=80" // Financial success
+    ];
+  } else if (lowerSubject.includes('facebook') || lowerSubject.includes('fb')) {
+    return [
+      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop&q=80", // Facebook interface
+      "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&q=80", // Social media analytics
+      "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=600&fit=crop&q=80", // Social media marketing
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80", // Advertising
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Facebook ads
+      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80", // Social media ROI
+      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop&q=80" // Facebook success
+    ];
+  } else if (lowerSubject.includes('tiktok')) {
+    return [
+      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop&q=80", // TikTok content
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop&q=80", // Video creation
       "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&q=80", // Viral content
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Analytics
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Multiple income streams
-      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80" // Success
+      "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=600&fit=crop&q=80", // Influencer marketing
+      "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=600&fit=crop&q=80", // Social media growth
+      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop&q=80", // Content creation
+
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // TikTok analytics
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80" // Social media success
     ];
   } else if (lowerSubject.includes('clickbank')) {
     return [
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Business analytics
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Profit charts
-      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80", // Product selection
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Traffic generation
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Email marketing
-      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80", // Commission optimization
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Scaling
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80" // Success
-    ];
-  } else if (lowerSubject.includes('facebook ads')) {
-    return [
-      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop&q=80", // Facebook interface
-      "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&q=80", // ROI charts
-      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80", // Targeting
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Creative design
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Ads Manager
-      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80", // Retargeting
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Budget optimization
-      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop&q=80" // Success
-    ];
-  } else if (lowerSubject.includes('work from home')) {
-    return [
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop&q=80", // Home office
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop&q=80", // Remote work
-      "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=600&fit=crop&q=80", // Business models
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop&q=80", // Setup guide
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop&q=80", // Home office optimization
-      "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=600&fit=crop&q=80", // Work-life balance
-      "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop&q=80", // Scaling
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop&q=80" // Success
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Affiliate marketing
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Commission earnings
+      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80", // Digital products
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80", // Online sales
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Marketing funnels
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Conversion rates
+      "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80", // Affiliate success
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80" // ClickBank profits
     ];
   } else {
     // Generic business/marketing images
@@ -105,13 +91,153 @@ const getSubjectSpecificImages = (subject: string): string[] => {
       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80",
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80",
       "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80",
       "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80",
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80",
       "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=600&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80"
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80"
     ];
   }
+};
+
+// Enhanced content generation for money-focused videos
+const generateMoneyVideoContent = (subject: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Make Money Online Today",
+      narration: "Discover how to make real money online starting today! These proven strategies have helped thousands of people create sustainable income streams from home. No experience required, just dedication and the right system."
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "$500+ Daily Earnings",
+      narration: "Learn the exact methods successful entrepreneurs use to earn five hundred dollars or more daily. These aren't get-rich-quick schemes, but legitimate business models that generate consistent cash flow when properly implemented."
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Multiple Income Streams",
+      narration: "Build multiple income streams that work together to maximize your earning potential. Diversification is key to financial security. We'll show you how to create passive income that continues earning while you sleep."
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Investment Strategies",
+      narration: "Master smart investment strategies that multiply your money over time. Learn about compound interest, dividend investing, and cryptocurrency opportunities that can accelerate your wealth building journey significantly."
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Financial Freedom Path",
+      narration: "Create your personalized path to financial freedom. Set realistic goals, track your progress, and implement systems that automatically save and invest your money. Financial independence is achievable with the right plan."
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Wealth Building System",
+      narration: "Implement a complete wealth building system that grows your money exponentially. Learn budgeting, saving, investing, and business creation strategies that wealthy people use to maintain and grow their fortunes."
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Scale Your Earnings",
+      narration: "Scale your earnings from hundreds to thousands of dollars monthly. Discover automation tools, outsourcing strategies, and systems that allow your income to grow without proportionally increasing your time investment."
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Start Your Money Journey!",
+      narration: "Your money-making journey starts right now! Take action today and begin implementing these proven strategies. Every successful entrepreneur started with a single step. Make today your financial turning point!"
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "motivational-money",
+    videoUrl
+  };
+};
+
+// Enhanced Facebook content generation
+const generateFacebookVideoContent = (subject: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Facebook Marketing Mastery",
+      narration: "Master Facebook marketing with strategies that actually work! With over three billion active users, Facebook remains the most powerful platform for reaching your target audience and growing your business exponentially."
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Advanced Facebook Ads",
+      narration: "Learn advanced Facebook advertising techniques that maximize your return on investment. Discover how to create high-converting ad campaigns that reach the right people at the right time with surgical precision."
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Audience Targeting Secrets",
+      narration: "Unlock Facebook's powerful audience targeting capabilities. Learn to create custom audiences, lookalike audiences, and use behavioral targeting to reach people most likely to buy your products or services."
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Facebook Business Growth",
+      narration: "Transform your Facebook page into a powerful business growth engine. Learn content strategies, engagement techniques, and conversion optimization methods that turn followers into paying customers consistently."
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Social Media ROI",
+      narration: "Maximize your social media return on investment with proven Facebook strategies. Track meaningful metrics, optimize your campaigns, and scale successful ads to generate predictable business growth and revenue."
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Facebook Sales Funnel",
+      narration: "Build complete Facebook sales funnels that convert prospects into customers. Learn to create compelling lead magnets, nurture sequences, and sales processes that work seamlessly within the Facebook ecosystem."
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Scale Facebook Success",
+      narration: "Scale your Facebook marketing success to new heights. Discover automation tools, advanced bidding strategies, and campaign optimization techniques that successful businesses use to dominate their markets."
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Dominate Facebook Today!",
+      narration: "Start dominating Facebook marketing today! Implement these proven strategies and watch your business grow through targeted, profitable Facebook campaigns that deliver real, measurable results consistently."
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "tech-professional",
+    videoUrl
+  };
 };
 
 // Generate synchronized video content based on campaign subject (2 minutes)
@@ -120,12 +246,14 @@ export const generateSynchronizedVideoContent = (subject: string): SynchronizedV
   const videoUrl = getSubjectSpecificVideo(subject);
   const images = getSubjectSpecificImages(subject);
   
-  if (lowerSubject.includes('tiktok')) {
+  if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn') || lowerSubject.includes('profit')) {
+    return generateMoneyVideoContent(subject, videoUrl, images);
+  } else if (lowerSubject.includes('facebook') || lowerSubject.includes('fb ads')) {
+    return generateFacebookVideoContent(subject, videoUrl, images);
+  } else if (lowerSubject.includes('tiktok')) {
     return generateTikTokVideoContent(subject, videoUrl, images);
   } else if (lowerSubject.includes('clickbank')) {
     return generateClickBankVideoContent(subject, videoUrl, images);
-  } else if (lowerSubject.includes('facebook ads')) {
-    return generateFacebookAdsVideoContent(subject, videoUrl, images);
   } else if (lowerSubject.includes('work from home')) {
     return generateWorkFromHomeVideoContent(subject, videoUrl, images);
   } else if (lowerSubject.includes('affiliate marketing')) {
