@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,12 +28,29 @@ export const EmailList = ({
   onDeleteEmail 
 }: EmailListProps) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState<Record<number, boolean>>({});
+  const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({});
 
   const toggleVideoPlayback = (emailId: number) => {
-    setIsVideoPlaying(prev => ({
-      ...prev,
-      [emailId]: !prev[emailId]
-    }));
+    const video = videoRefs.current[emailId];
+    if (!video) return;
+
+    if (isVideoPlaying[emailId]) {
+      video.pause();
+      setIsVideoPlaying(prev => ({
+        ...prev,
+        [emailId]: false
+      }));
+    } else {
+      video.play();
+      setIsVideoPlaying(prev => ({
+        ...prev,
+        [emailId]: true
+      }));
+    }
+  };
+
+  const handleVideoRef = (emailId: number, ref: HTMLVideoElement | null) => {
+    videoRefs.current[emailId] = ref;
   };
 
   return (
@@ -80,10 +97,11 @@ export const EmailList = ({
                     {email.creative.type === "video" ? (
                       <div className="relative w-32 h-20 inline-block mr-3">
                         <video 
+                          ref={(ref) => handleVideoRef(email.id, ref)}
                           src={email.creative.url} 
-                          className="w-full h-full object-cover rounded cursor-pointer"
-                          onClick={() => toggleVideoPlayback(email.id)}
-                          poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
+                          className="w-full h-full object-cover rounded"
+                          muted
+                          preload="metadata"
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                           <Button
