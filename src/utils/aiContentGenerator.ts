@@ -9,7 +9,123 @@ export const organicTrafficContent = [
   "⚡ Experience the difference that AI-enhanced organic traffic makes for your business. Our digital products combine artificial intelligence with proven SEO methodologies to deliver exceptional results in search rankings and sustainable traffic growth."
 ];
 
-// Enhanced AI image collection with platform-specific and topic-specific images
+// Enhanced contextual image mapping for specific search terms
+export const contextualImages = {
+  // Make money related searches
+  "make money from home": [
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // person working from home setup
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80", // home office workspace
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // remote work setup
+  ],
+  "make money online": [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // online business analytics
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // digital marketing dashboard
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // ecommerce growth
+  ],
+  "passive income": [
+    "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=400&fit=crop&auto=format&q=80", // investment growth chart
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // financial analytics
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // passive income streams
+  ],
+
+  // Facebook related searches
+  "facebook ads": [
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook advertising interface
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // social media advertising
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // mobile social ads
+  ],
+  "facebook marketing": [
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook business page
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // social media strategy
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Facebook engagement
+  ],
+  "make money on facebook": [
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook monetization
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Facebook business analytics
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // Facebook commerce
+  ],
+
+  // TikTok related searches
+  "tiktok marketing": [
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // TikTok content creation
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // video content strategy
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // mobile video marketing
+  ],
+  "make money with tiktok": [
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // TikTok creator fund
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // TikTok monetization
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // TikTok business growth
+  ],
+
+  // Instagram related searches
+  "instagram marketing": [
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Instagram strategy
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Instagram visual content
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // Instagram growth
+  ],
+  "instagram growth": [
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Instagram followers
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Instagram engagement
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Instagram analytics
+  ],
+
+  // YouTube related searches
+  "youtube monetization": [
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // YouTube content creation
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // YouTube studio setup
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // YouTube analytics
+  ],
+  "youtube marketing": [
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // YouTube strategy
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // video marketing
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // YouTube optimization
+  ],
+
+  // Affiliate marketing searches
+  "affiliate marketing": [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // affiliate commission tracking
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // affiliate performance
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // affiliate networks
+  ],
+
+  // Dropshipping and ecommerce
+  "dropshipping": [
+    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format&q=80", // ecommerce setup
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // online store
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // dropshipping analytics
+  ],
+  "ecommerce": [
+    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format&q=80", // online shopping
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // ecommerce platform
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // ecommerce growth
+  ],
+
+  // Cryptocurrency and trading
+  "crypto trading": [
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80", // crypto charts
+    "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop&auto=format&q=80", // cryptocurrency trading
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // trading analytics
+  ],
+  "bitcoin": [
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80", // bitcoin concept
+    "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop&auto=format&q=80", // cryptocurrency
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // crypto investment
+  ],
+
+  // Online courses and education
+  "online courses": [
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // online learning
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // e-learning setup
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80", // digital education
+  ],
+  "course creation": [
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // course development
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // content creation
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // educational content
+  ]
+};
+
+// Enhanced platform-specific images
 export const platformSpecificImages = {
   facebook: [
     "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook marketing
@@ -43,289 +159,39 @@ export const platformSpecificImages = {
   ]
 };
 
-// Enhanced AI image collection with advanced, attractive campaign images
-export const aiImagesByCategory = {
-  seo: [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // advanced analytics dashboard
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // data visualization charts
-    "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop&auto=format&q=80", // professional analytics
-    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // marketing analytics
-    "https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?w=800&h=400&fit=crop&auto=format&q=80", // SEO analytics screen
-  ],
-  social: [
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // social media strategy
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // social networks visualization
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // mobile social engagement
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // social media icons
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // social media marketing
-  ],
-  content: [
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // content creation workspace
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80", // professional writing
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // blogging setup
-    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // content strategy
-    "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop&auto=format&q=80", // creative writing
-  ],
-  email: [
-    "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=400&fit=crop&auto=format&q=80", // email marketing campaign
-    "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&h=400&fit=crop&auto=format&q=80", // email on device
-    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop&auto=format&q=80", // digital communication
-    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=400&fit=crop&auto=format&q=80", // email newsletter design
-    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop&auto=format&q=80", // email automation
-  ],
-  ai: [
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80", // AI technology visualization
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop&auto=format&q=80", // AI neural network
-    "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop&auto=format&q=80", // AI automation concept
-    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&auto=format&q=80", // AI futuristic interface
-    "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=800&h=400&fit=crop&auto=format&q=80", // AI digital brain
-  ],
-  marketing: [
-    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // marketing strategy tools
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // marketing analytics
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // marketing data insights
-    "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&h=400&fit=crop&auto=format&q=80", // digital marketing campaign
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // marketing funnel
-  ],
-  traffic: [
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // traffic analytics dashboard
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // web traffic visualization
-    "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop&auto=format&q=80", // website analytics
-    "https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?w=800&h=400&fit=crop&auto=format&q=80", // organic traffic growth
-    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // traffic optimization tools
-  ]
-};
-
-// Enhanced 30-second intro videos optimized for different topics
-export const aiIntroVideos = [
-  {
-    url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-    duration: "30s",
-    description: "Professional digital marketing workspace intro",
-    topics: ["seo", "digital", "marketing", "workspace"]
-  },
-  {
-    url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-    duration: "30s", 
-    description: "Data analytics and traffic growth visualization",
-    topics: ["traffic", "analytics", "growth", "data"]
-  },
-  {
-    url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-    duration: "30s",
-    description: "AI technology and automation showcase",
-    topics: ["ai", "artificial", "technology", "automation"]
-  },
-  {
-    url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-    duration: "30s",
-    description: "Content creation and social media intro",
-    topics: ["content", "social", "media", "creation"]
-  }
-];
-
-// Enhanced video collection categorized by topic with 30-second intros
-export const videosByCategory = {
-  seo: [
-    {
-      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "SEO Strategy Intro",
-      description: "30-second intro showcasing SEO tools and ranking strategies"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-      duration: "30s", 
-      title: "Technical SEO Overview",
-      description: "Quick intro to technical SEO and optimization techniques"
-    }
-  ],
-  traffic: [
-    {
-      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "Organic Traffic Growth",
-      description: "30-second overview of organic traffic generation strategies"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "Traffic Analytics Intro",
-      description: "Quick introduction to traffic analysis and conversion optimization"
-    }
-  ],
-  digital: [
-    {
-      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "Digital Marketing Tools",
-      description: "30-second showcase of digital marketing toolkit and strategies"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "Digital Transformation",
-      description: "Quick intro to digital business transformation"
-    }
-  ],
-  ai: [
-    {
-      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "AI-Powered Marketing",
-      description: "30-second introduction to AI marketing automation and tools"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "Artificial Intelligence Intro",
-      description: "Quick overview of AI technology in digital marketing"
-    }
-  ],
-  marketing: [
-    {
-      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "Marketing Strategy Overview",
-      description: "30-second intro to comprehensive marketing strategies"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "Campaign Management Intro",
-      description: "Quick introduction to marketing campaign optimization"
-    }
-  ],
-  social: [
-    {
-      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "Social Media Growth",
-      description: "30-second intro to social media marketing and engagement"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-      duration: "30s", 
-      title: "Social Platform Optimization",
-      description: "Quick overview of social media platform strategies"
-    }
-  ],
-  content: [
-    {
-      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "Content Creation Intro",
-      description: "30-second introduction to content marketing and creation"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-      duration: "30s",
-      title: "Content Strategy Overview", 
-      description: "Quick intro to content strategy and optimization"
-    }
-  ],
-  email: [
-    {
-      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "Email Marketing Automation",
-      description: "30-second intro to email marketing and automation strategies"
-    },
-    {
-      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-      duration: "30s",
-      title: "Email Campaign Optimization",
-      description: "Quick overview of email campaign performance and optimization"
-    }
-  ]
-};
-
-// AI Title Generator based on search terms
-export const generateAITitle = (searchTerm: string): string => {
-  const lowerSearchTerm = searchTerm.toLowerCase();
-  
-  const titleTemplates = {
-    seo: [
-      "🚀 AI-Powered SEO: {term} Strategies That Drive Results",
-      "📈 Master {term} with Our Advanced SEO Toolkit",
-      "🎯 {term} Success: AI-Driven SEO Solutions",
-      "💡 Revolutionary {term} Techniques for Organic Growth",
-      "⚡ Transform Your {term} with AI SEO Mastery"
-    ],
-    social: [
-      "📱 Social Media {term}: AI-Enhanced Growth Strategies",
-      "🌟 Boost Your {term} with Smart Social Tools",
-      "🚀 {term} Mastery: Advanced Social Media Tactics",
-      "📊 AI-Driven {term} for Maximum Engagement",
-      "💫 Revolutionary {term} Social Media Solutions"
-    ],
-    content: [
-      "✍️ Content {term}: AI-Powered Creation & Strategy",
-      "📝 Master {term} with Intelligent Content Tools",
-      "🎨 {term} Excellence: AI Content Generation",
-      "📖 Transform Your {term} with Smart Content AI",
-      "🔥 Advanced {term} Content Marketing Strategies"
-    ],
-    email: [
-      "📧 Email {term}: AI-Enhanced Campaign Success",
-      "💌 Master {term} with Intelligent Email Tools",
-      "🎯 {term} Email Marketing: AI-Driven Results",
-      "📈 Revolutionary {term} Email Automation",
-      "⚡ Transform Your {term} Email Strategy"
-    ],
-    marketing: [
-      "🎯 Marketing {term}: AI-Powered Growth Solutions",
-      "📊 Master {term} with Advanced Marketing AI",
-      "🚀 {term} Marketing: Intelligent Strategy Tools",
-      "💡 Revolutionary {term} Marketing Automation",
-      "🌟 AI-Enhanced {term} Marketing Excellence"
-    ],
-    traffic: [
-      "🚗 Traffic {term}: AI-Driven Growth Strategies",
-      "📈 Boost Your {term} with Organic Traffic AI",
-      "🎯 {term} Traffic: Advanced Growth Solutions",
-      "⚡ Revolutionary {term} Traffic Generation",
-      "🌟 Master {term} Traffic with AI Tools"
-    ],
-    ai: [
-      "🤖 AI {term}: Next-Generation Digital Solutions",
-      "⚡ Master {term} with Advanced AI Technology",
-      "🚀 {term} AI: Revolutionary Business Tools",
-      "💡 Intelligent {term}: AI-Powered Success",
-      "🌟 Transform Your {term} with AI Innovation"
-    ]
-  };
-
-  // Determine category based on search term
-  let category = 'ai'; // default
-  
-  if (lowerSearchTerm.includes('seo') || lowerSearchTerm.includes('search') || lowerSearchTerm.includes('ranking')) {
-    category = 'seo';
-  } else if (lowerSearchTerm.includes('social') || lowerSearchTerm.includes('media') || lowerSearchTerm.includes('facebook') || lowerSearchTerm.includes('instagram')) {
-    category = 'social';
-  } else if (lowerSearchTerm.includes('content') || lowerSearchTerm.includes('blog') || lowerSearchTerm.includes('article')) {
-    category = 'content';
-  } else if (lowerSearchTerm.includes('email') || lowerSearchTerm.includes('newsletter') || lowerSearchTerm.includes('campaign')) {
-    category = 'email';
-  } else if (lowerSearchTerm.includes('marketing') || lowerSearchTerm.includes('promotion') || lowerSearchTerm.includes('advertising')) {
-    category = 'marketing';
-  } else if (lowerSearchTerm.includes('traffic') || lowerSearchTerm.includes('organic') || lowerSearchTerm.includes('visitor')) {
-    category = 'traffic';
-  }
-
-  const templates = titleTemplates[category] || titleTemplates['ai'];
-  const selectedTemplate = templates[Math.floor(Math.random() * templates.length)];
-  
-  // Capitalize the search term for better presentation
-  const capitalizedTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1);
-  
-  return selectedTemplate.replace('{term}', capitalizedTerm);
-};
-
-// Enhanced function to get images based on search query
+// Enhanced function to get images based on search query with exact matching
 export const getImageBySearchQuery = (searchQuery: string): string => {
-  const lowerQuery = searchQuery.toLowerCase();
+  const lowerQuery = searchQuery.toLowerCase().trim();
   
+  // Check for exact contextual matches first
+  for (const [key, images] of Object.entries(contextualImages)) {
+    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
+      return images[Math.floor(Math.random() * images.length)];
+    }
+  }
+  
+  // Check for platform-specific matches
+  if (lowerQuery.includes('facebook')) {
+    const images = platformSpecificImages.facebook;
+    return images[Math.floor(Math.random() * images.length)];
+  }
+  
+  if (lowerQuery.includes('tiktok')) {
+    const images = platformSpecificImages.tiktok;
+    return images[Math.floor(Math.random() * images.length)];
+  }
+  
+  if (lowerQuery.includes('instagram')) {
+    const images = platformSpecificImages.instagram;
+    return images[Math.floor(Math.random() * images.length)];
+  }
+  
+  if (lowerQuery.includes('youtube')) {
+    const images = platformSpecificImages.youtube;
+    return images[Math.floor(Math.random() * images.length)];
+  }
+  
+  // Fallback to category-based matching
   let category = 'ai'; // default
   
   if (lowerQuery.includes('seo') || lowerQuery.includes('search') || lowerQuery.includes('ranking')) {
@@ -344,6 +210,95 @@ export const getImageBySearchQuery = (searchQuery: string): string => {
   
   const images = aiImagesByCategory[category] || aiImagesByCategory['ai'];
   return images[Math.floor(Math.random() * images.length)];
+};
+
+// Enhanced function to get 3 mockup images with better contextual matching
+export const getMockupImagesBySearchQuery = (searchQuery: string): Array<{url: string, description: string}> => {
+  const lowerQuery = searchQuery.toLowerCase().trim();
+  
+  // Check for exact contextual matches first
+  for (const [key, images] of Object.entries(contextualImages)) {
+    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
+      return [
+        { 
+          url: images[0], 
+          description: `${key.charAt(0).toUpperCase() + key.slice(1)} Strategy - Professional approach to ${key}` 
+        },
+        { 
+          url: images[1] || images[0], 
+          description: `${key.charAt(0).toUpperCase() + key.slice(1)} Success - Proven techniques for ${key}` 
+        },
+        { 
+          url: images[2] || images[0], 
+          description: `${key.charAt(0).toUpperCase() + key.slice(1)} Mastery - Advanced ${key} methods` 
+        }
+      ];
+    }
+  }
+
+  // Platform-specific matching with detailed descriptions
+  if (lowerQuery.includes('facebook')) {
+    return [
+      { url: platformSpecificImages.facebook[0], description: "Facebook Marketing Strategy - Advanced audience targeting and engagement tactics" },
+      { url: platformSpecificImages.facebook[1], description: "Facebook Ads Optimization - ROI-focused advertising campaigns" },
+      { url: platformSpecificImages.facebook[2], description: "Facebook Business Growth - Scaling your presence on the platform" }
+    ];
+  }
+  
+  if (lowerQuery.includes('tiktok')) {
+    return [
+      { url: platformSpecificImages.tiktok[0], description: "TikTok Viral Content - Creating engaging videos that trend" },
+      { url: platformSpecificImages.tiktok[1], description: "TikTok Marketing Strategy - Building brand awareness through short-form video" },
+      { url: platformSpecificImages.tiktok[2], description: "TikTok Monetization - Creator fund and brand partnership opportunities" }
+    ];
+  }
+  
+  if (lowerQuery.includes('instagram')) {
+    return [
+      { url: platformSpecificImages.instagram[0], description: "Instagram Growth Hacks - Organic follower and engagement strategies" },
+      { url: platformSpecificImages.instagram[1], description: "Instagram Stories & Reels - Creative content that converts" },
+      { url: platformSpecificImages.instagram[2], description: "Instagram Business Success - Converting followers into customers" }
+    ];
+  }
+  
+  if (lowerQuery.includes('youtube')) {
+    return [
+      { url: platformSpecificImages.youtube[0], description: "YouTube Channel Growth - Subscriber acquisition and retention strategies" },
+      { url: platformSpecificImages.youtube[1], description: "YouTube Monetization - Ad revenue, sponsorships, and channel memberships" },
+      { url: platformSpecificImages.youtube[2], description: "YouTube SEO Mastery - Ranking videos and increasing discoverability" }
+    ];
+  }
+
+  // Money-making specific descriptions
+  if (lowerQuery.includes('make money') || lowerQuery.includes('income') || lowerQuery.includes('earn')) {
+    const moneyImages = contextualImages["make money online"] || aiImagesByCategory.marketing;
+    return [
+      { url: moneyImages[0], description: "Online Income Generation - Multiple revenue stream strategies" },
+      { url: moneyImages[1] || moneyImages[0], description: "Digital Profit Optimization - Maximizing your earning potential" },
+      { url: moneyImages[2] || moneyImages[0], description: "Passive Income Systems - Automated revenue generation methods" }
+    ];
+  }
+
+  // Default mockups based on category
+  const category = determineCategory(lowerQuery);
+  const images = aiImagesByCategory[category] || aiImagesByCategory.ai;
+  
+  return [
+    { url: images[0], description: `Professional ${category} strategy - Advanced techniques and best practices` },
+    { url: images[1] || images[0], description: `${category} optimization - Data-driven approach to success` },
+    { url: images[2] || images[0], description: `${category} automation - AI-powered tools and workflows` }
+  ];
+};
+
+// Helper function to determine category
+const determineCategory = (query: string): string => {
+  if (query.includes('seo') || query.includes('search')) return 'seo';
+  if (query.includes('social') || query.includes('media')) return 'social';
+  if (query.includes('content') || query.includes('blog')) return 'content';
+  if (query.includes('email') || query.includes('newsletter')) return 'email';
+  if (query.includes('marketing') || query.includes('promotion')) return 'marketing';
+  if (query.includes('traffic') || query.includes('organic')) return 'traffic';
+  return 'ai';
 };
 
 // Enhanced function to get videos based on search query
@@ -378,52 +333,7 @@ export const getVideoBySearchQuery = (searchQuery: string) => {
   };
 };
 
-export const getRandomContent = () => {
-  return organicTrafficContent[Math.floor(Math.random() * organicTrafficContent.length)];
-};
-
-export const getRandomImage = () => {
-  const allImages = Object.values(aiImagesByCategory).flat();
-  return allImages[Math.floor(Math.random() * allImages.length)];
-};
-
-// Updated to get 30-second intro videos
-export const getRandomVideo = () => {
-  const randomIntro = aiIntroVideos[Math.floor(Math.random() * aiIntroVideos.length)];
-  return randomIntro.url;
-};
-
 // Enhanced function to get 30-second intro videos based on subject with better keyword matching
-export const getVideoBySubject = (subject: string) => {
-  const lowerSubject = subject.toLowerCase();
-  
-  // Determine category based on subject keywords with more specific matching
-  let category = 'ai'; // default
-  
-  if (lowerSubject.includes('seo') || lowerSubject.includes('search') || lowerSubject.includes('ranking')) {
-    category = 'seo';
-  } else if (lowerSubject.includes('traffic') || lowerSubject.includes('organic') || lowerSubject.includes('visitor')) {
-    category = 'traffic';
-  } else if (lowerSubject.includes('digital') || lowerSubject.includes('toolkit') || lowerSubject.includes('tool')) {
-    category = 'digital';
-  } else if (lowerSubject.includes('marketing') || lowerSubject.includes('campaign') || lowerSubject.includes('promotion')) {
-    category = 'marketing';
-  } else if (lowerSubject.includes('ai') || lowerSubject.includes('powered') || lowerSubject.includes('artificial')) {
-    category = 'ai';
-  } else if (lowerSubject.includes('social') || lowerSubject.includes('media') || lowerSubject.includes('facebook') || lowerSubject.includes('instagram')) {
-    category = 'social';
-  } else if (lowerSubject.includes('content') || lowerSubject.includes('blog') || lowerSubject.includes('article')) {
-    category = 'content';
-  } else if (lowerSubject.includes('email') || lowerSubject.includes('newsletter')) {
-    category = 'email';
-  }
-  
-  const videos = videosByCategory[category] || videosByCategory['ai'];
-  const selectedVideo = videos[Math.floor(Math.random() * videos.length)];
-  return selectedVideo.url;
-};
-
-// New function to get 30-second intro video with metadata
 export const getIntroVideoBySubject = (subject: string) => {
   const lowerSubject = subject.toLowerCase();
   
@@ -477,86 +387,17 @@ export const getContentBySearchTerm = (searchTerm: string) => {
   return getRandomContent();
 };
 
-// Function to get 3 mockup images based on search query
-export const getMockupImagesBySearchQuery = (searchQuery: string): Array<{url: string, description: string}> => {
-  const lowerQuery = searchQuery.toLowerCase();
-  
-  // Platform-specific matching
-  if (lowerQuery.includes('facebook')) {
-    return [
-      { url: platformSpecificImages.facebook[0], description: "Facebook Marketing Strategy - Engaging audience through targeted content" },
-      { url: platformSpecificImages.facebook[1], description: "Social Media Growth - Building community and increasing reach" },
-      { url: platformSpecificImages.facebook[2], description: "Facebook Ads Optimization - Maximizing ROI through smart targeting" }
-    ];
-  }
-  
-  if (lowerQuery.includes('tiktok')) {
-    return [
-      { url: platformSpecificImages.tiktok[0], description: "TikTok Content Creation - Viral video strategies and trends" },
-      { url: platformSpecificImages.tiktok[1], description: "TikTok Marketing - Reaching Gen Z audience effectively" },
-      { url: platformSpecificImages.tiktok[2], description: "TikTok Monetization - Creator fund and brand partnerships" }
-    ];
-  }
-  
-  if (lowerQuery.includes('instagram')) {
-    return [
-      { url: platformSpecificImages.instagram[0], description: "Instagram Growth - Building followers and engagement" },
-      { url: platformSpecificImages.instagram[1], description: "Instagram Stories & Reels - Creative content strategies" },
-      { url: platformSpecificImages.instagram[2], description: "Instagram Business - Converting followers to customers" }
-    ];
-  }
-  
-  if (lowerQuery.includes('youtube')) {
-    return [
-      { url: platformSpecificImages.youtube[0], description: "YouTube Channel Growth - Subscriber and view optimization" },
-      { url: platformSpecificImages.youtube[1], description: "YouTube Monetization - Ad revenue and sponsorship strategies" },
-      { url: platformSpecificImages.youtube[2], description: "YouTube SEO - Ranking videos and increasing visibility" }
-    ];
-  }
-  
-  if (lowerQuery.includes('affiliate') || lowerQuery.includes('commission')) {
-    return [
-      { url: platformSpecificImages.affiliate[0], description: "Affiliate Marketing Success - High-converting product promotion" },
-      { url: platformSpecificImages.affiliate[1], description: "Commission Tracking - Analytics and performance optimization" },
-      { url: platformSpecificImages.affiliate[2], description: "Affiliate Networks - Finding profitable partnerships" }
-    ];
-  }
-  
-  if (lowerQuery.includes('ecommerce') || lowerQuery.includes('online store')) {
-    return [
-      { url: platformSpecificImages.ecommerce[0], description: "E-commerce Setup - Building profitable online stores" },
-      { url: platformSpecificImages.ecommerce[1], description: "Online Sales - Converting visitors to customers" },
-      { url: platformSpecificImages.ecommerce[2], description: "E-commerce Growth - Scaling your online business" }
-    ];
-  }
-  
-  // General topic matching
-  if (lowerQuery.includes('money') || lowerQuery.includes('income')) {
-    return [
-      { url: aiImagesByCategory.marketing[0], description: "Income Generation - Multiple revenue stream strategies" },
-      { url: aiImagesByCategory.traffic[0], description: "Profit Optimization - Maximizing earning potential" },
-      { url: aiImagesByCategory.ai[0], description: "AI-Powered Income - Automated revenue systems" }
-    ];
-  }
-  
-  // Default mockups based on category
-  const category = determineCategory(lowerQuery);
-  const images = aiImagesByCategory[category] || aiImagesByCategory.ai;
-  
-  return [
-    { url: images[0], description: `Professional ${category} strategy - Advanced techniques and best practices` },
-    { url: images[1] || images[0], description: `${category} optimization - Data-driven approach to success` },
-    { url: images[2] || images[0], description: `${category} automation - AI-powered tools and workflows` }
-  ];
+export const getRandomContent = () => {
+  return organicTrafficContent[Math.floor(Math.random() * organicTrafficContent.length)];
 };
 
-// Helper function to determine category
-const determineCategory = (query: string): string => {
-  if (query.includes('seo') || query.includes('search')) return 'seo';
-  if (query.includes('social') || query.includes('media')) return 'social';
-  if (query.includes('content') || query.includes('blog')) return 'content';
-  if (query.includes('email') || query.includes('newsletter')) return 'email';
-  if (query.includes('marketing') || query.includes('promotion')) return 'marketing';
-  if (query.includes('traffic') || query.includes('organic')) return 'traffic';
-  return 'ai';
+export const getRandomImage = () => {
+  const allImages = Object.values(aiImagesByCategory).flat();
+  return allImages[Math.floor(Math.random() * allImages.length)];
+};
+
+// Updated to get 30-second intro videos
+export const getRandomVideo = () => {
+  const randomIntro = aiIntroVideos[Math.floor(Math.random() * aiIntroVideos.length)];
+  return randomIntro.url;
 };
