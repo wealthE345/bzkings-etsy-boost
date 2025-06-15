@@ -18,13 +18,21 @@ const Navigation = () => {
     <header className="bg-white/20 backdrop-blur-sm border-b border-purple-100/30 sticky top-0 z-50 glass-effect">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-amber-500 rounded-lg flex items-center justify-center">
-              <Zap className="h-5 w-5 text-white" />
+          <Link to="/" className="flex items-center gap-3">
+            <div className="relative">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-amber-500 rounded-lg flex items-center justify-center shadow-lg">
+                <Zap className="h-6 w-6 text-white" />
+              </div>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                <span className="text-xs font-bold text-white">B</span>
+              </div>
             </div>
-            <span className="font-bold text-xl bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
-              BZ Kings
-            </span>
+            <div className="flex flex-col">
+              <span className="font-bold text-xl bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
+                BZ Kings SEO
+              </span>
+              <span className="text-xs text-white/70 -mt-1">Premium SEO Tools</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -39,7 +47,7 @@ const Navigation = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-white">AI Apps</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="text-white">SEO Tools</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid gap-3 p-6 w-[400px] bg-white/95 backdrop-blur-sm">
                       <NavigationMenuLink asChild>
@@ -49,8 +57,8 @@ const Navigation = () => {
                         >
                           <Download className="h-5 w-5 text-purple-600" />
                           <div>
-                            <div className="font-medium">AI App Hub</div>
-                            <div className="text-sm text-gray-600">SEO & Mobile Apps - Free & Premium</div>
+                            <div className="font-medium">SEO App Hub</div>
+                            <div className="text-sm text-gray-600">Premium SEO & Mobile Apps</div>
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -62,7 +70,7 @@ const Navigation = () => {
                           <Search className="h-5 w-5 text-purple-600" />
                           <div>
                             <div className="font-medium">Keyword Research</div>
-                            <div className="text-sm text-gray-600">SEO keyword analysis with real data</div>
+                            <div className="text-sm text-gray-600">Advanced keyword analysis with real data</div>
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -74,7 +82,7 @@ const Navigation = () => {
                           <Shield className="h-5 w-5 text-purple-600" />
                           <div>
                             <div className="font-medium">Backlink Generator</div>
-                            <div className="text-sm text-gray-600">Generate high-quality organic backlinks</div>
+                            <div className="text-sm text-gray-600">Generate 2000+ organic backlinks from 50+ domains</div>
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -83,7 +91,7 @@ const Navigation = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-white">Mobile Apps</NavigationMenuTrigger>
+                  <NavigationMenuTrigger className="text-white">Premium Apps</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid gap-3 p-6 w-[350px] bg-white/95 backdrop-blur-sm">
                       <NavigationMenuLink asChild>
@@ -186,7 +194,7 @@ const Navigation = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Download className="h-4 w-4" />
-                AI App Hub
+                SEO App Hub
               </Link>
               <Link
                 to="/keyword-research"
@@ -195,6 +203,14 @@ const Navigation = () => {
               >
                 <Search className="h-4 w-4" />
                 Keyword Research
+              </Link>
+              <Link
+                to="/backlink-generator"
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Shield className="h-4 w-4" />
+                Backlink Generator
               </Link>
               <Link
                 to="/about"
@@ -219,14 +235,6 @@ const Navigation = () => {
               >
                 <Shield className="h-4 w-4" />
                 Terms & Disclaimer
-              </Link>
-              <Link
-                to="/backlink-generator"
-                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Shield className="h-4 w-4" />
-                Backlink Generator
               </Link>
               <div className="flex flex-col gap-2 px-4">
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>

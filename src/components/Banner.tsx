@@ -16,17 +16,17 @@ const Banner = () => {
         <div className="flex items-center gap-3 flex-1">
           <Sparkles className="h-5 w-5 animate-pulse" />
           <p className="text-sm md:text-base font-medium">
-            🎉 <strong>New Year Special:</strong> Get 50% off all Premium SEO Apps! Limited time offer.
+            🎉 <strong>BZ Kings SEO Special:</strong> Get 50% off all Premium SEO Tools & 2000+ Backlinks! Limited time offer.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/app-hub">
+          <Link to="/backlink-generator">
             <Button 
               size="sm" 
               variant="secondary"
               className="bg-white text-purple-700 hover:bg-gray-100 font-semibold"
             >
-              Claim Offer
+              Get Backlinks
             </Button>
           </Link>
           <Button

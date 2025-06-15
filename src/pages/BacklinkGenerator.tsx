@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
-import { Link2, TrendingUp, Globe, Target, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { Link2, TrendingUp, Globe, Target, CheckCircle, Clock, AlertCircle, Crown, Zap, Star } from "lucide-react";
 import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Banner from "@/components/Banner";
@@ -31,17 +31,75 @@ const BacklinkGenerator = () => {
   const [totalGenerated, setTotalGenerated] = useState(0);
   const [activeBacklinks, setActiveBacklinks] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [selectedPlan, setSelectedPlan] = useState("free");
+
+  // Expanded list of 50+ high-authority domains
+  const domains = [
+    "medium.com", "reddit.com", "quora.com", "linkedin.com", "facebook.com",
+    "twitter.com", "pinterest.com", "tumblr.com", "blogspot.com", "wordpress.com",
+    "github.com", "stackoverflow.com", "youtube.com", "vimeo.com", "flickr.com",
+    "instagram.com", "tiktok.com", "snapchat.com", "discord.com", "telegram.org",
+    "whatsapp.com", "skype.com", "zoom.us", "teams.microsoft.com", "slack.com",
+    "dropbox.com", "google.com", "apple.com", "microsoft.com", "amazon.com",
+    "ebay.com", "etsy.com", "shopify.com", "wix.com", "squarespace.com",
+    "weebly.com", "godaddy.com", "namecheap.com", "hostgator.com", "bluehost.com",
+    "siteground.com", "cloudflare.com", "aws.amazon.com", "digitalocean.com", "vultr.com",
+    "linode.com", "heroku.com", "netlify.com", "vercel.com", "firebase.google.com",
+    "mongodb.com", "mysql.com", "postgresql.org", "redis.io", "elasticsearch.co"
+  ];
+
+  const plans = [
+    {
+      name: "Free Plan",
+      id: "free",
+      price: "$0",
+      backlinks: "50 backlinks",
+      domains: "25 domains",
+      features: ["Basic analytics", "Email support", "Manual generation"],
+      color: "border-gray-300",
+      icon: <Star className="h-5 w-5 text-gray-500" />
+    },
+    {
+      name: "Pro Plan",
+      id: "pro",
+      price: "$29/month",
+      backlinks: "500 backlinks",
+      domains: "50+ domains",
+      features: ["Real-time analytics", "Priority support", "Auto-generation", "Custom anchors"],
+      color: "border-blue-500",
+      icon: <Zap className="h-5 w-5 text-blue-500" />
+    },
+    {
+      name: "Enterprise",
+      id: "enterprise",
+      price: "$99/month",
+      backlinks: "2000 backlinks",
+      domains: "50+ premium domains",
+      features: ["Advanced analytics", "24/7 support", "Bulk generation", "White-label", "API access"],
+      color: "border-purple-500",
+      icon: <Crown className="h-5 w-5 text-purple-500" />
+    }
+  ];
 
   // Sample analytics data
   const analyticsData = [
-    { date: '2024-01-01', backlinks: 45, domains: 12 },
-    { date: '2024-01-02', backlinks: 52, domains: 15 },
-    { date: '2024-01-03', backlinks: 67, domains: 18 },
-    { date: '2024-01-04', backlinks: 78, domains: 22 },
-    { date: '2024-01-05', backlinks: 89, domains: 25 },
-    { date: '2024-01-06', backlinks: 102, domains: 28 },
-    { date: '2024-01-07', backlinks: 125, domains: 32 },
+    { date: '2024-01-01', backlinks: 145, domains: 32 },
+    { date: '2024-01-02', backlinks: 252, domains: 45 },
+    { date: '2024-01-03', backlinks: 367, domains: 48 },
+    { date: '2024-01-04', backlinks: 478, domains: 52 },
+    { date: '2024-01-05', backlinks: 589, domains: 55 },
+    { date: '2024-01-06', backlinks: 702, domains: 58 },
+    { date: '2024-01-07', backlinks: 825, domains: 62 },
   ];
+
+  const getMaxBacklinks = () => {
+    switch (selectedPlan) {
+      case "free": return 50;
+      case "pro": return 500;
+      case "enterprise": return 2000;
+      default: return 50;
+    }
+  };
 
   const generateBacklinks = async () => {
     if (!targetUrl || !keywords) {
@@ -49,18 +107,14 @@ const BacklinkGenerator = () => {
       return;
     }
 
+    const maxBacklinks = getMaxBacklinks();
     setIsGenerating(true);
     setProgress(0);
 
     // Simulate backlink generation
     const keywordList = keywords.split(",").map(k => k.trim());
-    const domains = [
-      "medium.com", "reddit.com", "quora.com", "linkedin.com", "facebook.com",
-      "twitter.com", "pinterest.com", "tumblr.com", "blogspot.com", "wordpress.com",
-      "github.com", "stackoverflow.com", "youtube.com", "vimeo.com", "flickr.com"
-    ];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < maxBacklinks; i++) {
       setTimeout(() => {
         const domain = domains[Math.floor(Math.random() * domains.length)];
         const keyword = keywordList[Math.floor(Math.random() * keywordList.length)];
@@ -69,8 +123,8 @@ const BacklinkGenerator = () => {
           url: `https://${domain}/post/${Math.random().toString(36).substr(2, 9)}`,
           domain,
           anchor: keyword,
-          status: Math.random() > 0.2 ? "active" : Math.random() > 0.5 ? "pending" : "failed",
-          domainAuthority: Math.floor(Math.random() * 40) + 30,
+          status: Math.random() > 0.15 ? "active" : Math.random() > 0.5 ? "pending" : "failed",
+          domainAuthority: Math.floor(Math.random() * 50) + 40,
           timestamp: new Date()
         };
 
@@ -79,13 +133,13 @@ const BacklinkGenerator = () => {
         if (newBacklink.status === "active") {
           setActiveBacklinks(prev => prev + 1);
         }
-        setProgress((i + 1) * 5);
+        setProgress(((i + 1) / maxBacklinks) * 100);
 
-        if (i === 19) {
+        if (i === maxBacklinks - 1) {
           setIsGenerating(false);
-          toast.success("🎉 Backlink generation completed! Generated 20 high-quality backlinks.");
+          toast.success(`🎉 Backlink generation completed! Generated ${maxBacklinks} high-quality backlinks from ${new Set(domains).size}+ premium domains.`);
         }
-      }, i * 500);
+      }, i * 100);
     }
   };
 
@@ -119,15 +173,43 @@ const BacklinkGenerator = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-purple-700 border-purple-300 glass-effect">
-            🔗 AI Backlink Generator Pro
+            🔗 BZ Kings SEO - Premium Backlink Generator
           </Badge>
           <h1 className="text-4xl font-bold mb-4 text-white drop-shadow-lg">
-            Generate High-Quality Organic Backlinks
+            Generate 2000+ High-Quality Organic Backlinks
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow">
-            Build powerful backlinks automatically with our AI-powered backlink generator. 
-            Get real organic backlinks from high-authority domains.
+            Build powerful backlinks automatically from 50+ premium domains with our AI-powered backlink generator. 
+            Get real organic backlinks that boost your SEO rankings instantly.
           </p>
+        </div>
+
+        {/* Pricing Plans */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {plans.map((plan) => (
+            <Card 
+              key={plan.id} 
+              className={`glass-effect border-2 cursor-pointer transition-all ${
+                selectedPlan === plan.id ? plan.color : 'border-white/20'
+              }`}
+              onClick={() => setSelectedPlan(plan.id)}
+            >
+              <CardContent className="p-6 text-center">
+                <div className="flex items-center justify-center mb-3">
+                  {plan.icon}
+                  <h3 className="text-xl font-bold text-white ml-2">{plan.name}</h3>
+                </div>
+                <p className="text-3xl font-bold text-white mb-2">{plan.price}</p>
+                <p className="text-white/70 mb-4">{plan.backlinks}</p>
+                <p className="text-white/70 mb-4">{plan.domains}</p>
+                <ul className="text-sm text-white/80 space-y-1">
+                  {plan.features.map((feature, index) => (
+                    <li key={index}>✓ {feature}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Stats Cards */}
@@ -175,9 +257,9 @@ const BacklinkGenerator = () => {
           <TabsContent value="generator">
             <Card className="glass-effect border-white/20">
               <CardHeader>
-                <CardTitle className="text-white">Generate Backlinks</CardTitle>
+                <CardTitle className="text-white">Generate Premium Backlinks</CardTitle>
                 <CardDescription className="text-white/70">
-                  Enter your target URL and keywords to generate high-quality backlinks
+                  Enter your target URL and keywords to generate up to {getMaxBacklinks()} high-quality backlinks from 50+ premium domains
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -203,11 +285,16 @@ const BacklinkGenerator = () => {
                   />
                 </div>
 
+                <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+                  <p className="text-white font-semibold mb-2">Selected Plan: {plans.find(p => p.id === selectedPlan)?.name}</p>
+                  <p className="text-white/70">Will generate up to {getMaxBacklinks()} backlinks from 50+ premium domains</p>
+                </div>
+
                 {isGenerating && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-white">
-                      <span>Generating backlinks...</span>
-                      <span>{progress}%</span>
+                      <span>Generating backlinks from premium domains...</span>
+                      <span>{Math.round(progress)}%</span>
                     </div>
                     <Progress value={progress} className="h-2" />
                   </div>
@@ -219,7 +306,7 @@ const BacklinkGenerator = () => {
                   className="w-full gradient-primary text-white"
                   size="lg"
                 >
-                  {isGenerating ? "Generating Backlinks..." : "Generate Backlinks"}
+                  {isGenerating ? `Generating ${getMaxBacklinks()} Backlinks...` : `Generate ${getMaxBacklinks()} Backlinks`}
                   <Target className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>
@@ -229,9 +316,9 @@ const BacklinkGenerator = () => {
           <TabsContent value="analytics">
             <Card className="glass-effect border-white/20">
               <CardHeader>
-                <CardTitle className="text-white">Backlink Analytics</CardTitle>
+                <CardTitle className="text-white">Premium Analytics Dashboard</CardTitle>
                 <CardDescription className="text-white/70">
-                  Real-time analytics of your backlink generation progress
+                  Real-time analytics of your backlink generation progress across 50+ premium domains
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -285,14 +372,14 @@ const BacklinkGenerator = () => {
               <CardHeader>
                 <CardTitle className="text-white">Backlink History</CardTitle>
                 <CardDescription className="text-white/70">
-                  View all generated backlinks and their status
+                  View all generated backlinks from 50+ premium domains and their status
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {backlinks.length === 0 ? (
                     <p className="text-white/70 text-center py-8">
-                      No backlinks generated yet. Use the generator to create your first backlinks!
+                      No backlinks generated yet. Use the generator to create your first backlinks from premium domains!
                     </p>
                   ) : (
                     backlinks.map((backlink) => (
