@@ -216,6 +216,23 @@ const BacklinkGenerator = () => {
     }
   };
 
+  const handlePlanPayment = (planId: string) => {
+    if (planId === "free") {
+      setSelectedPlan(planId);
+      toast.success("Free plan selected! Sign up to get started.");
+      window.location.href = '/signup';
+      return;
+    }
+    
+    const plan = plans.find(p => p.id === planId);
+    if (plan) {
+      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=wealthenterprise69@gmail.com&item_name=${encodeURIComponent(plan.name + ' - Backlink Generator')}&amount=${planId === 'pro' ? '29' : '99'}&currency_code=USD&return=https://bzkingsdigitalmall.etsy.com/success&cancel_return=https://bzkingsdigitalmall.etsy.com/cancel`;
+      
+      toast.info("Redirecting to PayPal for secure payment...");
+      window.open(paypalUrl, '_blank');
+    }
+  };
+
   return (
     <div className="min-h-screen animated-bg">
       <Banner />
@@ -253,11 +270,21 @@ const BacklinkGenerator = () => {
                 <p className="text-3xl font-bold text-white mb-2">{plan.price}</p>
                 <p className="text-white/70 mb-4">{plan.backlinks}</p>
                 <p className="text-white/70 mb-4">{plan.domains}</p>
-                <ul className="text-sm text-white/80 space-y-1">
+                <ul className="text-sm text-white/80 space-y-1 mb-4">
                   {plan.features.map((feature, index) => (
                     <li key={index}>✓ {feature}</li>
                   ))}
                 </ul>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlanPayment(plan.id);
+                  }}
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                  size="sm"
+                >
+                  {plan.id === 'free' ? 'Get Started' : `Get ${plan.name}`}
+                </Button>
               </CardContent>
             </Card>
           ))}

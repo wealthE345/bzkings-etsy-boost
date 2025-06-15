@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1080,7 +1081,8 @@ const handlePayment = (app: App) => {
 
 const handlePlanPayment = (plan: Plan) => {
   if (plan.price === 0) {
-    toast.success("Welcome to the Free Starter plan!");
+    // Redirect to signup page for free plan
+    window.location.href = '/signup';
     return;
   }
   
