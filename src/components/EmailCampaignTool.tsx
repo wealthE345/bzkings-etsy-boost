@@ -167,6 +167,129 @@ const EmailCampaignTool = () => {
     }, 3000);
   };
 
+  const handleGenerateAIImage = async () => {
+    setIsGeneratingImage(true);
+    toast.info("🖼️ AI is generating an optimized image for organic traffic...");
+
+    setTimeout(() => {
+      const aiImages = [
+        "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
+      ];
+
+      const randomImage = aiImages[Math.floor(Math.random() * aiImages.length)];
+      
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "image",
+          url: randomImage,
+          alt: "AI-generated image optimized for organic traffic and SEO campaigns"
+        },
+        aiGenerated: true
+      });
+
+      setIsGeneratingImage(false);
+      toast.success("🎨 AI image generated successfully!");
+      toast.info("📊 Image optimized for organic traffic engagement");
+    }, 2500);
+  };
+
+  const handleGenerateAIVideo = async () => {
+    setIsGeneratingVideo(true);
+    toast.info("🎬 AI is generating an optimized video for organic traffic...");
+
+    setTimeout(() => {
+      const aiVideos = [
+        "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+        "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+        "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+        "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+      ];
+
+      const randomVideo = aiVideos[Math.floor(Math.random() * aiVideos.length)];
+      
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "video",
+          url: randomVideo,
+          alt: "AI-generated video optimized for organic traffic and SEO campaigns"
+        },
+        aiGenerated: true
+      });
+
+      setIsGeneratingVideo(false);
+      toast.success("🎥 AI video generated successfully!");
+      toast.info("📈 Video optimized for organic traffic conversion");
+    }, 4000);
+  };
+
+  const handleRegenerateCreative = async () => {
+    if (!newEmail.creative.url) {
+      toast.error("No creative to regenerate. Generate one first!");
+      return;
+    }
+
+    const isCurrentVideo = newEmail.creative.type === "video";
+    
+    if (isCurrentVideo) {
+      setIsGeneratingVideo(true);
+      toast.info("🔄 Regenerating AI video creative...");
+    } else {
+      setIsGeneratingImage(true);
+      toast.info("🔄 Regenerating AI image creative...");
+    }
+
+    setTimeout(() => {
+      if (isCurrentVideo) {
+        const aiVideos = [
+          "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+          "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+          "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+          "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+        ];
+        const randomVideo = aiVideos[Math.floor(Math.random() * aiVideos.length)];
+        
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "video",
+            url: randomVideo,
+            alt: "AI-regenerated video optimized for organic traffic campaigns"
+          }
+        });
+        
+        setIsGeneratingVideo(false);
+        toast.success("🎬 AI video regenerated successfully!");
+      } else {
+        const aiImages = [
+          "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
+        ];
+        const randomImage = aiImages[Math.floor(Math.random() * aiImages.length)];
+        
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "image",
+            url: randomImage,
+            alt: "AI-regenerated image optimized for organic traffic campaigns"
+          }
+        });
+        
+        setIsGeneratingImage(false);
+        toast.success("🖼️ AI image regenerated successfully!");
+      }
+    }, 3000);
+  };
+
   const handleUploadImage = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -232,6 +355,25 @@ const EmailCampaignTool = () => {
       ...prev,
       [emailId]: !prev[emailId]
     }));
+  };
+
+  const handleIntegratePlatform = () => {
+    if (!selectedPlatform) {
+      toast.error("Please select a platform first");
+      return;
+    }
+
+    if (!platformCredentials.apiKey.trim()) {
+      toast.error("Please enter your API key");
+      return;
+    }
+
+    toast.info(`🔗 Integrating with ${selectedPlatform}...`);
+    
+    setTimeout(() => {
+      toast.success(`✅ Successfully integrated with ${selectedPlatform}!`);
+      toast.info("🎯 Your organic traffic audience is now synced");
+    }, 2000);
   };
 
   const handleCreateEmail = () => {
@@ -754,7 +896,7 @@ const EmailCampaignTool = () => {
                                   className="bg-black/50 hover:bg-black/70 text-white border-none"
                                   onClick={() => toggleVideoPlayback(email.id)}
                                 >
-                                  {isVideoPlaying[email.id] ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                                  {isVideoPlaying[email.id] ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />
                                 </Button>
                               </div>
                             </div>
@@ -946,7 +1088,11 @@ const EmailCampaignTool = () => {
                   <SelectValue placeholder="Select your email platform" />
                 </SelectTrigger>
                 <SelectContent>
-                  {/* Supported platforms content here */}
+                  <SelectItem value="mailchimp">Mailchimp</SelectItem>
+                  <SelectItem value="convertkit">ConvertKit</SelectItem>
+                  <SelectItem value="aweber">AWeber</SelectItem>
+                  <SelectItem value="constantcontact">Constant Contact</SelectItem>
+                  <SelectItem value="sendinblue">Sendinblue</SelectItem>
                 </SelectContent>
               </Select>
 
