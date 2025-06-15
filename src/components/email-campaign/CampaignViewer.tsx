@@ -1,11 +1,10 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles, VolumeX, Volume2, Volume1, Mic } from "lucide-react";
+import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles, VolumeX, Volume2, Volume1, Mic, Captions } from "lucide-react";
 import { EmailCampaign } from "@/hooks/useEmailCampaign";
 import { generateEmailContent } from "@/utils/aiContentGenerator";
 import { toast } from "sonner";
@@ -25,8 +24,10 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
   const [isEditing, setIsEditing] = useState(isEditable);
   const [editedCampaign, setEditedCampaign] = useState<EmailCampaign | null>(null);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
-  const [showTextToSpeech, setShowTextToSpeech] = useState(false);
+  const [showCaptions, setShowCaptions] = useState(true);
+  const [currentCaptionIndex, setCurrentCaptionIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const captionIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Reset video state when campaign changes
@@ -40,6 +41,57 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     setIsEditing(isEditable);
   }, [campaign, isEditable, volume]);
 
+  // Enhanced function to get text-to-speech content with better captions
+  const getTextToSpeechContent = () => {
+    if (!currentCampaign.creative?.type === "video") return "";
+    
+    const searchTerm = currentCampaign.subject || "digital marketing";
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    
+    if (lowerSearchTerm.includes('tiktok')) {
+      return "Welcome to TikTok Money Mastery! Are you ready to turn your TikTok passion into profit? This comprehensive training reveals how everyday creators are earning $1,000+ monthly through TikTok. Learn viral content creation, Creator Fund optimization, brand partnerships, and affiliate marketing through TikTok. Don't just scroll TikTok - start earning from it today!";
+    } else if (lowerSearchTerm.includes('clickbank')) {
+      return "Unlock the ClickBank profit system that's generating $500+ daily for smart affiliates! Learn insider strategies that top ClickBank affiliates use to generate consistent commissions. Master high-converting product selection, traffic generation, and commission optimization for maximum ClickBank profits!";
+    } else if (lowerSearchTerm.includes('facebook ads')) {
+      return "Master Facebook Ads with our comprehensive advertising blueprint that's generating 300% ROI! Discover advanced targeting strategies, high-converting ad creatives, and optimization techniques used by top marketers. Start dominating Facebook advertising today!";
+    } else if (lowerSearchTerm.includes('make money from home')) {
+      return "Transform your home into a profit-generating headquarters! Say goodbye to the daily commute and hello to financial freedom. Learn multiple income streams you can build from home, time management strategies, and scaling techniques for location independence!";
+    }
+    
+    return `Welcome to this promotional video about ${searchTerm}! This AI-generated content will help you understand the key benefits and strategies for success. Our comprehensive system delivers maximum results and helps you achieve your goals with ${searchTerm}.`;
+  };
+
+  // Split captions into segments for animated display
+  const getCaptionSegments = () => {
+    const fullText = getTextToSpeechContent();
+    const segments = fullText.split(/[.!?]+/).filter(segment => segment.trim().length > 0);
+    return segments.map(segment => segment.trim() + '.');
+  };
+
+  const startCaptionAnimation = () => {
+    if (!showCaptions) return;
+    
+    const segments = getCaptionSegments();
+    setCurrentCaptionIndex(0);
+    
+    captionIntervalRef.current = setInterval(() => {
+      setCurrentCaptionIndex(prev => {
+        if (prev >= segments.length - 1) {
+          return 0; // Loop back to start
+        }
+        return prev + 1;
+      });
+    }, 3000); // Change caption every 3 seconds
+  };
+
+  const stopCaptionAnimation = () => {
+    if (captionIntervalRef.current) {
+      clearInterval(captionIntervalRef.current);
+      captionIntervalRef.current = null;
+    }
+    setCurrentCaptionIndex(0);
+  };
+
   const toggleVideoPlayback = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -47,12 +99,14 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     if (isVideoPlaying) {
       video.pause();
       setIsVideoPlaying(false);
+      stopCaptionAnimation();
     } else {
       video.currentTime = 0;
       video.volume = isMuted ? 0 : volume;
       video.play().then(() => {
         setIsVideoPlaying(true);
-        toast.success("🎬 Video playing with promotional audio!");
+        startCaptionAnimation();
+        toast.success("🎬 Video playing with promotional audio and captions!");
       }).catch(console.error);
     }
   };
@@ -130,19 +184,28 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     toast.success("✅ Campaign saved successfully!");
   };
 
-  // Get text-to-speech content for video
-  const getTextToSpeechContent = () => {
-    if (currentCampaign.creative?.type === "video") {
-      // This would be the actual text-to-speech content that plays in the video
-      const searchTerm = currentCampaign.subject || "digital marketing";
-      return `Welcome to this promotional video about ${searchTerm}! This AI-generated content will help you understand the key benefits and strategies for success with ${searchTerm}. Our comprehensive system is designed to deliver maximum results and help you achieve your goals.`;
+  const toggleCaptions = () => {
+    setShowCaptions(!showCaptions);
+    if (!showCaptions && isVideoPlaying) {
+      startCaptionAnimation();
+    } else {
+      stopCaptionAnimation();
     }
-    return "";
+    toast.info(showCaptions ? "📝 Captions disabled" : "📝 Captions enabled");
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopCaptionAnimation();
+    };
+  }, []);
 
   if (!campaign) return null;
 
   const currentCampaign = editedCampaign || campaign;
+  const captionSegments = getCaptionSegments();
+  const currentCaption = captionSegments[currentCaptionIndex] || "";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -265,31 +328,44 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
             </div>
           )}
 
-          {/* Enhanced AI Creative Content with Volume Controls */}
+          {/* Enhanced AI Creative Content with Live Captions */}
           {currentCampaign.creative?.url && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Promotional Video with Text-to-Speech Narration</h3>
-                {currentCampaign.creative.type === "video" && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowTextToSpeech(!showTextToSpeech)}
-                  >
-                    <Mic className="h-4 w-4 mr-1" />
-                    {showTextToSpeech ? "Hide" : "Show"} Narration Text
-                  </Button>
-                )}
+                <h3 className="text-lg font-semibold">Promotional Video with Live Text-to-Speech Captions</h3>
+                <div className="flex gap-2">
+                  {currentCampaign.creative.type === "video" && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={toggleCaptions}
+                        className={showCaptions ? "bg-blue-50 border-blue-300" : ""}
+                      >
+                        <Captions className="h-4 w-4 mr-1" />
+                        {showCaptions ? "Hide" : "Show"} Captions
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowTextToSpeech(!showTextToSpeech)}
+                      >
+                        <Mic className="h-4 w-4 mr-1" />
+                        Full Script
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
 
-              {/* Text-to-Speech Content Display */}
+              {/* Full Text-to-Speech Script Display */}
               {showTextToSpeech && currentCampaign.creative.type === "video" && (
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
                     <Mic className="h-4 w-4" />
-                    Video Narration Script (Text-to-Speech)
+                    Complete Video Narration Script
                   </h4>
-                  <p className="text-sm text-blue-800 italic">
+                  <p className="text-sm text-blue-800 italic leading-relaxed">
                     {getTextToSpeechContent()}
                   </p>
                 </div>
@@ -308,6 +384,35 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                       poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                       loop
                     />
+                    
+                    {/* Live Captions Overlay */}
+                    {showCaptions && isVideoPlaying && currentCaption && (
+                      <div className="absolute bottom-16 left-4 right-4 bg-black/80 text-white p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Captions className="h-4 w-4 text-blue-400" />
+                          <span className="text-xs text-blue-400 font-medium">LIVE NARRATION</span>
+                        </div>
+                        <p className="text-sm leading-relaxed animate-pulse">
+                          {currentCaption}
+                        </p>
+                        <div className="mt-2 flex justify-center">
+                          <div className="flex gap-1">
+                            {captionSegments.map((_, index) => (
+                              <div
+                                key={index}
+                                className={`w-2 h-2 rounded-full ${
+                                  index === currentCaptionIndex 
+                                    ? 'bg-blue-400' 
+                                    : index < currentCaptionIndex 
+                                      ? 'bg-gray-400' 
+                                      : 'bg-gray-600'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Play/Pause Button */}
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
@@ -331,6 +436,12 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                         <Video className="h-3 w-3 mr-1" />
                         Promotional Video
                       </Badge>
+                      {showCaptions && (
+                        <Badge variant="outline" className="bg-green-600 text-white border-white/30">
+                          <Captions className="h-3 w-3 mr-1" />
+                          Captions On
+                        </Badge>
+                      )}
                     </div>
 
                     {/* Bottom Volume Controls */}
@@ -406,7 +517,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                 
                 {currentCampaign.creative.type === "video" && (
                   <p className="text-xs text-gray-500 mt-1 text-center">
-                    📢 Promotional video with AI-generated text-to-speech narration • Use volume controls to adjust audio
+                    📢 Promotional video with AI-generated text-to-speech narration • Live captions show on screen during playback
                   </p>
                 )}
               </div>

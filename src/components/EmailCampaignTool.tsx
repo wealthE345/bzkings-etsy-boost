@@ -151,12 +151,12 @@ export default function EmailCampaignTool() {
           <EmailList
             emailList={emailList}
             isPublishing={isPublishing}
-            onPublishEmail={handlePublishEmail}
+            onPublishEmail={(email) => handlePublishEmail(email.id)}
             onPreviewEmail={handlePreviewEmail}
             onEditEmail={handleEditEmail}
             onViewAnalytics={handleViewAnalytics}
-            onDuplicateEmail={handleDuplicateEmail}
-            onDeleteEmail={handleDeleteEmail}
+            onDuplicateEmail={(email) => handleDuplicateEmail(email.id)}
+            onDeleteEmail={(email) => handleDeleteEmail(email.id)}
           />
         </TabsContent>
 
@@ -291,7 +291,7 @@ export default function EmailCampaignTool() {
         setIsAnalyticsDialogOpen={setIsAnalyticsDialogOpen}
         setEditingEmail={setEditingEmail}
         onSaveEdit={handleSaveEdit}
-        onPublishEmail={handlePublishEmail}
+        onPublishEmail={(email) => handlePublishEmail(email.id)}
         onEditEmail={handleEditEmail}
       />
     </div>
