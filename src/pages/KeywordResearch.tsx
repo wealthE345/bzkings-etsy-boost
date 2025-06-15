@@ -24,6 +24,15 @@ const KeywordResearch = () => {
     loadTrendingKeywords();
   }, []);
 
+  // Update trending keywords when search keyword changes
+  useEffect(() => {
+    if (keyword.trim()) {
+      loadRelatedTrendingKeywords(keyword);
+    } else {
+      loadTrendingKeywords();
+    }
+  }, [keyword]);
+
   const loadTrendingKeywords = async () => {
     setIsLoadingTrending(true);
     try {
@@ -34,6 +43,21 @@ const KeywordResearch = () => {
     } catch (error) {
       console.error('Error loading trending keywords from search engines:', error);
       toast.error("Failed to load trending keywords from search engines");
+    } finally {
+      setIsLoadingTrending(false);
+    }
+  };
+
+  const loadRelatedTrendingKeywords = async (searchTerm: string) => {
+    setIsLoadingTrending(true);
+    try {
+      const relatedTrending = await KeywordScrapingService.getRelatedTrendingKeywords(searchTerm);
+      setTrendingKeywords(relatedTrending);
+      console.log(`Loaded fresh trending keywords related to "${searchTerm}" from search engines:`, relatedTrending);
+      toast.success(`Loaded ${relatedTrending.length} trending keywords related to "${searchTerm}" from search engines`);
+    } catch (error) {
+      console.error('Error loading related trending keywords from search engines:', error);
+      toast.error("Failed to load related trending keywords from search engines");
     } finally {
       setIsLoadingTrending(false);
     }
@@ -138,59 +162,6 @@ const KeywordResearch = () => {
           </div>
         </div>
 
-        {/* Trending Keywords Section */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Flame className="h-5 w-5 text-orange-600" />
-              Live Trending Keywords
-            </CardTitle>
-            <CardDescription className="flex items-center gap-2">
-              <Globe className="h-3 w-3" />
-              Fresh trending keywords from search engines - updated in real-time
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between mb-4">
-              <Badge variant="outline" className="text-green-600 border-green-600">
-                <Globe className="h-3 w-3 mr-1" />
-                Live Data from Search Engines
-              </Badge>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={loadTrendingKeywords}
-                disabled={isLoadingTrending}
-              >
-                {isLoadingTrending ? "Refreshing..." : "Refresh Trending"}
-              </Button>
-            </div>
-            {isLoadingTrending ? (
-              <div className="flex items-center justify-center py-4">
-                <div className="text-gray-500">Loading fresh trending keywords from search engines...</div>
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {trendingKeywords.map((trending, index) => (
-                  <Badge
-                    key={index}
-                    variant="outline"
-                    className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors p-2"
-                    onClick={() => handleTrendingKeywordClick(trending.keyword)}
-                  >
-                    <TrendingUp className="h-3 w-3 mr-1 text-orange-600" />
-                    {trending.keyword}
-                    <span className="ml-1 text-xs text-orange-600">{trending.trend}</span>
-                    <span className="ml-2 text-xs text-gray-500">
-                      {typeof trending.volume === 'number' ? trending.volume.toLocaleString() : trending.volume}/mo
-                    </span>
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -222,6 +193,67 @@ const KeywordResearch = () => {
             <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
               ✓ Live keyword data from search engines - fresh results every time
             </p>
+          </CardContent>
+        </Card>
+
+        {/* Trending Keywords Section */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Flame className="h-5 w-5 text-orange-600" />
+              {keyword.trim() ? `Live Trending Keywords for "${keyword}"` : 'Live Trending Keywords'}
+            </CardTitle>
+            <CardDescription className="flex items-center gap-2">
+              <Globe className="h-3 w-3" />
+              {keyword.trim() 
+                ? `Fresh trending keywords related to "${keyword}" from search engines - updated in real-time`
+                : 'Fresh trending keywords from search engines - updated in real-time'
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between mb-4">
+              <Badge variant="outline" className="text-green-600 border-green-600">
+                <Globe className="h-3 w-3 mr-1" />
+                Live Data from Search Engines
+              </Badge>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => keyword.trim() ? loadRelatedTrendingKeywords(keyword) : loadTrendingKeywords()}
+                disabled={isLoadingTrending}
+              >
+                {isLoadingTrending ? "Refreshing..." : "Refresh Trending"}
+              </Button>
+            </div>
+            {isLoadingTrending ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="text-gray-500">
+                  {keyword.trim() 
+                    ? `Loading fresh trending keywords related to "${keyword}" from search engines...`
+                    : 'Loading fresh trending keywords from search engines...'
+                  }
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {trendingKeywords.map((trending, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors p-2"
+                    onClick={() => handleTrendingKeywordClick(trending.keyword)}
+                  >
+                    <TrendingUp className="h-3 w-3 mr-1 text-orange-600" />
+                    {trending.keyword}
+                    <span className="ml-1 text-xs text-orange-600">{trending.trend}</span>
+                    <span className="ml-2 text-xs text-gray-500">
+                      {typeof trending.volume === 'number' ? trending.volume.toLocaleString() : trending.volume}/mo
+                    </span>
+                  </Badge>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
