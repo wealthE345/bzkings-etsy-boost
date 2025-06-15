@@ -16,6 +16,7 @@ export const aiImages = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
 ];
 
+// Enhanced video collection with high-quality, playable videos
 export const aiVideos = [
   "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
   "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
@@ -23,7 +24,7 @@ export const aiVideos = [
   "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
 ];
 
-// Enhanced video collection with more specific content
+// Enhanced video collection with more specific content and better playback
 export const videosByCategory = {
   seo: [
     "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
@@ -49,6 +50,16 @@ export const videosByCategory = {
     "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
     "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
     "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+  ],
+  social: [
+    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4"
+  ],
+  content: [
+    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4"
   ]
 };
 
@@ -64,24 +75,46 @@ export const getRandomVideo = () => {
   return aiVideos[Math.floor(Math.random() * aiVideos.length)];
 };
 
+// Enhanced function to get videos based on subject with better keyword matching
 export const getVideoBySubject = (subject: string) => {
   const lowerSubject = subject.toLowerCase();
   
-  // Determine category based on subject keywords
+  // Determine category based on subject keywords with more specific matching
   let category = 'ai'; // default
   
-  if (lowerSubject.includes('seo') || lowerSubject.includes('search')) {
+  if (lowerSubject.includes('seo') || lowerSubject.includes('search') || lowerSubject.includes('ranking')) {
     category = 'seo';
-  } else if (lowerSubject.includes('traffic') || lowerSubject.includes('organic')) {
+  } else if (lowerSubject.includes('traffic') || lowerSubject.includes('organic') || lowerSubject.includes('visitor')) {
     category = 'traffic';
-  } else if (lowerSubject.includes('digital') || lowerSubject.includes('toolkit')) {
+  } else if (lowerSubject.includes('digital') || lowerSubject.includes('toolkit') || lowerSubject.includes('tool')) {
     category = 'digital';
-  } else if (lowerSubject.includes('marketing') || lowerSubject.includes('campaign')) {
+  } else if (lowerSubject.includes('marketing') || lowerSubject.includes('campaign') || lowerSubject.includes('promotion')) {
     category = 'marketing';
-  } else if (lowerSubject.includes('ai') || lowerSubject.includes('powered')) {
+  } else if (lowerSubject.includes('ai') || lowerSubject.includes('powered') || lowerSubject.includes('artificial')) {
     category = 'ai';
+  } else if (lowerSubject.includes('social') || lowerSubject.includes('media') || lowerSubject.includes('facebook') || lowerSubject.includes('instagram')) {
+    category = 'social';
+  } else if (lowerSubject.includes('content') || lowerSubject.includes('blog') || lowerSubject.includes('article')) {
+    category = 'content';
   }
   
   const videos = videosByCategory[category] || aiVideos;
   return videos[Math.floor(Math.random() * videos.length)];
+};
+
+// New function to get content based on search terms
+export const getContentBySearchTerm = (searchTerm: string) => {
+  const lowerSearchTerm = searchTerm.toLowerCase();
+  
+  if (lowerSearchTerm.includes('seo')) {
+    return "🚀 Master SEO with our AI-powered tools and strategies. Transform your search rankings with intelligent keyword research, automated content optimization, and proven techniques that drive organic traffic growth.";
+  } else if (lowerSearchTerm.includes('social media')) {
+    return "📱 Revolutionize your social media presence with AI-enhanced content creation, automated posting schedules, and intelligent audience engagement strategies that boost your organic reach.";
+  } else if (lowerSearchTerm.includes('content marketing')) {
+    return "✍️ Elevate your content marketing with AI-powered creation tools, smart distribution strategies, and data-driven optimization techniques that attract and convert your target audience.";
+  } else if (lowerSearchTerm.includes('email marketing')) {
+    return "📧 Transform your email campaigns with AI-generated content, intelligent segmentation, and automated personalization that increases open rates and drives conversions.";
+  }
+  
+  return getRandomContent();
 };

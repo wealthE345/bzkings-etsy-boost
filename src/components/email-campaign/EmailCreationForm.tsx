@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target } from "lucide-react";
+import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target, Search } from "lucide-react";
 import { toast } from "sonner";
 import { NewEmail } from "@/hooks/useEmailCampaign";
 import { getRandomContent, getRandomImage, getVideoBySubject } from "@/utils/aiContentGenerator";
@@ -23,6 +23,32 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      toast.error("Please enter a search term");
+      return;
+    }
+
+    setIsSearching(true);
+    toast.info(`🔍 Searching for content related to "${searchTerm}"...`);
+
+    setTimeout(() => {
+      // Generate AI subject based on search term
+      const aiSubject = `🚀 AI-Powered: ${searchTerm} - Transform Your Organic Traffic Strategy`;
+      
+      setNewEmail({
+        ...newEmail,
+        subject: aiSubject
+      });
+
+      setIsSearching(false);
+      toast.success(`✨ Generated subject for "${searchTerm}"!`);
+      toast.info("📝 Now generate AI content and creatives based on this subject");
+    }, 2000);
+  };
 
   const handleGenerateAIContent = async () => {
     if (!newEmail.subject.trim()) {
@@ -48,7 +74,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
         randomCreative = {
           type: "image" as const,
           url: getRandomImage(),
-          alt: "AI-generated image featuring SEO tools and organic traffic analytics dashboard"
+          alt: `AI-generated image for ${newEmail.subject} featuring SEO tools and organic traffic analytics`
         };
       }
 
@@ -68,7 +94,8 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
   const handleGenerateAIImage = async () => {
     setIsGeneratingImage(true);
-    toast.info("🖼️ AI is generating an optimized image for organic traffic...");
+    const searchContext = newEmail.subject || searchTerm || "organic traffic";
+    toast.info(`🖼️ AI is generating an optimized image for "${searchContext}"...`);
 
     setTimeout(() => {
       const randomImage = getRandomImage();
@@ -78,37 +105,38 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
         creative: {
           type: "image",
           url: randomImage,
-          alt: "AI-generated image optimized for organic traffic and SEO campaigns"
+          alt: `AI-generated image for ${searchContext} optimized for organic traffic campaigns`
         },
         aiGenerated: true
       });
 
       setIsGeneratingImage(false);
       toast.success("🎨 AI image generated successfully!");
-      toast.info("📊 Image optimized for organic traffic engagement");
+      toast.info(`📊 Image optimized for "${searchContext}" engagement`);
     }, 2500);
   };
 
   const handleGenerateAIVideo = async () => {
     setIsGeneratingVideo(true);
-    toast.info("🎬 AI is generating an optimized video for organic traffic...");
+    const searchContext = newEmail.subject || searchTerm || "AI digital marketing";
+    toast.info(`🎬 AI is generating an optimized video for "${searchContext}"...`);
 
     setTimeout(() => {
-      const subjectBasedVideo = getVideoBySubject(newEmail.subject || "AI digital marketing");
+      const subjectBasedVideo = getVideoBySubject(searchContext);
       
       setNewEmail({
         ...newEmail,
         creative: {
           type: "video",
           url: subjectBasedVideo,
-          alt: `AI-generated video for ${newEmail.subject || 'email campaign'} optimized for organic traffic`
+          alt: `AI-generated video for ${searchContext} optimized for organic traffic`
         },
         aiGenerated: true
       });
 
       setIsGeneratingVideo(false);
       toast.success("🎥 AI video generated successfully!");
-      toast.info("📈 Video optimized for organic traffic conversion");
+      toast.info(`📈 Video optimized for "${searchContext}" conversion`);
     }, 4000);
   };
 
@@ -119,6 +147,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     }
 
     const isCurrentVideo = newEmail.creative.type === "video";
+    const searchContext = newEmail.subject || searchTerm || "AI digital marketing";
     
     if (isCurrentVideo) {
       setIsGeneratingVideo(true);
@@ -130,14 +159,14 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
     setTimeout(() => {
       if (isCurrentVideo) {
-        const subjectBasedVideo = getVideoBySubject(newEmail.subject || "AI digital marketing");
+        const subjectBasedVideo = getVideoBySubject(searchContext);
         
         setNewEmail({
           ...newEmail,
           creative: {
             type: "video",
             url: subjectBasedVideo,
-            alt: `AI-regenerated video for ${newEmail.subject} optimized for organic traffic campaigns`
+            alt: `AI-regenerated video for ${searchContext} optimized for organic traffic campaigns`
           }
         });
         
@@ -151,7 +180,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
           creative: {
             type: "image",
             url: randomImage,
-            alt: "AI-regenerated image optimized for organic traffic campaigns"
+            alt: `AI-regenerated image for ${searchContext} optimized for organic traffic campaigns`
           }
         });
         
@@ -235,8 +264,39 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
         <CardDescription>Generate AI-powered email campaigns with intelligent content and creatives for organic traffic audiences</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Search Section */}
+        <div className="space-y-3">
+          <div className="text-sm font-medium text-gray-700">Search for Campaign Ideas:</div>
+          <div className="flex gap-2">
+            <Input
+              placeholder="Search for topics (e.g., SEO, content marketing, social media...)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1"
+            />
+            <Button 
+              onClick={handleSearch}
+              disabled={isSearching}
+              variant="outline"
+              className="text-blue-600 border-blue-300 hover:bg-blue-50"
+            >
+              {isSearching ? (
+                <>
+                  <Clock className="mr-2 h-4 w-4 animate-spin" />
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <Search className="mr-2 h-4 w-4" />
+                  Search
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
         <Input
-          placeholder="Email Subject (e.g., AI-Powered SEO: Boost Your Organic Traffic)"
+          placeholder="Email Subject (or use search above to generate)"
           value={newEmail.subject}
           onChange={(e) => setNewEmail({ ...newEmail, subject: e.target.value })}
         />
@@ -402,7 +462,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                   <div className="absolute top-2 right-2">
                     <Badge variant="secondary">
                       <Video className="h-3 w-3 mr-1" />
-                      Video
+                      Playable Video
                     </Badge>
                   </div>
                 </div>
