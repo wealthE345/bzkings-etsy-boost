@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +14,7 @@ import TrafficDashboard from "@/components/TrafficDashboard";
 import SEOTools from "@/components/SEOTools";
 import SocialMediaBooster from "@/components/SocialMediaBooster";
 import ConversionTracker from "@/components/ConversionTracker";
+import EmailCampaignTool from "@/components/EmailCampaignTool";
 import Banner from "@/components/Banner";
 
 const Index = () => {
@@ -125,42 +125,9 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="leads">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8">
               <LeadCaptureForm />
-              <Card className="border-2 border-purple-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Mail className="h-5 w-5 text-purple-600" />
-                    Email Marketing Stats
-                  </CardTitle>
-                  <CardDescription>
-                    Track your email campaign performance
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Open Rate</span>
-                      <span className="text-sm text-gray-600">24.5%</span>
-                    </div>
-                    <Progress value={24.5} className="h-2" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Click Rate</span>
-                      <span className="text-sm text-gray-600">8.3%</span>
-                    </div>
-                    <Progress value={8.3} className="h-2" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Conversion Rate</span>
-                      <span className="text-sm text-gray-600">3.7%</span>
-                    </div>
-                    <Progress value={3.7} className="h-2" />
-                  </div>
-                </CardContent>
-              </Card>
+              <EmailCampaignTool />
             </div>
           </TabsContent>
 
