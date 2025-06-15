@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown, Trash2, Crown, Zap, Rocket, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
@@ -292,7 +293,7 @@ const CampaignManager = () => {
 
   const handlePaymentSelection = (pkg: any) => {
     setSelectedPaymentPackage(pkg);
-    setShowPaymentOptions(false);
+    setShowPaymentDialog(false);
     
     if (pkg.id === 'custom_impressions') {
       toast.info('Contact us for custom pricing on bulk impressions');
@@ -314,7 +315,7 @@ const CampaignManager = () => {
       return;
     }
 
-    setShowPaymentOptions(true);
+    setShowPaymentDialog(true);
     return;
   };
 
@@ -426,6 +427,8 @@ const CampaignManager = () => {
     }
   };
 
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -509,79 +512,74 @@ const CampaignManager = () => {
         </Card>
       </div>
 
-      {showPaymentOptions && (
-        <Card className="border-2 border-blue-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
               Choose Your Impression Package
-            </CardTitle>
-            <CardDescription>Pay only for the organic impressions you need - Real traffic, real results</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {paymentPackages.map((pkg) => (
-                <Card key={pkg.id} className={`relative cursor-pointer transition-all hover:shadow-lg ${pkg.popular ? 'border-2 border-blue-500' : 'border'}`}>
-                  {pkg.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-blue-500 text-white">Best Value</Badge>
+            </DialogTitle>
+            <DialogDescription>
+              Pay only for the organic impressions you need - Real traffic, real results
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            {paymentPackages.map((pkg) => (
+              <Card key={pkg.id} className={`relative cursor-pointer transition-all hover:shadow-lg ${pkg.popular ? 'border-2 border-blue-500' : 'border'}`}>
+                {pkg.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-blue-500 text-white">Best Value</Badge>
+                  </div>
+                )}
+                <CardContent className="p-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold">{pkg.name}</h3>
+                    <div className="mt-2">
+                      <span className="text-3xl font-bold">${pkg.price}</span>
+                      {pkg.impressions > 0 && (
+                        <div className="text-sm text-muted-foreground mt-1">
+                          <p>{pkg.impressions.toLocaleString()} organic impressions</p>
+                          <p className="text-green-600 font-medium">${pkg.costPer100}/100 impressions</p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  <CardContent className="p-6">
-                    <div className="text-center mb-6">
-                      <h3 className="text-xl font-bold">{pkg.name}</h3>
-                      <div className="mt-2">
-                        <span className="text-3xl font-bold">${pkg.price}</span>
-                        {pkg.impressions > 0 && (
-                          <div className="text-sm text-muted-foreground mt-1">
-                            <p>{pkg.impressions.toLocaleString()} organic impressions</p>
-                            <p className="text-green-600 font-medium">${pkg.costPer100}/100 impressions</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <ul className="space-y-2 mb-6">
-                      {pkg.features.map((feature, index) => (
-                        <li key={index} className="flex items-center gap-2 text-sm">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    <Button 
-                      onClick={() => handlePaymentSelection(pkg)} 
-                      className={`w-full ${pkg.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                      variant={pkg.popular ? 'default' : 'outline'}
-                    >
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Pay with PayPal
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            
-            <div className="mt-6 p-4 bg-green-50 rounded-lg">
-              <h4 className="font-semibold text-green-800 mb-2">Why Choose Our Organic Impressions?</h4>
-              <ul className="text-sm text-green-700 space-y-1">
-                <li>• 100% real, organic traffic from actual users</li>
-                <li>• Geo-targeted to your specified regions</li>
-                <li>• Higher engagement rates than standard ads</li>
-                <li>• No bots or fake traffic - guaranteed quality</li>
-                <li>• Instant PayPal payment processing</li>
-              </ul>
-            </div>
-            
-            <div className="flex justify-center mt-6">
-              <Button onClick={() => setShowPaymentOptions(false)} variant="outline">
-                Cancel
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                  </div>
+                  
+                  <ul className="space-y-2 mb-6">
+                    {pkg.features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2 text-sm">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => handlePaymentSelection(pkg)} 
+                    className={`w-full ${pkg.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                    variant={pkg.popular ? 'default' : 'outline'}
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Pay with PayPal
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="mt-6 p-4 bg-green-50 rounded-lg">
+            <h4 className="font-semibold text-green-800 mb-2">Why Choose Our Organic Impressions?</h4>
+            <ul className="text-sm text-green-700 space-y-1">
+              <li>• 100% real, organic traffic from actual users</li>
+              <li>• Geo-targeted to your specified regions</li>
+              <li>• Higher engagement rates than standard ads</li>
+              <li>• No bots or fake traffic - guaranteed quality</li>
+              <li>• Instant PayPal payment processing</li>
+            </ul>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {showCreateForm && (
         <Card className="border-2 border-green-200">
@@ -783,7 +781,7 @@ const CampaignManager = () => {
                       Generate high-converting ad variations with real organic impressions starting at $1.50/100 impressions
                     </p>
                     <Button
-                      onClick={() => setShowPaymentOptions(true)}
+                      onClick={() => setShowPaymentDialog(true)}
                       size="sm"
                       className="bg-blue-600 hover:bg-blue-700"
                     >
