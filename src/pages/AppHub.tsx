@@ -1,9 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, Star, Shield, Check, Smartphone, Zap, TrendingUp, BarChart, Globe, Search, Link, Eye, Users, Target, Cpu, Brain, Bot, Tool, Calendar, Camera, Map, Video, ShoppingCart, Microphone } from "lucide-react";
+import { Download, Star, Shield, Check, Smartphone, Zap, TrendingUp, BarChart, Globe, Search, ExternalLink, Eye, Users, Target, Cpu, Brain, Bot, Settings, Calendar, Camera, Map, Video, ShoppingCart, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
@@ -38,7 +39,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 15420,
     rating: 4.8,
-    icon: Tool,
+    icon: Settings,
     features: ["Content generation", "SEO optimization", "Keyword research"],
     size: "45 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -62,7 +63,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 9870,
     rating: 4.6,
-    icon: Link,
+    icon: ExternalLink,
     features: ["Backlink discovery", "Domain analysis", "Outreach tools"],
     size: "52 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -74,7 +75,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 8750,
     rating: 4.5,
-    icon: Tool,
+    icon: Settings,
     features: ["Meta tag creation", "Schema markup", "Open Graph tags"],
     size: "28 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -110,7 +111,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 6540,
     rating: 4.6,
-    icon: Tool,
+    icon: Settings,
     features: ["Content optimization", "Readability analysis", "SEO scoring"],
     size: "35 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -134,7 +135,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 4320,
     rating: 4.5,
-    icon: Tool,
+    icon: Settings,
     features: ["Schema markup", "Rich snippets", "JSON-LD generation"],
     size: "30 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -158,7 +159,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 6750,
     rating: 4.6,
-    icon: Tool,
+    icon: Settings,
     features: ["Technical audits", "Core Web Vitals", "Site speed analysis"],
     size: "58 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -182,7 +183,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 4870,
     rating: 4.5,
-    icon: Link,
+    icon: ExternalLink,
     features: ["Link prospecting", "Outreach automation", "Campaign tracking"],
     size: "46 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -206,7 +207,7 @@ const freeAIApps: App[] = [
     category: "SEO",
     downloads: 2890,
     rating: 4.6,
-    icon: Microphone,
+    icon: Mic,
     features: ["Voice search optimization", "Featured snippets", "FAQ generation"],
     size: "32 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -334,7 +335,7 @@ const paidAIApps: App[] = [
     downloads: 3670,
     rating: 4.6,
     price: 129,
-    icon: Link,
+    icon: ExternalLink,
     features: ["Advanced prospecting", "Automated outreach", "Quality scoring"],
     size: "65 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -347,7 +348,7 @@ const paidAIApps: App[] = [
     downloads: 4120,
     rating: 4.8,
     price: 159,
-    icon: Tool,
+    icon: Settings,
     features: ["Deep technical audits", "Custom recommendations", "Priority scoring"],
     size: "72 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -451,7 +452,7 @@ const paidAIApps: App[] = [
     downloads: 2340,
     rating: 4.8,
     price: 149,
-    icon: Microphone,
+    icon: Mic,
     features: ["Voice search optimization", "Conversational content", "Smart speaker SEO"],
     size: "74 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -477,7 +478,7 @@ const paidAIApps: App[] = [
     downloads: 1670,
     rating: 4.9,
     price: 89,
-    icon: Tool,
+    icon: Settings,
     features: ["Advanced schema types", "Validation tools", "Rich snippet preview"],
     size: "54 MB",
     compatibility: ["Windows", "macOS", "Linux", "Android", "iOS"]
@@ -571,7 +572,7 @@ const mobileAIApps: App[] = [
     downloads: 22340,
     rating: 4.9,
     price: 6.99,
-    icon: Tool,
+    icon: Settings,
     features: ["Voice-to-text", "AI writing", "Cloud sync"],
     size: "32 MB",
     compatibility: ["Android", "iOS"]
@@ -610,7 +611,7 @@ const mobileAIApps: App[] = [
     downloads: 12670,
     rating: 4.5,
     price: 5.99,
-    icon: Link,
+    icon: ExternalLink,
     features: ["Prospect discovery", "Email templates", "Follow-up automation"],
     size: "24 MB",
     compatibility: ["Android", "iOS"]
@@ -649,7 +650,7 @@ const mobileAIApps: App[] = [
     downloads: 14560,
     rating: 4.6,
     price: 3.99,
-    icon: Microphone,
+    icon: Mic,
     features: ["Voice queries", "Featured snippets", "FAQ optimization"],
     size: "20 MB",
     compatibility: ["Android", "iOS"]
@@ -662,7 +663,7 @@ const mobileAIApps: App[] = [
     downloads: 11890,
     rating: 4.8,
     price: 6.99,
-    icon: Tool,
+    icon: Settings,
     features: ["Site audits", "Speed analysis", "Mobile-first indexing"],
     size: "30 MB",
     compatibility: ["Android", "iOS"]
@@ -740,7 +741,7 @@ const mobileAIApps: App[] = [
     downloads: 9870,
     rating: 4.7,
     price: 4.99,
-    icon: Tool,
+    icon: Settings,
     features: ["Schema creation", "Rich snippets", "Markup validation"],
     size: "21 MB",
     compatibility: ["Android", "iOS"]
@@ -753,7 +754,7 @@ const mobileAIApps: App[] = [
     downloads: 15670,
     rating: 4.8,
     price: 6.99,
-    icon: Link,
+    icon: ExternalLink,
     features: ["Backlink monitoring", "Quality assessment", "Disavow suggestions"],
     size: "26 MB",
     compatibility: ["Android", "iOS"]
@@ -766,7 +767,7 @@ const mobileAIApps: App[] = [
     downloads: 11230,
     rating: 4.5,
     price: 2.99,
-    icon: Tool,
+    icon: Settings,
     features: ["Meta generation", "Preview mode", "Bulk editing"],
     size: "18 MB",
     compatibility: ["Android", "iOS"]
