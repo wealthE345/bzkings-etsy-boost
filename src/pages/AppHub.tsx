@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import JSZip from "jszip";
+import AppLogo from "@/components/AppLogo";
 
 interface App {
   id: number;
@@ -1100,9 +1100,7 @@ const AppHub = () => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <app.icon className="h-6 w-6 text-white" />
-            </div>
+            <AppLogo app={app} size="md" />
             <div>
               <CardTitle className="text-lg text-white">{app.name}</CardTitle>
               <div className="flex items-center gap-2 mt-1">
