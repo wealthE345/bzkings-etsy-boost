@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,19 +33,55 @@ const BacklinkGenerator = () => {
   const [progress, setProgress] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState("free");
 
-  // Expanded list of 50+ high-authority domains
+  // Expanded list of 100+ high-authority domains including search engines and forums
   const domains = [
-    "medium.com", "reddit.com", "quora.com", "linkedin.com", "facebook.com",
-    "twitter.com", "pinterest.com", "tumblr.com", "blogspot.com", "wordpress.com",
-    "github.com", "stackoverflow.com", "youtube.com", "vimeo.com", "flickr.com",
-    "instagram.com", "tiktok.com", "snapchat.com", "discord.com", "telegram.org",
-    "whatsapp.com", "skype.com", "zoom.us", "teams.microsoft.com", "slack.com",
-    "dropbox.com", "google.com", "apple.com", "microsoft.com", "amazon.com",
-    "ebay.com", "etsy.com", "shopify.com", "wix.com", "squarespace.com",
-    "weebly.com", "godaddy.com", "namecheap.com", "hostgator.com", "bluehost.com",
-    "siteground.com", "cloudflare.com", "aws.amazon.com", "digitalocean.com", "vultr.com",
-    "linode.com", "heroku.com", "netlify.com", "vercel.com", "firebase.google.com",
-    "mongodb.com", "mysql.com", "postgresql.org", "redis.io", "elasticsearch.co"
+    // Search Engines & Major Platforms
+    "google.com", "bing.com", "yahoo.com", "duckduckgo.com", "baidu.com",
+    "yandex.com", "ask.com", "aol.com", "startpage.com", "searx.org",
+    
+    // Social Media Platforms
+    "facebook.com", "twitter.com", "linkedin.com", "instagram.com", "pinterest.com",
+    "reddit.com", "quora.com", "tumblr.com", "snapchat.com", "tiktok.com",
+    "discord.com", "telegram.org", "whatsapp.com", "skype.com", "zoom.us",
+    
+    // Forums & Community Sites
+    "stackoverflow.com", "stackexchange.com", "forums.adobe.com", "community.mozilla.org",
+    "answers.microsoft.com", "discussions.apple.com", "ubuntu-forums.org", "xda-developers.com",
+    "techcrunch.com", "hacker-news.firebaseio.com", "producthunt.com", "indiehackers.com",
+    
+    // Content Platforms
+    "medium.com", "wordpress.com", "blogspot.com", "substack.com", "ghost.org",
+    "wix.com", "squarespace.com", "weebly.com", "webflow.com", "carrd.co",
+    
+    // Development & Tech
+    "github.com", "gitlab.com", "bitbucket.org", "codepen.io", "replit.com",
+    "heroku.com", "netlify.com", "vercel.com", "firebase.google.com", "aws.amazon.com",
+    "digitalocean.com", "vultr.com", "linode.com", "cloudflare.com", "mongodb.com",
+    
+    // E-commerce & Business
+    "amazon.com", "ebay.com", "etsy.com", "shopify.com", "alibaba.com",
+    "aliexpress.com", "walmart.com", "target.com", "bestbuy.com", "newegg.com",
+    
+    // News & Media
+    "cnn.com", "bbc.com", "reuters.com", "bloomberg.com", "forbes.com",
+    "techcrunch.com", "mashable.com", "wired.com", "theverge.com", "engadget.com",
+    
+    // Educational & Reference
+    "wikipedia.org", "wikihow.com", "coursera.org", "udemy.com", "edx.org",
+    "khanacademy.org", "mit.edu", "stanford.edu", "harvard.edu", "berkeley.edu",
+    
+    // Video & Multimedia
+    "youtube.com", "vimeo.com", "dailymotion.com", "twitch.tv", "soundcloud.com",
+    "spotify.com", "apple.com", "netflix.com", "hulu.com", "disney.com",
+    
+    // Professional Services
+    "salesforce.com", "hubspot.com", "mailchimp.com", "constantcontact.com",
+    "dropbox.com", "googledrive.com", "onedrive.com", "box.com", "slack.com",
+    
+    // Additional High-Authority Sites
+    "yelp.com", "tripadvisor.com", "booking.com", "airbnb.com", "expedia.com",
+    "indeed.com", "glassdoor.com", "monster.com", "careerbuilder.com", "upwork.com",
+    "fiverr.com", "99designs.com", "behance.net", "dribbble.com", "unsplash.com"
   ];
 
   const plans = [
@@ -52,8 +89,8 @@ const BacklinkGenerator = () => {
       name: "Free Plan",
       id: "free",
       price: "$0",
-      backlinks: "5000 backlinks",
-      domains: "25 domains",
+      backlinks: "500 backlinks",
+      domains: "50+ domains",
       features: ["Basic analytics", "Email support", "Manual generation"],
       color: "border-gray-300",
       icon: <Star className="h-5 w-5 text-gray-500" />
@@ -62,8 +99,8 @@ const BacklinkGenerator = () => {
       name: "Pro Plan",
       id: "pro",
       price: "$29/month",
-      backlinks: "5000 backlinks",
-      domains: "50+ domains",
+      backlinks: "1500 backlinks",
+      domains: "100+ domains",
       features: ["Real-time analytics", "Priority support", "Auto-generation", "Custom anchors"],
       color: "border-blue-500",
       icon: <Zap className="h-5 w-5 text-blue-500" />
@@ -73,7 +110,7 @@ const BacklinkGenerator = () => {
       id: "enterprise",
       price: "$99/month",
       backlinks: "5000 backlinks",
-      domains: "50+ premium domains",
+      domains: "100+ premium domains",
       features: ["Advanced analytics", "24/7 support", "Bulk generation", "White-label", "API access"],
       color: "border-purple-500",
       icon: <Crown className="h-5 w-5 text-purple-500" />
@@ -92,7 +129,12 @@ const BacklinkGenerator = () => {
   ];
 
   const getMaxBacklinks = () => {
-    return 5000; // All plans now have 5000 backlinks
+    switch (selectedPlan) {
+      case "free": return 500;
+      case "pro": return 1500;
+      case "enterprise": return 5000;
+      default: return 500;
+    }
   };
 
   const generateBacklinks = async () => {
@@ -131,7 +173,7 @@ const BacklinkGenerator = () => {
 
         if (i === maxBacklinks - 1) {
           setIsGenerating(false);
-          toast.success(`🎉 Backlink generation completed! Generated ${maxBacklinks} high-quality backlinks from ${new Set(domains).size}+ premium domains.`);
+          toast.success(`🎉 Backlink generation completed! Generated ${maxBacklinks} high-quality backlinks from 100+ premium domains including search engines and forums.`);
         }
       }, i * 100);
     }
@@ -170,10 +212,10 @@ const BacklinkGenerator = () => {
             🔗 BZ Kings SEO - Premium Backlink Generator
           </Badge>
           <h1 className="text-4xl font-bold mb-4 text-white drop-shadow-lg">
-            Generate 5000+ High-Quality Organic Backlinks
+            Generate High-Quality Organic Backlinks from 100+ Domains
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow">
-            Build powerful backlinks automatically from 50+ premium domains with our AI-powered backlink generator. 
+            Build powerful backlinks automatically from 100+ premium domains including search engines, forums, and high-authority websites. 
             Get real organic backlinks that boost your SEO rankings instantly.
           </p>
         </div>
@@ -253,7 +295,7 @@ const BacklinkGenerator = () => {
               <CardHeader>
                 <CardTitle className="text-white">Generate Premium Backlinks</CardTitle>
                 <CardDescription className="text-white/70">
-                  Enter your target URL and keywords to generate up to 5000 high-quality backlinks from 50+ premium domains
+                  Enter your target URL and keywords to generate up to {getMaxBacklinks()} high-quality backlinks from 100+ premium domains
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -281,13 +323,13 @@ const BacklinkGenerator = () => {
 
                 <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                   <p className="text-white font-semibold mb-2">Selected Plan: {plans.find(p => p.id === selectedPlan)?.name}</p>
-                  <p className="text-white/70">Will generate up to 5000 backlinks from 50+ premium domains</p>
+                  <p className="text-white/70">Will generate up to {getMaxBacklinks()} backlinks from 100+ premium domains including search engines and forums</p>
                 </div>
 
                 {isGenerating && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-white">
-                      <span>Generating backlinks from premium domains...</span>
+                      <span>Generating backlinks from 100+ premium domains...</span>
                       <span>{Math.round(progress)}%</span>
                     </div>
                     <Progress value={progress} className="h-2" />
@@ -300,7 +342,7 @@ const BacklinkGenerator = () => {
                   className="w-full gradient-primary text-white"
                   size="lg"
                 >
-                  {isGenerating ? "Generating 5000 Backlinks..." : "Generate 5000 Backlinks"}
+                  {isGenerating ? `Generating ${getMaxBacklinks()} Backlinks...` : `Generate ${getMaxBacklinks()} Backlinks`}
                   <Target className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>
@@ -366,14 +408,14 @@ const BacklinkGenerator = () => {
               <CardHeader>
                 <CardTitle className="text-white">Backlink History</CardTitle>
                 <CardDescription className="text-white/70">
-                  View all generated backlinks from 50+ premium domains and their status
+                  View all generated backlinks from 100+ premium domains including search engines and forums
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {backlinks.length === 0 ? (
                     <p className="text-white/70 text-center py-8">
-                      No backlinks generated yet. Use the generator to create your first backlinks from premium domains!
+                      No backlinks generated yet. Use the generator to create your first backlinks from 100+ premium domains!
                     </p>
                   ) : (
                     backlinks.map((backlink) => (

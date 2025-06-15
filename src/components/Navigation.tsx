@@ -9,7 +9,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router-dom";
-import { Menu, X, Zap, Search, Star, Shield, Download, Smartphone, Users, Home } from "lucide-react";
+import { Menu, X, Search, Star, Shield, Download, Smartphone, Users, Home } from "lucide-react";
+import Logo from "@/components/Logo";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,21 +19,8 @@ const Navigation = () => {
     <header className="bg-white/20 backdrop-blur-sm border-b border-purple-100/30 sticky top-0 z-50 glass-effect">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-amber-500 rounded-lg flex items-center justify-center shadow-lg">
-                <Zap className="h-6 w-6 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                <span className="text-xs font-bold text-white">B</span>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-xl bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
-                BZ Kings SEO
-              </span>
-              <span className="text-xs text-white/70 -mt-1">Premium SEO Tools</span>
-            </div>
+          <Link to="/">
+            <Logo />
           </Link>
 
           {/* Desktop Navigation */}
