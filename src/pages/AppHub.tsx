@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1079,6 +1078,18 @@ const handlePayment = (app: App) => {
   window.open(paypalUrl, '_blank');
 };
 
+const handlePlanPayment = (plan: Plan) => {
+  if (plan.price === 0) {
+    toast.success("Welcome to the Free Starter plan!");
+    return;
+  }
+  
+  const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=wealthenterprise69@gmail.com&item_name=${encodeURIComponent(plan.name + ' Plan')}&amount=${plan.price}&currency_code=USD&return=https://bzkingsdigitalmall.etsy.com/success&cancel_return=https://bzkingsdigitalmall.etsy.com/cancel`;
+  
+  toast.info("Redirecting to PayPal for secure payment...");
+  window.open(paypalUrl, '_blank');
+};
+
 const AppHub = () => {
   const [activeTab, setActiveTab] = useState("free");
 
@@ -1182,7 +1193,10 @@ const AppHub = () => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full mt-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
+                <Button 
+                  className="w-full mt-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                  onClick={() => handlePlanPayment(plan)}
+                >
                   {plan.price === 0 ? 'Get Started' : 'Choose Plan'}
                 </Button>
               </CardContent>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -201,6 +200,22 @@ const BacklinkGenerator = () => {
     }
   };
 
+  const handlePlanSelection = (planId: string) => {
+    if (planId === "free") {
+      setSelectedPlan(planId);
+      toast.success("Free plan selected!");
+      return;
+    }
+    
+    const plan = plans.find(p => p.id === planId);
+    if (plan) {
+      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=wealthenterprise69@gmail.com&item_name=${encodeURIComponent(plan.name + ' - Backlink Generator')}&amount=${planId === 'pro' ? '29' : '99'}&currency_code=USD&return=https://bzkingsdigitalmall.etsy.com/success&cancel_return=https://bzkingsdigitalmall.etsy.com/cancel`;
+      
+      toast.info("Redirecting to PayPal for secure payment...");
+      window.open(paypalUrl, '_blank');
+    }
+  };
+
   return (
     <div className="min-h-screen animated-bg">
       <Banner />
@@ -228,7 +243,7 @@ const BacklinkGenerator = () => {
               className={`glass-effect border-2 cursor-pointer transition-all ${
                 selectedPlan === plan.id ? plan.color : 'border-white/20'
               }`}
-              onClick={() => setSelectedPlan(plan.id)}
+              onClick={() => handlePlanSelection(plan.id)}
             >
               <CardContent className="p-6 text-center">
                 <div className="flex items-center justify-center mb-3">
