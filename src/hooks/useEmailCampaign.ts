@@ -1,230 +1,110 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { getIntroVideoBySubject, generateEmailContent } from "@/utils/aiContentGenerator";
 
 export interface EmailCampaign {
   id: number;
   subject: string;
-  status: "Published" | "Draft" | "Scheduled";
+  content: string;
+  status: "Draft" | "Scheduled" | "Published";
+  sent: number;
   opens: number;
   clicks: number;
-  sent: number;
-  content: string;
-  creative: {
+  aiGenerated?: boolean;
+  targetAudience?: string;
+  creative?: {
     type: "image" | "video";
     url: string;
     alt: string;
   };
-  aiGenerated: boolean;
-  targetAudience: string;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface NewEmail {
-  subject: string;
-  content: string;
-  recipients: string;
-  scheduleDate: string;
-  creative: {
+  subject?: string;
+  content?: string;
+  creative?: {
     type: "image" | "video";
     url: string;
     alt: string;
   };
-  aiGenerated: boolean;
-  targetAudience: string;
-  startDate: string;
-  endDate: string;
+  aiGenerated?: boolean;
+  targetAudience?: string;
+  recipients?: string[];
+  scheduleDate?: string;
 }
 
-const initialEmailList: EmailCampaign[] = [
-  { 
-    id: 1, 
-    subject: "🚀 AI-Generated: Boost Your Organic Traffic with Our Digital Toolkit", 
-    status: "Published", 
-    opens: 1245, 
-    clicks: 387, 
-    sent: 2800, 
-    content: "Discover how AI-powered digital products can transform your organic traffic strategy. Our comprehensive suite includes SEO optimization tools, content generation platforms, and traffic analytics dashboards designed specifically for organic growth. Join thousands of successful entrepreneurs who have mastered sustainable online growth with our proven digital solutions.",
-    creative: {
-      type: "video",
-      url: getIntroVideoBySubject("AI-Generated: Boost Your Organic Traffic with Our Digital Toolkit"),
-      alt: "AI-generated video showcasing organic traffic growth strategies and digital marketing tools"
-    },
-    aiGenerated: true,
-    targetAudience: "organic-traffic",
-    startDate: "2024-01-15T09:00",
-    endDate: "2024-02-15T17:00"
-  },
-  { 
-    id: 2, 
-    subject: "🎯 AI Content: SEO Mastery - New Digital Products for Organic Growth", 
-    status: "Draft", 
-    opens: 0, 
-    clicks: 0, 
-    sent: 0, 
-    content: "Elevate your SEO game with our latest AI-curated collection of digital products. From advanced keyword research tools to automated content optimization systems, everything you need for sustainable organic traffic growth. Our products are designed by SEO experts and enhanced with AI to deliver maximum impact for your organic marketing efforts.",
-    creative: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop",
-      alt: "AI-generated image featuring SEO tools and organic traffic analytics dashboard"
-    },
-    aiGenerated: true,
-    targetAudience: "organic-traffic",
-    startDate: "2024-02-01T08:00",
-    endDate: "2024-03-01T18:00"
-  },
-  { 
-    id: 3, 
-    subject: "📈 AI-Powered: Exclusive Organic Traffic Generation Masterclass", 
-    status: "Scheduled", 
-    opens: 0, 
-    clicks: 0, 
-    sent: 2150, 
-    content: "Join our exclusive AI-enhanced masterclass on generating organic traffic that converts. Learn cutting-edge strategies powered by artificial intelligence, advanced SEO techniques, and proven content marketing methods used by top digital marketers to build sustainable online businesses. This comprehensive training includes AI tools, templates, and step-by-step guidance.",
-    creative: {
-      type: "video",
-      url: getIntroVideoBySubject("AI-Powered: Exclusive Organic Traffic Generation Masterclass"),
-      alt: "AI-generated video presenting organic traffic masterclass with digital marketing strategies"
-    },
-    aiGenerated: true,
-    targetAudience: "organic-traffic",
-    startDate: "2024-02-10T10:00",
-    endDate: "2024-03-10T16:00"
-  },
-];
-
-const initialNewEmail: NewEmail = {
-  subject: "",
-  content: "",
-  recipients: "organic-traffic",
-  scheduleDate: "",
-  creative: {
-    type: "image",
-    url: "",
-    alt: ""
-  },
-  aiGenerated: false,
-  targetAudience: "organic-traffic",
-  startDate: "",
-  endDate: ""
-};
-
 export const useEmailCampaign = () => {
-  const [emailList, setEmailList] = useState<EmailCampaign[]>(initialEmailList);
-  const [newEmail, setNewEmail] = useState<NewEmail>(initialNewEmail);
+  const [emailList, setEmailList] = useState<EmailCampaign[]>([]);
+  const [newEmail, setNewEmail] = useState<NewEmail>({});
   const [isCreatingEmail, setIsCreatingEmail] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
   const handleCreateEmail = () => {
-    if (!newEmail.subject.trim() || !newEmail.content.trim()) {
+    if (!newEmail.subject?.trim() || !newEmail.content?.trim()) {
       toast.error("Please fill in both subject and content");
       return;
     }
 
-    if (!newEmail.startDate || !newEmail.endDate) {
-      toast.error("Please set both start and end dates for the campaign");
-      return;
-    }
-
-    if (new Date(newEmail.endDate) <= new Date(newEmail.startDate)) {
-      toast.error("End date must be after start date");
-      return;
-    }
-
     setIsCreatingEmail(true);
-    toast.info("Creating AI-powered email campaign for organic traffic...");
+    toast.info("🚀 Creating your AI-powered email campaign...");
 
     setTimeout(() => {
-      const newEmailItem: EmailCampaign = {
+      const newCampaign: EmailCampaign = {
         id: emailList.length + 1,
         subject: newEmail.subject,
-        status: newEmail.scheduleDate ? "Scheduled" : "Draft",
+        content: newEmail.content,
+        status: "Draft",
+        sent: 0,
         opens: 0,
         clicks: 0,
-        sent: 0,
-        content: newEmail.content,
+        aiGenerated: newEmail.aiGenerated || false,
+        targetAudience: newEmail.targetAudience || "organic-traffic",
         creative: newEmail.creative,
-        aiGenerated: newEmail.aiGenerated,
-        targetAudience: newEmail.targetAudience,
-        startDate: newEmail.startDate,
-        endDate: newEmail.endDate
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
       };
 
-      setEmailList([newEmailItem, ...emailList]);
-      setNewEmail(initialNewEmail);
+      setEmailList([...emailList, newCampaign]);
+      setNewEmail({});
       setIsCreatingEmail(false);
-      
-      toast.success("📧 AI-powered email campaign created!");
-      toast.info("Campaign optimized for organic traffic audience");
+      toast.success("✅ Email campaign created successfully!");
     }, 2000);
   };
 
-  const handlePublishEmail = (emailId: number) => {
-    const emailToPublish = emailList.find(email => email.id === emailId);
-    if (!emailToPublish) {
-      toast.error("Email not found");
-      return;
-    }
-
-    if (emailToPublish.status === "Published") {
-      toast.info("This email campaign is already published!");
-      return;
-    }
-
+  const handlePublishEmail = (email: EmailCampaign) => {
     setIsPublishing(true);
-    toast.info(`🚀 Publishing "${emailToPublish.subject}" to organic traffic audience...`);
+    toast.info(`🚀 Publishing: "${email.subject}"...`);
 
     setTimeout(() => {
-      const randomSent = Math.floor(Math.random() * 1200) + 1800;
-      const randomOpens = Math.floor(randomSent * (0.4 + Math.random() * 0.2));
-      const randomClicks = Math.floor(randomOpens * (0.15 + Math.random() * 0.15));
-
-      setEmailList(emailList.map(email => 
-        email.id === emailId 
-          ? { ...email, status: "Published", sent: randomSent, opens: randomOpens, clicks: randomClicks }
-          : email
+      setEmailList(emailList.map(e =>
+        e.id === email.id ? { ...e, status: "Published" } : e
       ));
       setIsPublishing(false);
-      toast.success(`✅ "${emailToPublish.subject}" published successfully!`);
-      toast.success(`📊 Sent to ${randomSent.toLocaleString()} organic traffic subscribers!`);
-    }, 3000);
+      toast.success(`✅ Published: "${email.subject}"!`);
+    }, 2000);
   };
 
-  const handleDeleteEmail = (emailId: number) => {
-    const emailToDelete = emailList.find(email => email.id === emailId);
-    if (!emailToDelete) {
-      toast.error("Email not found");
-      return;
-    }
-
-    if (emailToDelete.status === "Published") {
-      toast.error("❌ Cannot delete published campaigns");
-      return;
-    }
-
-    setEmailList(emailList.filter(email => email.id !== emailId));
-    toast.success(`🗑️ "${emailToDelete.subject}" deleted successfully!`);
+  const handleDeleteEmail = (email: EmailCampaign) => {
+    setEmailList(emailList.filter(e => e.id !== email.id));
+    toast.success(`🗑️ Deleted: "${email.subject}"`);
   };
 
   const handleDuplicateEmail = (email: EmailCampaign) => {
     const duplicatedEmail: EmailCampaign = {
+      ...email,
       id: emailList.length + 1,
-      subject: `Copy of ${email.subject}`,
+      subject: `${email.subject} (Copy)`,
       status: "Draft",
+      sent: 0,
       opens: 0,
       clicks: 0,
-      sent: 0,
-      content: email.content,
-      creative: { ...email.creative },
-      aiGenerated: email.aiGenerated,
-      targetAudience: email.targetAudience,
-      startDate: email.startDate,
-      endDate: email.endDate
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
     };
 
-    setEmailList([duplicatedEmail, ...emailList]);
-    toast.success(`📋 Email duplicated: "Copy of ${email.subject}"`);
+    setEmailList([...emailList, duplicatedEmail]);
+    toast.success(`📄 Duplicated: "${email.subject}"`);
   };
 
   return {

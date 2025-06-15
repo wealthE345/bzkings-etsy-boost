@@ -7,15 +7,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon } from "lucide-react";
-import { EmailCampaign } from "@/hooks/useEmailCampaign";
+import { EmailCampaign, NewEmail } from "@/hooks/useEmailCampaign";
 import { generateAITitle, getMockupImagesBySearchQuery, getIntroVideoBySubject, generateEmailContent } from "@/utils/aiContentGenerator";
 import { ImageMockupSelector } from "./ImageMockupSelector";
 import { CampaignViewer } from "./CampaignViewer";
 import { toast } from "sonner";
 
 interface EmailCreationFormProps {
-  newEmail: Partial<EmailCampaign>;
-  setNewEmail: (email: Partial<EmailCampaign>) => void;
+  newEmail: NewEmail;
+  setNewEmail: (email: NewEmail) => void;
   isCreatingEmail: boolean;
   onCreateEmail: () => void;
 }
@@ -25,6 +25,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [showMockups, setShowMockups] = useState(false);
   const [mockupImages, setMockupImages] = useState<Array<{url: string, description: string}>>([]);
+  const [mockupVideos, setMockupVideos] = useState<Array<{url: string, description: string, title: string}>>([]);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [previewCampaign, setPreviewCampaign] = useState<EmailCampaign | null>(null);
 
@@ -39,9 +40,12 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     // Generate AI title based on search term
     const aiTitle = generateAITitle(searchTerm);
     
-    // Get mockup images
+    // Get mockup images and videos
     const images = getMockupImagesBySearchQuery(searchTerm);
+    const videos = getIntroVideoBySubject(searchTerm);
+    
     setMockupImages(images);
+    setMockupVideos([videos]);
     setShowMockups(true);
     
     // Update email with AI-generated title
@@ -105,6 +109,19 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     toast.success(`🎨 Selected creative: ${mockup.description}`);
   };
 
+  const handleSelectVideo = (video: {url: string, description: string, title: string}) => {
+    setNewEmail({
+      ...newEmail,
+      creative: {
+        type: "video",
+        url: video.url,
+        alt: video.description
+      }
+    });
+    setShowMockups(false);
+    toast.success(`🎬 Selected video: ${video.title}`);
+  };
+
   const handleViewCampaign = () => {
     if (!newEmail.subject?.trim() || !newEmail.content?.trim()) {
       toast.error("Please add subject and content before viewing campaign");
@@ -122,7 +139,9 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       clicks: 0,
       aiGenerated: newEmail.aiGenerated || false,
       targetAudience: newEmail.targetAudience || "organic-traffic",
-      creative: newEmail.creative
+      creative: newEmail.creative,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
     };
 
     setPreviewCampaign(preview);
@@ -222,6 +241,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                       src={newEmail.creative.url} 
                       className="w-full h-32 object-cover rounded-lg"
                       controls
+                      volume={0.7}
                       poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                     />
                     <Badge 
@@ -287,12 +307,14 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
         </CardContent>
       </Card>
 
-      {/* Mockup Selector */}
+      {/* Enhanced Mockup Selector */}
       <ImageMockupSelector
         isOpen={showMockups}
         onClose={() => setShowMockups(false)}
         mockups={mockupImages}
-        onSelect={handleSelectMockup}
+        videos={mockupVideos}
+        onSelectImage={handleSelectMockup}
+        onSelectVideo={handleSelectVideo}
         searchTerm={searchTerm}
       />
 

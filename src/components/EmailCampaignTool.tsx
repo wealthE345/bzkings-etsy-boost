@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Mail, Calendar, Zap, Target } from "lucide-react";
 import { toast } from "sonner";
-import { useEmailCampaign } from "@/hooks/useEmailCampaign";
+import { useEmailCampaign, NewEmail } from "@/hooks/useEmailCampaign";
 import { EmailCreationForm } from "@/components/email-campaign/EmailCreationForm";
 import { EmailList } from "@/components/email-campaign/EmailList";
 import { CampaignStats } from "@/components/email-campaign/CampaignStats";

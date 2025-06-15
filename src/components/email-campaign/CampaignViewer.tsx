@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles } from "lucide-react";
+import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles, VolumeX, Volume2 } from "lucide-react";
 import { EmailCampaign } from "@/hooks/useEmailCampaign";
 import { generateEmailContent } from "@/utils/aiContentGenerator";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ interface CampaignViewerProps {
 
 export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable = false }: CampaignViewerProps) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [isEditing, setIsEditing] = useState(isEditable);
   const [editedCampaign, setEditedCampaign] = useState<EmailCampaign | null>(null);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
@@ -30,6 +31,9 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     if (campaign && videoRef.current) {
       setIsVideoPlaying(false);
       videoRef.current.currentTime = 0;
+      // Set default volume to 70%
+      videoRef.current.volume = 0.7;
+      setIsMuted(false);
     }
     setEditedCampaign(campaign);
     setIsEditing(isEditable);
@@ -45,9 +49,23 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     } else {
       // Start from beginning for full 30-second intro experience
       video.currentTime = 0;
+      video.volume = 0.7; // Ensure volume is set
       video.play().then(() => {
         setIsVideoPlaying(true);
       }).catch(console.error);
+    }
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isMuted) {
+      video.volume = 0.7;
+      setIsMuted(false);
+    } else {
+      video.volume = 0;
+      setIsMuted(true);
     }
   };
 
@@ -119,7 +137,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
               <DialogDescription>
                 {isEditing 
                   ? "Edit your campaign with AI-powered content generation"
-                  : "Full campaign preview with interactive 30-second AI-generated intro video"
+                  : "Full campaign preview with interactive 30-second AI-generated intro video with audio"
                 }
               </DialogDescription>
             </div>
@@ -221,10 +239,10 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
             </div>
           )}
 
-          {/* AI Creative Content with Enhanced Video Playback */}
+          {/* AI Creative Content with Enhanced Video Playback and Audio */}
           {currentCampaign.creative?.url && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">30-Second AI-Generated Intro</h3>
+              <h3 className="text-lg font-semibold">30-Second AI-Generated Intro with Audio</h3>
               <div className="relative">
                 {currentCampaign.creative.type === "video" ? (
                   <div className="relative w-full max-w-2xl mx-auto group">
@@ -232,7 +250,6 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                       ref={videoRef}
                       src={currentCampaign.creative.url} 
                       className="w-full h-80 object-cover rounded-lg shadow-lg"
-                      muted
                       preload="metadata"
                       onEnded={handleVideoEnd}
                       onError={handleVideoError}
@@ -253,18 +270,36 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                         )}
                       </Button>
                     </div>
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-4 right-4 flex gap-2">
                       <Badge variant="secondary" className="bg-black/70 text-white">
                         <Video className="h-3 w-3 mr-1" />
-                        30s AI Intro Video
+                        30s AI Video
                       </Badge>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="bg-black/70 hover:bg-black/80 text-white"
+                        onClick={toggleMute}
+                      >
+                        {isMuted ? (
+                          <VolumeX className="h-4 w-4" />
+                        ) : (
+                          <Volume2 className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
                     {isVideoPlaying && (
-                      <div className="absolute bottom-4 left-4">
+                      <div className="absolute bottom-4 left-4 flex gap-2">
                         <Badge variant="default" className="bg-green-600">
                           <Play className="h-3 w-3 mr-1" />
                           Playing
                         </Badge>
+                        {!isMuted && (
+                          <Badge variant="outline" className="bg-blue-600 text-white">
+                            <Volume2 className="h-3 w-3 mr-1" />
+                            Audio On
+                          </Badge>
+                        )}
                       </div>
                     )}
                   </div>
@@ -289,7 +324,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                 </p>
                 {currentCampaign.creative.type === "video" && (
                   <p className="text-xs text-gray-500 mt-1 text-center">
-                    Click play to watch the full 30-second AI-generated intro video
+                    Click play to watch the full 30-second AI-generated intro video with audio • Use volume button to control sound
                   </p>
                 )}
               </div>
@@ -345,7 +380,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium text-gray-900">Content Generation</h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  {currentCampaign.aiGenerated ? "AI-Powered Content & 30s Intro Video" : "Manual Content Creation"}
+                  {currentCampaign.aiGenerated ? "AI-Powered Content & 30s Intro Video with Audio" : "Manual Content Creation"}
                 </p>
               </div>
             </div>

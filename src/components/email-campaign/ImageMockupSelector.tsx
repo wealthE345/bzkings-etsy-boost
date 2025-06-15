@@ -1,109 +1,120 @@
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Check, Sparkles } from "lucide-react";
-import { toast } from "sonner";
-import { getMockupImagesBySearchQuery } from "@/utils/aiContentGenerator";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImageIcon, Video, Play, X } from "lucide-react";
 
 interface ImageMockupSelectorProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mockups: Array<{url: string, description: string}>;
+  videos?: Array<{url: string, description: string, title: string}>;
+  onSelectImage: (mockup: {url: string, description: string}) => void;
+  onSelectVideo?: (video: {url: string, description: string, title: string}) => void;
   searchTerm: string;
-  onImageSelect: (imageUrl: string, description: string) => void;
-  isVisible: boolean;
 }
 
-export const ImageMockupSelector = ({ searchTerm, onImageSelect, isVisible }: ImageMockupSelectorProps) => {
-  const [selectedImage, setSelectedImage] = useState<string>("");
-  
-  if (!isVisible || !searchTerm.trim()) return null;
-
-  const mockupImages = getMockupImagesBySearchQuery(searchTerm);
-
-  const handleImageSelect = (imageUrl: string, description: string) => {
-    setSelectedImage(imageUrl);
-    onImageSelect(imageUrl, description);
-    toast.success("✅ Image selected for your campaign!");
-  };
-
+export const ImageMockupSelector = ({ 
+  isOpen, 
+  onClose, 
+  mockups, 
+  videos = [], 
+  onSelectImage, 
+  onSelectVideo, 
+  searchTerm 
+}: ImageMockupSelectorProps) => {
   return (
-    <Card className="mt-4">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-purple-600" />
-          AI Image Mockups
-          <Badge variant="outline" className="text-blue-600 border-blue-300">
-            Based on "{searchTerm}"
-          </Badge>
-        </CardTitle>
-        <CardDescription>
-          Choose from these AI-generated mockup images that match your campaign idea
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {mockupImages.map((mockup, index) => (
-            <div 
-              key={index} 
-              className={`relative group cursor-pointer border-2 rounded-lg overflow-hidden transition-all ${
-                selectedImage === mockup.url 
-                  ? 'border-purple-500 shadow-lg' 
-                  : 'border-gray-200 hover:border-purple-300'
-              }`}
-              onClick={() => handleImageSelect(mockup.url, mockup.description)}
-            >
-              <img 
-                src={mockup.url} 
-                alt={mockup.description}
-                className="w-full h-32 object-cover"
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-              
-              {/* Selection indicator */}
-              {selectedImage === mockup.url && (
-                <div className="absolute top-2 right-2">
-                  <div className="bg-purple-600 text-white p-1 rounded-full">
-                    <Check className="h-4 w-4" />
-                  </div>
-                </div>
-              )}
-              
-              {/* Image type badge */}
-              <Badge 
-                variant="secondary" 
-                className="absolute top-2 left-2 text-xs bg-white/90"
-              >
-                <ImageIcon className="h-3 w-3 mr-1" />
-                Mockup {index + 1}
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              🎨 Creative Options for "{searchTerm}"
+              <Badge variant="outline" className="text-purple-600 border-purple-300">
+                {mockups.length + videos.length} Options
               </Badge>
-              
-              {/* Description overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                <p className="text-white text-xs font-medium line-clamp-2">
-                  {mockup.description}
-                </p>
-              </div>
-              
-              {/* Click to select button */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button 
-                  size="sm" 
-                  variant="secondary"
-                  className="bg-white/90 hover:bg-white text-black"
-                >
-                  {selectedImage === mockup.url ? "Selected" : "Select Image"}
-                </Button>
-              </div>
+            </DialogTitle>
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </DialogHeader>
+
+        <Tabs defaultValue="images" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="images" className="flex items-center gap-2">
+              <ImageIcon className="h-4 w-4" />
+              Images ({mockups.length})
+            </TabsTrigger>
+            <TabsTrigger value="videos" className="flex items-center gap-2">
+              <Video className="h-4 w-4" />
+              Videos ({videos.length})
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="images" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mockups.map((mockup, index) => (
+                <div key={index} className="border rounded-lg p-3 hover:shadow-lg transition-shadow cursor-pointer group">
+                  <div className="relative">
+                    <img 
+                      src={mockup.url} 
+                      alt={mockup.description}
+                      className="w-full h-40 object-cover rounded-lg mb-3"
+                    />
+                    <Badge variant="default" className="absolute top-2 right-2">
+                      <ImageIcon className="h-3 w-3 mr-1" />
+                      AI Image
+                    </Badge>
+                  </div>
+                  <h4 className="font-medium text-sm mb-2">{mockup.description}</h4>
+                  <Button 
+                    onClick={() => onSelectImage(mockup)}
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    size="sm"
+                  >
+                    Select Image
+                  </Button>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        
-        <div className="mt-4 text-xs text-gray-600 text-center">
-          💡 These images are AI-generated based on your search term "{searchTerm}". Click to select one for your campaign.
-        </div>
-      </CardContent>
-    </Card>
+          </TabsContent>
+
+          <TabsContent value="videos" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {videos.map((video, index) => (
+                <div key={index} className="border rounded-lg p-3 hover:shadow-lg transition-shadow cursor-pointer group">
+                  <div className="relative">
+                    <video 
+                      src={video.url} 
+                      className="w-full h-40 object-cover rounded-lg mb-3"
+                      muted
+                      poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
+                      <Play className="h-8 w-8 text-white" />
+                    </div>
+                    <Badge variant="secondary" className="absolute top-2 right-2">
+                      <Video className="h-3 w-3 mr-1" />
+                      30s Video
+                    </Badge>
+                  </div>
+                  <h4 className="font-medium text-sm mb-1">{video.title}</h4>
+                  <p className="text-xs text-gray-600 mb-3">{video.description}</p>
+                  <Button 
+                    onClick={() => onSelectVideo && onSelectVideo(video)}
+                    className="w-full bg-purple-600 hover:bg-purple-700"
+                    size="sm"
+                  >
+                    Select Video
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
   );
 };
