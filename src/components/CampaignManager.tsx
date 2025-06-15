@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -304,11 +305,16 @@ const CampaignManager = () => {
     // Calculate PayPal payment amount based on budget
     const budget = parseFloat(newCampaign.budget);
     const impressions = budget * 100; // Assuming $1 = 100 impressions
-    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-paypal-email@example.com&item_name=${encodeURIComponent('Organic Traffic Campaign - ' + newCampaign.title)}&amount=${budget}&currency_code=USD&return=https://yoursite.com/payment-success&cancel_return=https://yoursite.com/payment-cancelled`;
+    
+    // Updated PayPal URL with your email address
+    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=wealthenterprise69@gmail.com&item_name=${encodeURIComponent('Organic Traffic Campaign - ' + newCampaign.title)}&amount=${budget}&currency_code=USD&return=https://bzkingsdigitalmall.etsy.com/success&cancel_return=https://bzkingsdigitalmall.etsy.com/cancel`;
     
     toast.success(`Redirecting to PayPal for payment of $${budget} for ${impressions.toLocaleString()} organic impressions`);
     
-    // Simulate PayPal redirect
+    // Redirect to PayPal immediately
+    window.open(paypalUrl, '_blank');
+    
+    // Simulate campaign creation after payment (this would normally happen after successful payment callback)
     setTimeout(() => {
       const campaign: Campaign = {
         id: Date.now().toString(),
@@ -362,7 +368,7 @@ const CampaignManager = () => {
       });
       setSeoRecommendations([]);
       setShowCreateForm(false);
-      toast.success(`Payment successful! Campaign "${campaign.title}" launched with ${impressions.toLocaleString()} organic impressions!`);
+      toast.success(`Campaign "${campaign.title}" will be launched after successful PayPal payment!`);
     }, 2000);
   };
 
