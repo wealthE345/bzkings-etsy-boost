@@ -1,5 +1,5 @@
 
-// Enhanced AI content generation with promotional video matching for search terms
+// Enhanced AI content generation with promotional video matching for search terms and text-to-speech
 
 export const organicTrafficContent = [
   "🚀 Transform your organic traffic with AI-powered SEO strategies and cutting-edge digital tools. Our comprehensive suite helps entrepreneurs build sustainable online businesses through proven organic growth methods, advanced keyword optimization, and intelligent content marketing systems.",
@@ -15,74 +15,83 @@ export const promotionalVideosBySearchTerm = {
   "make money with clickbank": [
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      title: "ClickBank Success Masterclass",
+      title: "ClickBank Success Masterclass - $500+ Daily Commissions",
       description: "Master ClickBank affiliate marketing with proven strategies that generate $500+ daily commissions. Learn insider techniques for product selection, traffic generation, and commission optimization.",
-      textToSpeechContent: "Discover how to make money with ClickBank using our proven affiliate marketing system. Get exclusive access to high-converting ClickBank products and learn the exact strategies that top affiliates use to earn consistent commissions.",
-      duration: "2:30"
+      textToSpeechContent: "Welcome to the ultimate ClickBank Success Masterclass! Are you ready to unlock the secrets of earning $500 plus daily commissions through ClickBank affiliate marketing? In this comprehensive training, you'll discover the exact strategies that top affiliates use to dominate the ClickBank marketplace. We'll show you how to select winning products, drive targeted traffic, and optimize your campaigns for maximum profitability. Don't miss this opportunity to transform your income with ClickBank!",
+      duration: "2:30",
+      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Success%20Masterclass&txt-size=36&txt-color=ffffff&txt-align=center,middle"
     },
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      title: "ClickBank Profit Blueprint",
-      description: "Step-by-step ClickBank training showing how to select winning products, drive targeted traffic, and scale your affiliate commissions for maximum profitability.",
-      textToSpeechContent: "Transform your income with ClickBank affiliate marketing. This comprehensive blueprint reveals the secrets to finding profitable ClickBank products and generating passive income online.",
-      duration: "2:15"
+      title: "ClickBank Profit Blueprint - Passive Income System",
+      description: "Step-by-step ClickBank training showing how to select winning products, drive targeted traffic, and scale your affiliate commissions for maximum profitability and passive income generation.",
+      textToSpeechContent: "Introducing the ClickBank Profit Blueprint - your complete roadmap to building a passive income system with ClickBank affiliate marketing! This isn't just another course - it's a proven system that shows you exactly how to find profitable ClickBank products, create converting campaigns, and scale your earnings to build true passive income. Join thousands of successful affiliates who are already using this blueprint to generate consistent ClickBank commissions!",
+      duration: "2:15",
+      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Profit%20Blueprint&txt-size=34&txt-color=ffffff&txt-align=center,middle"
     }
   ],
   "facebook ads": [
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      title: "Facebook Ads Mastery Course",
-      description: "Complete Facebook advertising training covering audience targeting, ad creative optimization, and campaign scaling for maximum ROI and business growth.",
-      textToSpeechContent: "Master Facebook advertising with our comprehensive training program. Learn advanced targeting strategies, create high-converting ad creatives, and scale profitable Facebook ad campaigns.",
-      duration: "3:00"
+      title: "Facebook Ads Mastery Course - 300% ROI System",
+      description: "Complete Facebook advertising training covering audience targeting, ad creative optimization, and campaign scaling for maximum ROI and business growth with proven 300% return strategies.",
+      textToSpeechContent: "Welcome to Facebook Ads Mastery - the only course you need to achieve 300% ROI with Facebook advertising! Are you tired of burning money on Facebook ads that don't convert? This comprehensive training reveals the exact strategies used by top marketers to create profitable Facebook ad campaigns. You'll master advanced targeting, create high-converting ad creatives, and learn scaling techniques that deliver consistent results. Transform your Facebook advertising today!",
+      duration: "3:00",
+      thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Ads%20Mastery&txt-size=40&txt-color=ffffff&txt-align=center,middle"
     },
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-      title: "Facebook Marketing Revolution",
-      description: "Revolutionary Facebook marketing strategies that generate leads, increase sales, and build brand awareness through data-driven advertising techniques.",
-      textToSpeechContent: "Revolutionize your Facebook marketing with proven advertising strategies that deliver results. Get access to cutting-edge Facebook ad techniques used by top marketers worldwide.",
-      duration: "2:45"
+      title: "Facebook Marketing Revolution - Lead Generation System",
+      description: "Revolutionary Facebook marketing strategies that generate leads, increase sales, and build brand awareness through data-driven advertising techniques and conversion optimization.",
+      textToSpeechContent: "Get ready for the Facebook Marketing Revolution! This isn't your typical Facebook marketing course - it's a complete revolution in how you approach Facebook advertising. Discover cutting-edge strategies for lead generation, sales conversion, and brand building that are working right now. Our data-driven approach ensures every dollar you spend on Facebook ads delivers maximum return. Join the revolution and dominate Facebook marketing!",
+      duration: "2:45",
+      thumbnail: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Marketing%20Revolution&txt-size=32&txt-color=ffffff&txt-align=center,middle"
     }
   ],
   "make money with tiktok": [
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-      title: "TikTok Monetization Masterclass",
-      description: "Complete TikTok monetization training covering viral content creation, Creator Fund optimization, brand partnerships, and multiple income streams from TikTok.",
-      textToSpeechContent: "Turn your TikTok passion into profit with our comprehensive monetization system. Learn how to create viral content, attract brand partnerships, and build multiple income streams on TikTok.",
-      duration: "2:20"
+      title: "TikTok Monetization Masterclass - $1000+ Monthly",
+      description: "Complete TikTok monetization training covering viral content creation, Creator Fund optimization, brand partnerships, and multiple income streams from TikTok for $1000+ monthly earnings.",
+      textToSpeechContent: "Welcome to the TikTok Monetization Masterclass - your pathway to earning $1000 plus monthly from TikTok! Are you ready to turn your TikTok passion into serious profit? This comprehensive training reveals every monetization strategy available on TikTok. Learn how to create viral content that gets millions of views, optimize your Creator Fund earnings, secure lucrative brand partnerships, and build multiple income streams. Don't just scroll TikTok - start earning from it!",
+      duration: "2:20",
+      thumbnail: "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Monetization%20Masterclass&txt-size=28&txt-color=ffffff&txt-align=center,middle"
     },
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-      title: "TikTok Cash Creator System",
-      description: "Proven TikTok strategies for building a profitable content creation business, including affiliate marketing, product promotion, and audience monetization techniques.",
-      textToSpeechContent: "Discover the TikTok cash creator system that's helping ordinary people earn extraordinary income. Get step-by-step training on TikTok monetization strategies that actually work.",
-      duration: "2:10"
+      title: "TikTok Cash Creator System - Viral Income Blueprint",
+      description: "Proven TikTok strategies for building a profitable content creation business, including affiliate marketing, product promotion, and audience monetization techniques for viral success.",
+      textToSpeechContent: "Introducing the TikTok Cash Creator System - the viral income blueprint that's changing lives! This isn't just about getting views - it's about converting those views into cold hard cash. Our proven system shows you how to build a profitable TikTok business through strategic content creation, affiliate marketing, and audience monetization. Join ordinary people who are earning extraordinary income with our TikTok Cash Creator System!",
+      duration: "2:10",
+      thumbnail: "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Cash%20Creator%20System&txt-size=30&txt-color=ffffff&txt-align=center,middle"
     }
   ],
   "make money from home": [
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-      title: "Work From Home Success Blueprint",
-      description: "Complete work-from-home business training covering multiple income streams, time management, productivity optimization, and building a sustainable home-based business.",
-      textToSpeechContent: "Build a profitable work-from-home business with our comprehensive success blueprint. Learn proven strategies for earning consistent income from the comfort of your home.",
-      duration: "2:50"
+      title: "Work From Home Success Blueprint - Multiple Income Streams",
+      description: "Complete work-from-home business training covering multiple income streams, time management, productivity optimization, and building a sustainable home-based business empire.",
+      textToSpeechContent: "Welcome to the Work From Home Success Blueprint - your complete guide to building multiple income streams from home! Tired of the daily commute and office politics? This comprehensive training shows you how to create a thriving home-based business with multiple income streams. Learn time management secrets, productivity hacks, and proven business models that allow you to earn more while working from the comfort of your home. Your financial freedom starts here!",
+      duration: "2:50",
+      thumbnail: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Work%20From%20Home%20Success&txt-size=32&txt-color=ffffff&txt-align=center,middle"
     },
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-      title: "Home Business Empire Builder",
-      description: "Transform your home into a profit center with proven business strategies, digital marketing techniques, and income diversification methods for financial freedom.",
-      textToSpeechContent: "Create your home business empire with proven strategies that generate multiple income streams. Get access to the exact blueprint used by successful home-based entrepreneurs.",
-      duration: "2:35"
+      title: "Home Business Empire Builder - Financial Freedom System",
+      description: "Transform your home into a profit center with proven business strategies, digital marketing techniques, and income diversification methods for complete financial freedom.",
+      textToSpeechContent: "Get ready to build your Home Business Empire! This powerful system transforms your home into a profit-generating headquarters. Discover proven strategies for creating multiple income streams, mastering digital marketing, and building a business that gives you true financial freedom. Stop trading time for money and start building wealth from home with our empire builder system!",
+      duration: "2:35",
+      thumbnail: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Home%20Business%20Empire&txt-size=34&txt-color=ffffff&txt-align=center,middle"
     }
   ],
   "affiliate marketing": [
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-      title: "Affiliate Marketing Mastery",
-      description: "Complete affiliate marketing training covering niche selection, product promotion, traffic generation, and commission optimization for maximum profitability.",
-      textToSpeechContent: "Master affiliate marketing with our comprehensive training system. Learn how to select profitable niches, promote high-converting products, and build sustainable affiliate income.",
-      duration: "3:15"
+      title: "Affiliate Marketing Mastery - Commission Domination",
+      description: "Complete affiliate marketing training covering niche selection, product promotion, traffic generation, and commission optimization for maximum profitability and sustainable income.",
+      textToSpeechContent: "Welcome to Affiliate Marketing Mastery - your gateway to commission domination! Are you ready to master the art and science of affiliate marketing? This comprehensive training covers everything from profitable niche selection to advanced traffic generation strategies. Learn how to promote high-converting products, optimize your campaigns for maximum commissions, and build a sustainable affiliate marketing business. Start your journey to affiliate marketing success today!",
+      duration: "3:15",
+      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Marketing%20Mastery&txt-size=32&txt-color=ffffff&txt-align=center,middle"
     }
   ]
 };
@@ -91,52 +100,52 @@ export const promotionalVideosBySearchTerm = {
 export const contextualImages = {
   // ClickBank specific searches
   "make money with clickbank": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Success&txt-size=48&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Affiliate%20Profits&txt-size=36&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Commission%20System&txt-size=32&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Success%20System&txt-size=40&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,blue)",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Affiliate%20Profits&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,green,blue)",
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Commission%20Mastery&txt-size=32&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,orange,red)",
   ],
   "clickbank affiliate": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Affiliate%20Mastery&txt-size=40&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Performance&txt-size=42&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Marketplace&txt-size=38&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Affiliate%20Academy&txt-size=38&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,pink)",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Performance%20Pro&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,blue,cyan)",
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Marketplace%20Master&txt-size=32&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,green,yellow)",
   ],
 
   // Facebook Ads specific searches
   "facebook ads": [
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Ads%20Mastery&txt-size=44&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Advertising&txt-size=42&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Marketing&txt-size=40&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Ads%20Mastery%20Pro&txt-size=38&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,blue,purple)",
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Advertising%20Elite&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,indigo,blue)",
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Marketing%20Academy&txt-size=34&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,red)",
   ],
 
   // TikTok specific searches
   "make money with tiktok": [
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Money%20System&txt-size=40&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Monetization&txt-size=38&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Creator%20Income&txt-size=36&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Money%20Machine&txt-size=38&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,pink,purple)",
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Monetization%20Pro&txt-size=34&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,red,orange)",
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Creator%20Income&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,cyan,blue)",
   ],
   "tiktok marketing": [
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Marketing%20Pro&txt-size=40&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Business&txt-size=44&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Strategy&txt-size=42&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Marketing%20Mastery&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,pink)",
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Business%20Blueprint&txt-size=34&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,blue,green)",
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Strategy%20Academy&txt-size=34&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,orange,red)",
   ],
 
   // Make money from home specific
   "make money from home": [
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Work%20From%20Home%20Success&txt-size=36&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Home%20Business%20Builder&txt-size=38&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Remote%20Income%20System&txt-size=36&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Work%20From%20Home%20Success&txt-size=34&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,green,blue)",
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Home%20Business%20Empire&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,indigo)",
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Remote%20Income%20System&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,blue,cyan)",
   ],
 
   // Affiliate marketing
   "affiliate marketing": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Marketing%20Pro&txt-size=38&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Commission&txt-size=40&txt-color=ffffff&txt-align=center,middle",
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Success&txt-size=42&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Marketing%20Mastery&txt-size=34&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,orange,red)",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Commission%20Pro&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,green,blue)",
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Success%20Academy&txt-size=32&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,pink)",
   ]
 };
 
-// Enhanced function to get promotional videos based on search query
-export const getPromotionalVideoBySearchQuery = (searchQuery: string): Array<{url: string, description: string, title: string, textToSpeechContent: string}> => {
+// Enhanced function to get promotional videos based on search query with text-to-speech
+export const getPromotionalVideoBySearchQuery = (searchQuery: string): Array<{url: string, description: string, title: string, textToSpeechContent: string, thumbnail: string}> => {
   const lowerQuery = searchQuery.toLowerCase().trim();
   
   // Check for exact promotional video matches first
@@ -146,7 +155,8 @@ export const getPromotionalVideoBySearchQuery = (searchQuery: string): Array<{ur
         url: video.url,
         description: video.description,
         title: video.title,
-        textToSpeechContent: video.textToSpeechContent
+        textToSpeechContent: video.textToSpeechContent,
+        thumbnail: video.thumbnail
       }));
     }
   }
@@ -155,15 +165,17 @@ export const getPromotionalVideoBySearchQuery = (searchQuery: string): Array<{ur
   return [
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      title: `${searchQuery} Success System`,
-      description: `Complete ${searchQuery} training with proven strategies and step-by-step implementation guides`,
-      textToSpeechContent: `Master ${searchQuery} with our comprehensive training system. Get proven strategies and step-by-step guides to achieve success in ${searchQuery}.`
+      title: `${searchQuery} Success System - Complete Training`,
+      description: `Complete ${searchQuery} training with proven strategies and step-by-step implementation guides for maximum success and profitability`,
+      textToSpeechContent: `Welcome to the ultimate ${searchQuery} Success System! Are you ready to master ${searchQuery} and achieve incredible results? This comprehensive training reveals all the secrets you need to succeed with ${searchQuery}. Don't miss this opportunity to transform your life with ${searchQuery}!`,
+      thumbnail: `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Success')}&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,blue)`
     },
     {
       url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      title: `${searchQuery} Mastery Course`,
-      description: `Advanced ${searchQuery} techniques and optimization strategies for maximum results`,
-      textToSpeechContent: `Unlock advanced ${searchQuery} techniques with our mastery course. Learn optimization strategies that deliver maximum results in ${searchQuery}.`
+      title: `${searchQuery} Mastery Course - Advanced Strategies`,
+      description: `Advanced ${searchQuery} techniques and optimization strategies for maximum results and professional-level implementation`,
+      textToSpeechContent: `Introducing the ${searchQuery} Mastery Course! Take your ${searchQuery} skills to the next level with our advanced training system. This isn't basic information - these are professional-level strategies that deliver real results. Master ${searchQuery} today!`,
+      thumbnail: `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Mastery')}&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,green,blue)`
     }
   ];
 };
@@ -179,8 +191,8 @@ export const getImageBySearchQuery = (searchQuery: string): string => {
     }
   }
   
-  // Default with search term overlay
-  return `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery)}&txt-size=40&txt-color=ffffff&txt-align=center,middle`;
+  // Default with search term overlay and gradient background
+  return `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery)}&txt-size=40&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,blue)`;
 };
 
 // Enhanced function to get 3 mockup images with better contextual matching
@@ -193,33 +205,33 @@ export const getMockupImagesBySearchQuery = (searchQuery: string): Array<{url: s
       return [
         { 
           url: images[0], 
-          description: `${searchQuery} Strategy - Professional ${searchQuery} training and implementation` 
+          description: `${searchQuery} Strategy - Professional ${searchQuery} training and implementation system` 
         },
         { 
           url: images[1] || images[0], 
-          description: `${searchQuery} Success - Proven ${searchQuery} techniques and optimization` 
+          description: `${searchQuery} Success - Proven ${searchQuery} techniques and optimization strategies` 
         },
         { 
           url: images[2] || images[0], 
-          description: `${searchQuery} Mastery - Advanced ${searchQuery} methods and scaling` 
+          description: `${searchQuery} Mastery - Advanced ${searchQuery} methods and scaling techniques` 
         }
       ];
     }
   }
 
-  // Default mockups with search term overlay
+  // Default mockups with search term overlay and gradient backgrounds
   return [
     { 
-      url: `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Strategy')}&txt-size=36&txt-color=ffffff&txt-align=center,middle`, 
-      description: `${searchQuery} Strategy - Professional approach to ${searchQuery}` 
+      url: `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Strategy')}&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,purple,blue)`, 
+      description: `${searchQuery} Strategy - Professional approach to mastering ${searchQuery}` 
     },
     { 
-      url: `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Success')}&txt-size=38&txt-color=ffffff&txt-align=center,middle`, 
-      description: `${searchQuery} Success - Proven techniques for ${searchQuery}` 
+      url: `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Success')}&txt-size=38&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,green,blue)`, 
+      description: `${searchQuery} Success - Proven techniques for achieving ${searchQuery} results` 
     },
     { 
-      url: `https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Mastery')}&txt-size=36&txt-color=ffffff&txt-align=center,middle`, 
-      description: `${searchQuery} Mastery - Advanced ${searchQuery} methods` 
+      url: `https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Mastery')}&txt-size=36&txt-color=ffffff&txt-align=center,middle&txt-pad=20&bg=gradient(45deg,orange,red)`, 
+      description: `${searchQuery} Mastery - Advanced ${searchQuery} methods and scaling strategies` 
     }
   ];
 };
