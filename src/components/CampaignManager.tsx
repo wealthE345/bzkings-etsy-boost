@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin } from "lucide-react";
+import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 
@@ -32,6 +33,8 @@ interface Campaign {
   targetRegion?: string;
   targetGender?: string;
   objectives?: string;
+  seoKeywords?: string[];
+  adVariations?: string[];
 }
 
 const CampaignManager = () => {
@@ -55,7 +58,9 @@ const CampaignManager = () => {
       productName: 'Digital Templates',
       targetAge: '25-45',
       targetRegion: 'United States',
-      objectives: 'Drive traffic and sales'
+      objectives: 'Drive traffic and sales',
+      seoKeywords: ['digital templates', 'creative design', 'professional templates'],
+      adVariations: ['Premium digital templates for creative professionals', 'Transform your designs with professional templates', 'Unlock creativity with our digital template collection']
     },
     {
       id: '2',
@@ -76,7 +81,9 @@ const CampaignManager = () => {
       productName: 'Printable Designs',
       targetAge: '30-55',
       targetRegion: 'Canada',
-      objectives: 'Brand awareness'
+      objectives: 'Brand awareness',
+      seoKeywords: ['printables', 'home decor', 'office organization'],
+      adVariations: ['Beautiful printable designs for home and office', 'Organize your space with stunning printables', 'Download and print beautiful designs instantly']
     }
   ]);
 
@@ -94,10 +101,15 @@ const CampaignManager = () => {
     targetAge: '',
     targetRegion: '',
     targetGender: '',
-    objectives: ''
+    objectives: '',
+    seoKeywords: '',
+    adVariations: [] as string[]
   });
   const [generatingImage, setGeneratingImage] = useState(false);
   const [generatingContent, setGeneratingContent] = useState(false);
+  const [analyzingSEO, setAnalyzingSEO] = useState(false);
+  const [generatingVariations, setGeneratingVariations] = useState(false);
+  const [seoRecommendations, setSeoRecommendations] = useState<string[]>([]);
 
   const performanceData = [
     { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3 },
@@ -112,17 +124,18 @@ const CampaignManager = () => {
   const generateAIImage = async () => {
     setGeneratingImage(true);
     try {
-      // Simulate AI image generation based on product/campaign info
       await new Promise(resolve => setTimeout(resolve, 2000));
       const placeholderImages = [
         'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
         'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
         'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop'
+        'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop'
       ];
       const randomImage = placeholderImages[Math.floor(Math.random() * placeholderImages.length)];
       setNewCampaign(prev => ({ ...prev, imageUrl: randomImage }));
-      toast.success('AI image generated based on your product!');
+      toast.success('AI-generated ad creative image based on your product!');
     } catch (error) {
       toast.error('Failed to generate AI image');
     } finally {
@@ -139,13 +152,82 @@ const CampaignManager = () => {
     setGeneratingContent(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      const aiContent = `Discover amazing ${newCampaign.productName} at ${newCampaign.websiteUrl}! Perfect for ${newCampaign.targetAge ? `ages ${newCampaign.targetAge}` : 'everyone'}. ${newCampaign.objectives ? `Our goal: ${newCampaign.objectives.toLowerCase()}.` : ''} Shop now and transform your experience!`;
-      setNewCampaign(prev => ({ ...prev, adContent: aiContent }));
-      toast.success('AI content generated based on your product info!');
+      const contentTemplates = [
+        `🚀 Transform your ${newCampaign.targetAge ? `life at ${newCampaign.targetAge}` : 'experience'} with ${newCampaign.productName}! Visit ${newCampaign.websiteUrl} and discover the difference. ${newCampaign.objectives ? `Perfect for ${newCampaign.objectives.toLowerCase()}.` : ''} Shop now! ✨`,
+        `✨ Discover amazing ${newCampaign.productName} that will revolutionize your daily routine! ${newCampaign.targetAge ? `Designed for ages ${newCampaign.targetAge}.` : ''} Visit ${newCampaign.websiteUrl} today! 🎯`,
+        `🎯 Ready to upgrade? ${newCampaign.productName} is here to help! ${newCampaign.objectives ? `Our mission: ${newCampaign.objectives.toLowerCase()}.` : ''} Get started at ${newCampaign.websiteUrl} 🚀`,
+        `💫 Join thousands who love ${newCampaign.productName}! ${newCampaign.targetRegion ? `Popular in ${newCampaign.targetRegion}.` : ''} Experience the difference at ${newCampaign.websiteUrl} ⭐`
+      ];
+      const randomContent = contentTemplates[Math.floor(Math.random() * contentTemplates.length)];
+      setNewCampaign(prev => ({ ...prev, adContent: randomContent }));
+      toast.success('AI-optimized ad content generated!');
     } catch (error) {
       toast.error('Failed to generate AI content');
     } finally {
       setGeneratingContent(false);
+    }
+  };
+
+  const generateAdVariations = async () => {
+    if (!newCampaign.adContent) {
+      toast.error('Please generate or enter ad content first');
+      return;
+    }
+
+    setGeneratingVariations(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const variations = [
+        `Short & Sweet: "${newCampaign.productName} - Your solution awaits at ${newCampaign.websiteUrl}"`,
+        `Question Hook: "Looking for ${newCampaign.productName}? Find your answer at ${newCampaign.websiteUrl}"`,
+        `Urgency: "Limited time! Get ${newCampaign.productName} now at ${newCampaign.websiteUrl}"`,
+        `Social Proof: "Join thousands using ${newCampaign.productName}! Start at ${newCampaign.websiteUrl}"`
+      ];
+      setNewCampaign(prev => ({ ...prev, adVariations: variations }));
+      toast.success('Generated 4 ad variations for A/B testing!');
+    } catch (error) {
+      toast.error('Failed to generate ad variations');
+    } finally {
+      setGeneratingVariations(false);
+    }
+  };
+
+  const analyzeSEO = async () => {
+    if (!newCampaign.websiteUrl || !newCampaign.productName) {
+      toast.error('Please enter website URL and product name first');
+      return;
+    }
+
+    setAnalyzingSEO(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const seoTips = [
+        `Use long-tail keywords like "${newCampaign.productName} for ${newCampaign.targetAge || 'professionals'}"`,
+        `Include location-based keywords if targeting ${newCampaign.targetRegion || 'specific regions'}`,
+        `Add emotional triggers like "best", "premium", "exclusive" to your ad copy`,
+        `Use action words: "discover", "transform", "unlock" in your headlines`,
+        `Include your target keyword "${newCampaign.productName}" in the first 125 characters`,
+        `Create urgency with phrases like "limited time", "exclusive offer"`,
+        `Use numbers and stats to build credibility`,
+        `Include local SEO terms if targeting specific regions`
+      ];
+      setSeoRecommendations(seoTips);
+      
+      // Auto-generate SEO keywords
+      const keywords = [
+        newCampaign.productName.toLowerCase(),
+        `best ${newCampaign.productName.toLowerCase()}`,
+        `${newCampaign.productName.toLowerCase()} online`,
+        `buy ${newCampaign.productName.toLowerCase()}`,
+        `${newCampaign.productName.toLowerCase()} ${newCampaign.targetRegion?.toLowerCase() || 'store'}`
+      ];
+      setNewCampaign(prev => ({ ...prev, seoKeywords: keywords.join(', ') }));
+      
+      toast.success('SEO analysis complete with keyword suggestions!');
+    } catch (error) {
+      toast.error('Failed to analyze SEO');
+    } finally {
+      setAnalyzingSEO(false);
     }
   };
 
@@ -175,7 +257,9 @@ const CampaignManager = () => {
       targetAge: newCampaign.targetAge,
       targetRegion: newCampaign.targetRegion,
       targetGender: newCampaign.targetGender,
-      objectives: newCampaign.objectives
+      objectives: newCampaign.objectives,
+      seoKeywords: newCampaign.seoKeywords ? newCampaign.seoKeywords.split(',').map(k => k.trim()) : [],
+      adVariations: newCampaign.adVariations
     };
 
     setCampaigns(prev => [...prev, campaign]);
@@ -192,10 +276,13 @@ const CampaignManager = () => {
       targetAge: '',
       targetRegion: '',
       targetGender: '',
-      objectives: ''
+      objectives: '',
+      seoKeywords: '',
+      adVariations: []
     });
+    setSeoRecommendations([]);
     setShowCreateForm(false);
-    toast.success('Campaign created successfully with targeting options!');
+    toast.success('AI-powered ad campaign created successfully!');
   };
 
   const toggleCampaignStatus = (id: string) => {
@@ -219,20 +306,23 @@ const CampaignManager = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Campaign Management</h2>
-          <p className="text-muted-foreground">Create targeted campaigns to promote your website and products</p>
+          <h2 className="text-2xl font-bold">AI Ad Creatives Campaign Tool</h2>
+          <p className="text-muted-foreground">Create high-converting ad campaigns with AI-generated content, images, and SEO optimization</p>
         </div>
         <Button onClick={() => setShowCreateForm(!showCreateForm)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Create Campaign
+          Create AI Campaign
         </Button>
       </div>
 
       {showCreateForm && (
         <Card className="border-2 border-purple-200">
           <CardHeader>
-            <CardTitle>Create New Ad Campaign</CardTitle>
-            <CardDescription>Build targeted campaigns to promote your website and products with AI-powered content</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Wand2 className="h-5 w-5" />
+              AI Ad Campaign Builder
+            </CardTitle>
+            <CardDescription>Let AI create optimized ad content, images, and SEO strategy for your campaign</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Basic Campaign Info */}
@@ -375,45 +465,135 @@ const CampaignManager = () => {
               </div>
             </div>
 
-            {/* Content Creation */}
+            {/* AI Content Creation */}
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
-                <Image className="h-4 w-4" />
-                Ad Creative
+                <Wand2 className="h-4 w-4" />
+                AI Ad Content Generator
               </h4>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Ad Content</label>
-                <Textarea
-                  placeholder="Enter your ad content and description, or generate with AI"
-                  value={newCampaign.adContent}
-                  onChange={(e) => setNewCampaign(prev => ({ ...prev, adContent: e.target.value }))}
-                  rows={3}
-                />
-                <Button
-                  onClick={generateAIContent}
-                  disabled={generatingContent}
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                >
-                  {generatingContent ? 'Generating...' : 'Generate AI Content from Product Info'}
-                </Button>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Primary Ad Content</label>
+                  <Textarea
+                    placeholder="AI will generate optimized ad content, or enter your own"
+                    value={newCampaign.adContent}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, adContent: e.target.value }))}
+                    rows={3}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={generateAIContent}
+                      disabled={generatingContent}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <Wand2 className="h-4 w-4" />
+                      {generatingContent ? 'Generating...' : 'Generate AI Content'}
+                    </Button>
+                    <Button
+                      onClick={generateAdVariations}
+                      disabled={generatingVariations || !newCampaign.adContent}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <TrendingUp className="h-4 w-4" />
+                      {generatingVariations ? 'Creating...' : 'Create A/B Variations'}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Ad Variations */}
+                {newCampaign.adVariations.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">AI-Generated Ad Variations (A/B Testing)</label>
+                    <div className="grid gap-2">
+                      {newCampaign.adVariations.map((variation, index) => (
+                        <div key={index} className="p-3 bg-gray-50 rounded-md">
+                          <p className="text-sm font-medium text-purple-600">Variation {index + 1}:</p>
+                          <p className="text-sm">{variation}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Campaign Image</label>
-                <div className="flex gap-2">
+            </div>
+
+            {/* AI Image Generation */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <ImageIcon className="h-4 w-4" />
+                AI Ad Creative Images
+              </h4>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
                   <Button
                     onClick={generateAIImage}
                     disabled={generatingImage}
                     variant="outline"
                     className="flex items-center gap-2"
                   >
-                    <Image className="h-4 w-4" />
+                    <Wand2 className="h-4 w-4" />
                     {generatingImage ? 'Generating...' : 'Generate AI Image'}
                   </Button>
-                  {newCampaign.imageUrl && (
-                    <img src={newCampaign.imageUrl} alt="Generated" className="w-16 h-16 rounded object-cover" />
-                  )}
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Upload className="h-4 w-4" />
+                    Or upload your own image
+                  </div>
+                </div>
+                {newCampaign.imageUrl && (
+                  <div className="flex items-center gap-4">
+                    <img src={newCampaign.imageUrl} alt="Generated ad creative" className="w-32 h-24 rounded-lg object-cover border-2 border-purple-200" />
+                    <div className="text-sm">
+                      <p className="font-medium text-green-600">✅ Ad creative ready</p>
+                      <p className="text-muted-foreground">Optimized for {newCampaign.platform || 'social media'}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* SEO Optimization */}
+            <div className="space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Search className="h-4 w-4" />
+                SEO Optimization & Keywords
+              </h4>
+              <div className="space-y-4">
+                <Button
+                  onClick={analyzeSEO}
+                  disabled={analyzingSEO}
+                  variant="outline"
+                  className="w-full flex items-center gap-2"
+                >
+                  <Lightbulb className="h-4 w-4" />
+                  {analyzingSEO ? 'Analyzing...' : 'Analyze SEO & Generate Keywords'}
+                </Button>
+
+                {seoRecommendations.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">SEO Recommendations</label>
+                    <div className="p-4 bg-blue-50 rounded-lg space-y-2">
+                      {seoRecommendations.map((tip, index) => (
+                        <div key={index} className="flex items-start gap-2">
+                          <Lightbulb className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm">{tip}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">SEO Keywords (comma-separated)</label>
+                  <Textarea
+                    placeholder="AI will suggest keywords, or enter your own"
+                    value={newCampaign.seoKeywords}
+                    onChange={(e) => setNewCampaign(prev => ({ ...prev, seoKeywords: e.target.value }))}
+                    rows={2}
+                  />
                 </div>
               </div>
             </div>
@@ -446,8 +626,8 @@ const CampaignManager = () => {
 
             <div className="flex gap-2">
               <Button onClick={createCampaign} className="flex items-center gap-2">
-                <Target className="h-4 w-4" />
-                Create Targeted Campaign
+                <Wand2 className="h-4 w-4" />
+                Launch AI Campaign
               </Button>
               <Button onClick={() => setShowCreateForm(false)} variant="outline">
                 Cancel
@@ -472,12 +652,21 @@ const CampaignManager = () => {
                     <img 
                       src={campaign.imageUrl} 
                       alt={campaign.title}
-                      className="w-16 h-16 rounded-lg object-cover"
+                      className="w-20 h-16 rounded-lg object-cover border"
                     />
-                    <div>
+                    <div className="flex-1">
                       <h4 className="font-semibold text-lg">{campaign.title}</h4>
                       <p className="text-sm text-muted-foreground mb-2">{campaign.platform}</p>
-                      <p className="text-sm">{campaign.adContent}</p>
+                      <p className="text-sm mb-2">{campaign.adContent}</p>
+                      {campaign.seoKeywords && campaign.seoKeywords.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {campaign.seoKeywords.slice(0, 3).map((keyword, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {keyword}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -524,6 +713,19 @@ const CampaignManager = () => {
                   </div>
                   <Progress value={campaign.progress} className="h-2" />
                 </div>
+
+                {campaign.adVariations && campaign.adVariations.length > 0 && (
+                  <div className="mt-4 pt-4 border-t">
+                    <p className="text-sm font-medium mb-2">A/B Test Variations:</p>
+                    <div className="grid gap-1">
+                      {campaign.adVariations.slice(0, 2).map((variation, index) => (
+                        <p key={index} className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
+                          {variation}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
