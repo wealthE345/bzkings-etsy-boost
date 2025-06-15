@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon } from "lucide-react";
 import { EmailCampaign, NewEmail } from "@/hooks/useEmailCampaign";
-import { generateAITitle, getMockupImagesBySearchQuery, getIntroVideoBySubject, generateEmailContent } from "@/utils/aiContentGenerator";
+import { generateAITitle, getMockupImagesBySearchQuery, getPromotionalVideoBySearchQuery, generateEmailContent } from "@/utils/aiContentGenerator";
 import { ImageMockupSelector } from "./ImageMockupSelector";
 import { CampaignViewer } from "./CampaignViewer";
 import { toast } from "sonner";
@@ -40,12 +40,12 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     // Generate AI title based on search term
     const aiTitle = generateAITitle(searchTerm);
     
-    // Get mockup images and videos
+    // Get mockup images and promotional videos
     const images = getMockupImagesBySearchQuery(searchTerm);
-    const videos = getIntroVideoBySubject(searchTerm);
+    const videos = getPromotionalVideoBySearchQuery(searchTerm);
     
     setMockupImages(images);
-    setMockupVideos([videos]);
+    setMockupVideos(videos);
     setShowMockups(true);
     
     // Update email with AI-generated title
@@ -54,7 +54,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       subject: aiTitle
     });
 
-    toast.success(`✨ Found ${images.length} creative ideas for "${searchTerm}"`);
+    toast.success(`✨ Found ${images.length} images and ${videos.length} videos for "${searchTerm}"`);
   };
 
   const handleGenerateAIContent = async () => {
@@ -64,14 +64,15 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     }
 
     setIsGeneratingAI(true);
-    toast.info("🤖 Generating AI-powered email content and creative...");
+    toast.info("🤖 Generating AI-powered email content and promotional video...");
 
     try {
       // Generate email content
       const content = generateEmailContent(searchTerm || newEmail.subject);
       
-      // Generate intro video
-      const video = getIntroVideoBySubject(newEmail.subject);
+      // Generate promotional video
+      const videos = getPromotionalVideoBySearchQuery(searchTerm || newEmail.subject);
+      const video = videos[0]; // Get first promotional video
       
       // Simulate AI processing time
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -85,11 +86,13 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
           alt: video.description
         },
         aiGenerated: true,
-        targetAudience: "organic-traffic"
+        targetAudience: "organic-traffic",
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
       });
 
       setIsGeneratingAI(false);
-      toast.success("✅ AI content and 30-second intro video generated!");
+      toast.success("✅ AI content and promotional video generated!");
     } catch (error) {
       setIsGeneratingAI(false);
       toast.error("Failed to generate AI content. Please try again.");
@@ -140,8 +143,8 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       aiGenerated: newEmail.aiGenerated || false,
       targetAudience: newEmail.targetAudience || "organic-traffic",
       creative: newEmail.creative,
-      startDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+      startDate: newEmail.startDate || new Date().toISOString(),
+      endDate: newEmail.endDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
     };
 
     setPreviewCampaign(preview);
@@ -155,7 +158,9 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       content: updatedCampaign.content,
       creative: updatedCampaign.creative,
       aiGenerated: updatedCampaign.aiGenerated,
-      targetAudience: updatedCampaign.targetAudience
+      targetAudience: updatedCampaign.targetAudience,
+      startDate: updatedCampaign.startDate,
+      endDate: updatedCampaign.endDate
     });
     toast.success("✅ Campaign updated from viewer!");
   };
@@ -180,7 +185,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             <label className="text-sm font-medium">Search for Campaign Ideas:</label>
             <div className="flex gap-2">
               <Input
-                placeholder="e.g., make money with clickbank, facebook ads, tiktok marketing..."
+                placeholder="e.g., make money with clickbank, facebook ads, make money with tiktok..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearchCampaignIdeas()}
@@ -226,7 +231,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               className="w-full bg-purple-600 hover:bg-purple-700"
             >
               <Wand2 className="mr-2 h-4 w-4" />
-              {isGeneratingAI ? "Generating AI Content & Video..." : "Generate AI Content & 30s Intro Video"}
+              {isGeneratingAI ? "Generating AI Content & Video..." : "Generate AI Content & Promotional Video"}
             </Button>
           </div>
 
@@ -241,7 +246,6 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                       src={newEmail.creative.url} 
                       className="w-full h-32 object-cover rounded-lg"
                       controls
-                      volume={0.7}
                       poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                     />
                     <Badge 

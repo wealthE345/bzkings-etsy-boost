@@ -1,4 +1,5 @@
-// Enhanced AI content generation with exact search-based matching for images and videos
+
+// Enhanced AI content generation with promotional video matching for search terms
 
 export const organicTrafficContent = [
   "🚀 Transform your organic traffic with AI-powered SEO strategies and cutting-edge digital tools. Our comprehensive suite helps entrepreneurs build sustainable online businesses through proven organic growth methods, advanced keyword optimization, and intelligent content marketing systems.",
@@ -9,216 +10,221 @@ export const organicTrafficContent = [
   "⚡ Experience the difference that AI-enhanced organic traffic makes for your business. Our digital products combine artificial intelligence with proven SEO methodologies to deliver exceptional results in search rankings and sustainable traffic growth."
 ];
 
+// Enhanced promotional video content mapping for exact search matching with text-to-speech content
+export const promotionalVideosBySearchTerm = {
+  "make money with clickbank": [
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      title: "ClickBank Success Masterclass",
+      description: "Master ClickBank affiliate marketing with proven strategies that generate $500+ daily commissions. Learn insider techniques for product selection, traffic generation, and commission optimization.",
+      textToSpeechContent: "Discover how to make money with ClickBank using our proven affiliate marketing system. Get exclusive access to high-converting ClickBank products and learn the exact strategies that top affiliates use to earn consistent commissions.",
+      duration: "2:30"
+    },
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      title: "ClickBank Profit Blueprint",
+      description: "Step-by-step ClickBank training showing how to select winning products, drive targeted traffic, and scale your affiliate commissions for maximum profitability.",
+      textToSpeechContent: "Transform your income with ClickBank affiliate marketing. This comprehensive blueprint reveals the secrets to finding profitable ClickBank products and generating passive income online.",
+      duration: "2:15"
+    }
+  ],
+  "facebook ads": [
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      title: "Facebook Ads Mastery Course",
+      description: "Complete Facebook advertising training covering audience targeting, ad creative optimization, and campaign scaling for maximum ROI and business growth.",
+      textToSpeechContent: "Master Facebook advertising with our comprehensive training program. Learn advanced targeting strategies, create high-converting ad creatives, and scale profitable Facebook ad campaigns.",
+      duration: "3:00"
+    },
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      title: "Facebook Marketing Revolution",
+      description: "Revolutionary Facebook marketing strategies that generate leads, increase sales, and build brand awareness through data-driven advertising techniques.",
+      textToSpeechContent: "Revolutionize your Facebook marketing with proven advertising strategies that deliver results. Get access to cutting-edge Facebook ad techniques used by top marketers worldwide.",
+      duration: "2:45"
+    }
+  ],
+  "make money with tiktok": [
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      title: "TikTok Monetization Masterclass",
+      description: "Complete TikTok monetization training covering viral content creation, Creator Fund optimization, brand partnerships, and multiple income streams from TikTok.",
+      textToSpeechContent: "Turn your TikTok passion into profit with our comprehensive monetization system. Learn how to create viral content, attract brand partnerships, and build multiple income streams on TikTok.",
+      duration: "2:20"
+    },
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      title: "TikTok Cash Creator System",
+      description: "Proven TikTok strategies for building a profitable content creation business, including affiliate marketing, product promotion, and audience monetization techniques.",
+      textToSpeechContent: "Discover the TikTok cash creator system that's helping ordinary people earn extraordinary income. Get step-by-step training on TikTok monetization strategies that actually work.",
+      duration: "2:10"
+    }
+  ],
+  "make money from home": [
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      title: "Work From Home Success Blueprint",
+      description: "Complete work-from-home business training covering multiple income streams, time management, productivity optimization, and building a sustainable home-based business.",
+      textToSpeechContent: "Build a profitable work-from-home business with our comprehensive success blueprint. Learn proven strategies for earning consistent income from the comfort of your home.",
+      duration: "2:50"
+    },
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      title: "Home Business Empire Builder",
+      description: "Transform your home into a profit center with proven business strategies, digital marketing techniques, and income diversification methods for financial freedom.",
+      textToSpeechContent: "Create your home business empire with proven strategies that generate multiple income streams. Get access to the exact blueprint used by successful home-based entrepreneurs.",
+      duration: "2:35"
+    }
+  ],
+  "affiliate marketing": [
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      title: "Affiliate Marketing Mastery",
+      description: "Complete affiliate marketing training covering niche selection, product promotion, traffic generation, and commission optimization for maximum profitability.",
+      textToSpeechContent: "Master affiliate marketing with our comprehensive training system. Learn how to select profitable niches, promote high-converting products, and build sustainable affiliate income.",
+      duration: "3:15"
+    }
+  ]
+};
+
 // Enhanced contextual image mapping for specific search terms with exact matching
 export const contextualImages = {
   // ClickBank specific searches
   "make money with clickbank": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&text=ClickBank%20Success", // affiliate dashboard with ClickBank overlay
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // ClickBank affiliate marketing
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // digital product sales with ClickBank theme
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Success&txt-size=48&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Affiliate%20Profits&txt-size=36&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Commission%20System&txt-size=32&txt-color=ffffff&txt-align=center,middle",
   ],
   "clickbank affiliate": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // affiliate commission tracking
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // ClickBank performance dashboard
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // ClickBank marketplace
-  ],
-  "clickbank marketing": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // ClickBank marketing analytics
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // ClickBank promotion strategies
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // ClickBank success metrics
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Affiliate%20Mastery&txt-size=40&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Performance&txt-size=42&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=ClickBank%20Marketplace&txt-size=38&txt-color=ffffff&txt-align=center,middle",
   ],
 
   // Facebook Ads specific searches
   "facebook ads": [
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook advertising interface
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Facebook ads manager
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Facebook mobile advertising
-  ],
-  "facebook advertising": [
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook business advertising
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Facebook ad campaigns
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Facebook targeting options
-  ],
-
-  // Make money from home specific
-  "make money from home": [
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // person working from home setup
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80", // home office workspace
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // remote work setup
-  ],
-  "work from home": [
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // home office
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80", // remote workspace
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // laptop home setup
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Ads%20Mastery&txt-size=44&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Advertising&txt-size=42&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Facebook%20Marketing&txt-size=40&txt-color=ffffff&txt-align=center,middle",
   ],
 
   // TikTok specific searches
   "make money with tiktok": [
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // TikTok content creation
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // TikTok video monetization
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // TikTok creator analytics
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Money%20System&txt-size=40&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Monetization&txt-size=38&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Creator%20Income&txt-size=36&txt-color=ffffff&txt-align=center,middle",
   ],
   "tiktok marketing": [
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // TikTok marketing strategy
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // TikTok business content
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // TikTok engagement metrics
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Marketing%20Pro&txt-size=40&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Business&txt-size=44&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=TikTok%20Strategy&txt-size=42&txt-color=ffffff&txt-align=center,middle",
   ],
 
-  // Add more specific search terms
+  // Make money from home specific
+  "make money from home": [
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Work%20From%20Home%20Success&txt-size=36&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Home%20Business%20Builder&txt-size=38&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Remote%20Income%20System&txt-size=36&txt-color=ffffff&txt-align=center,middle",
+  ],
+
+  // Affiliate marketing
   "affiliate marketing": [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // affiliate commission tracking
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // affiliate performance dashboard
-    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // affiliate networks interface
-  ],
-
-  // Add more contextual mappings here...
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Marketing%20Pro&txt-size=38&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Commission&txt-size=40&txt-color=ffffff&txt-align=center,middle",
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=Affiliate%20Success&txt-size=42&txt-color=ffffff&txt-align=center,middle",
+  ]
 };
 
-// Enhanced video content mapping for exact search matching
-export const contextualVideos = {
-  "make money with clickbank": {
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    title: "ClickBank Profit Mastery",
-    description: "Learn proven ClickBank affiliate strategies that generate consistent commissions",
-    duration: "30s"
-  },
-  "clickbank affiliate": {
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    title: "ClickBank Affiliate Success",
-    description: "Master ClickBank affiliate marketing with expert strategies",
-    duration: "30s"
-  },
-  "facebook ads": {
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    title: "Facebook Ads Mastery",
-    description: "Create high-converting Facebook ad campaigns that drive results",
-    duration: "30s"
-  },
-  "make money from home": {
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    title: "Work From Home Success",
-    description: "Build a profitable home-based business with proven strategies",
-    duration: "30s"
-  },
-  "tiktok marketing": {
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    title: "TikTok Marketing Blueprint",
-    description: "Viral TikTok marketing strategies that build your brand",
-    duration: "30s"
-  },
-  "make money with tiktok": {
-    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    title: "TikTok Monetization Guide",
-    description: "Turn your TikTok content into a profitable business",
-    duration: "30s"
+// Enhanced function to get promotional videos based on search query
+export const getPromotionalVideoBySearchQuery = (searchQuery: string): Array<{url: string, description: string, title: string, textToSpeechContent: string}> => {
+  const lowerQuery = searchQuery.toLowerCase().trim();
+  
+  // Check for exact promotional video matches first
+  for (const [key, videos] of Object.entries(promotionalVideosBySearchTerm)) {
+    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
+      return videos.map(video => ({
+        url: video.url,
+        description: video.description,
+        title: video.title,
+        textToSpeechContent: video.textToSpeechContent
+      }));
+    }
   }
+  
+  // Default promotional videos if no exact match
+  return [
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      title: `${searchQuery} Success System`,
+      description: `Complete ${searchQuery} training with proven strategies and step-by-step implementation guides`,
+      textToSpeechContent: `Master ${searchQuery} with our comprehensive training system. Get proven strategies and step-by-step guides to achieve success in ${searchQuery}.`
+    },
+    {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      title: `${searchQuery} Mastery Course`,
+      description: `Advanced ${searchQuery} techniques and optimization strategies for maximum results`,
+      textToSpeechContent: `Unlock advanced ${searchQuery} techniques with our mastery course. Learn optimization strategies that deliver maximum results in ${searchQuery}.`
+    }
+  ];
 };
 
-// Add missing image categories
-export const aiImagesByCategory = {
-  ai: [
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80"
-  ],
-  seo: [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80"
-  ],
-  social: [
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80"
-  ],
-  content: [
-    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80"
-  ],
-  email: [
-    "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80"
-  ],
-  marketing: [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80"
-  ],
-  traffic: [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80",
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80"
-  ]
+// Enhanced function to get images based on search query with exact matching
+export const getImageBySearchQuery = (searchQuery: string): string => {
+  const lowerQuery = searchQuery.toLowerCase().trim();
+  
+  // Check for exact contextual matches first
+  for (const [key, images] of Object.entries(contextualImages)) {
+    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
+      return images[Math.floor(Math.random() * images.length)];
+    }
+  }
+  
+  // Default with search term overlay
+  return `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery)}&txt-size=40&txt-color=ffffff&txt-align=center,middle`;
 };
 
-// Add missing video categories
-export const videosByCategory = {
-  ai: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "AI Marketing Revolution", description: "Transform your business with AI", duration: "30s" }
-  ],
-  seo: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", title: "SEO Mastery Guide", description: "Dominate search rankings", duration: "30s" }
-  ],
-  social: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", title: "Social Media Success", description: "Build your social presence", duration: "30s" }
-  ],
-  content: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", title: "Content Creation Pro", description: "Create engaging content", duration: "30s" }
-  ],
-  email: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", title: "Email Marketing Magic", description: "Boost email conversions", duration: "30s" }
-  ],
-  marketing: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", title: "Marketing Mastery", description: "Advanced marketing strategies", duration: "30s" }
-  ],
-  traffic: [
-    { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", title: "Traffic Generation", description: "Drive organic traffic", duration: "30s" }
-  ]
+// Enhanced function to get 3 mockup images with better contextual matching
+export const getMockupImagesBySearchQuery = (searchQuery: string): Array<{url: string, description: string}> => {
+  const lowerQuery = searchQuery.toLowerCase().trim();
+  
+  // Check for exact contextual matches first
+  for (const [key, images] of Object.entries(contextualImages)) {
+    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
+      return [
+        { 
+          url: images[0], 
+          description: `${searchQuery} Strategy - Professional ${searchQuery} training and implementation` 
+        },
+        { 
+          url: images[1] || images[0], 
+          description: `${searchQuery} Success - Proven ${searchQuery} techniques and optimization` 
+        },
+        { 
+          url: images[2] || images[0], 
+          description: `${searchQuery} Mastery - Advanced ${searchQuery} methods and scaling` 
+        }
+      ];
+    }
+  }
+
+  // Default mockups with search term overlay
+  return [
+    { 
+      url: `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Strategy')}&txt-size=36&txt-color=ffffff&txt-align=center,middle`, 
+      description: `${searchQuery} Strategy - Professional approach to ${searchQuery}` 
+    },
+    { 
+      url: `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Success')}&txt-size=38&txt-color=ffffff&txt-align=center,middle`, 
+      description: `${searchQuery} Success - Proven techniques for ${searchQuery}` 
+    },
+    { 
+      url: `https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80&overlay=text&txt=${encodeURIComponent(searchQuery + ' Mastery')}&txt-size=36&txt-color=ffffff&txt-align=center,middle`, 
+      description: `${searchQuery} Mastery - Advanced ${searchQuery} methods` 
+    }
+  ];
 };
 
-// Add missing AI intro videos
-export const aiIntroVideos = [
-  { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", title: "AI Marketing Revolution", description: "Transform your business with AI", duration: "30s" },
-  { url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", title: "Digital Success Blueprint", description: "Your path to online success", duration: "30s" }
-];
-
-// Enhanced platform-specific images
-export const platformSpecificImages = {
-  facebook: [
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Facebook marketing
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Social media strategy
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Mobile social engagement
-  ],
-  tiktok: [
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // TikTok style content
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // Video content creation
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // Social media marketing
-  ],
-  instagram: [
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // Instagram feed
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Visual content
-    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // Social media icons
-  ],
-  youtube: [
-    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // Video creation
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // Content creation
-    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // Video strategy
-  ],
-  affiliate: [
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Business analytics
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // Performance tracking
-    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // Marketing tools
-  ],
-  ecommerce: [
-    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&auto=format&q=80", // E-commerce setup
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // Online shopping
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // Business growth
-  ]
-};
-
-// Add missing export functions
+// Enhanced AI title generation
 export const generateAITitle = (searchTerm: string): string => {
   const lowerSearchTerm = searchTerm.toLowerCase();
   
@@ -243,251 +249,6 @@ export const generateAITitle = (searchTerm: string): string => {
   }
   
   return `🚀 AI-Powered Success: ${searchTerm}`;
-};
-
-// Enhanced function to get images based on search query with exact matching
-export const getImageBySearchQuery = (searchQuery: string): string => {
-  const lowerQuery = searchQuery.toLowerCase().trim();
-  
-  // Check for exact contextual matches first
-  for (const [key, images] of Object.entries(contextualImages)) {
-    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
-      return images[Math.floor(Math.random() * images.length)];
-    }
-  }
-  
-  // Check for platform-specific matches
-  if (lowerQuery.includes('facebook')) {
-    const images = platformSpecificImages.facebook;
-    return images[Math.floor(Math.random() * images.length)];
-  }
-  
-  if (lowerQuery.includes('tiktok')) {
-    const images = platformSpecificImages.tiktok;
-    return images[Math.floor(Math.random() * images.length)];
-  }
-  
-  if (lowerQuery.includes('instagram')) {
-    const images = platformSpecificImages.instagram;
-    return images[Math.floor(Math.random() * images.length)];
-  }
-  
-  if (lowerQuery.includes('youtube')) {
-    const images = platformSpecificImages.youtube;
-    return images[Math.floor(Math.random() * images.length)];
-  }
-  
-  // Fallback to category-based matching
-  let category = 'ai'; // default
-  
-  if (lowerQuery.includes('seo') || lowerQuery.includes('search') || lowerQuery.includes('ranking')) {
-    category = 'seo';
-  } else if (lowerQuery.includes('social') || lowerQuery.includes('media')) {
-    category = 'social';
-  } else if (lowerQuery.includes('content') || lowerQuery.includes('blog') || lowerQuery.includes('article')) {
-    category = 'content';
-  } else if (lowerQuery.includes('email') || lowerQuery.includes('newsletter')) {
-    category = 'email';
-  } else if (lowerQuery.includes('marketing') || lowerQuery.includes('promotion')) {
-    category = 'marketing';
-  } else if (lowerQuery.includes('traffic') || lowerQuery.includes('organic') || lowerQuery.includes('visitor')) {
-    category = 'traffic';
-  }
-  
-  const images = aiImagesByCategory[category] || aiImagesByCategory['ai'];
-  return images[Math.floor(Math.random() * images.length)];
-};
-
-// Enhanced function to get 3 mockup images with better contextual matching
-export const getMockupImagesBySearchQuery = (searchQuery: string): Array<{url: string, description: string}> => {
-  const lowerQuery = searchQuery.toLowerCase().trim();
-  
-  // Check for exact contextual matches first
-  for (const [key, images] of Object.entries(contextualImages)) {
-    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
-      return [
-        { 
-          url: images[0], 
-          description: `${searchQuery} Strategy - Professional approach to ${searchQuery}` 
-        },
-        { 
-          url: images[1] || images[0], 
-          description: `${searchQuery} Success - Proven techniques for ${searchQuery}` 
-        },
-        { 
-          url: images[2] || images[0], 
-          description: `${searchQuery} Mastery - Advanced ${searchQuery} methods` 
-        }
-      ];
-    }
-  }
-
-  // Platform-specific matching with detailed descriptions
-  if (lowerQuery.includes('facebook')) {
-    return [
-      { url: platformSpecificImages.facebook[0], description: "Facebook Marketing Strategy - Advanced audience targeting and engagement tactics" },
-      { url: platformSpecificImages.facebook[1], description: "Facebook Ads Optimization - ROI-focused advertising campaigns" },
-      { url: platformSpecificImages.facebook[2], description: "Facebook Business Growth - Scaling your presence on the platform" }
-    ];
-  }
-  
-  if (lowerQuery.includes('tiktok')) {
-    return [
-      { url: platformSpecificImages.tiktok[0], description: "TikTok Viral Content - Creating engaging videos that trend" },
-      { url: platformSpecificImages.tiktok[1], description: "TikTok Marketing Strategy - Building brand awareness through short-form video" },
-      { url: platformSpecificImages.tiktok[2], description: "TikTok Monetization - Creator fund and brand partnership opportunities" }
-    ];
-  }
-  
-  if (lowerQuery.includes('instagram')) {
-    return [
-      { url: platformSpecificImages.instagram[0], description: "Instagram Growth Hacks - Organic follower and engagement strategies" },
-      { url: platformSpecificImages.instagram[1], description: "Instagram Stories & Reels - Creative content that converts" },
-      { url: platformSpecificImages.instagram[2], description: "Instagram Business Success - Converting followers into customers" }
-    ];
-  }
-  
-  if (lowerQuery.includes('youtube')) {
-    return [
-      { url: platformSpecificImages.youtube[0], description: "YouTube Channel Growth - Subscriber acquisition and retention strategies" },
-      { url: platformSpecificImages.youtube[1], description: "YouTube Monetization - Ad revenue, sponsorships, and channel memberships" },
-      { url: platformSpecificImages.youtube[2], description: "YouTube SEO Mastery - Ranking videos and increasing discoverability" }
-    ];
-  }
-
-  // Money-making specific descriptions
-  if (lowerQuery.includes('make money') || lowerQuery.includes('income') || lowerQuery.includes('earn')) {
-    const moneyImages = contextualImages["make money online"] || aiImagesByCategory.marketing;
-    return [
-      { url: moneyImages[0], description: "Online Income Generation - Multiple revenue stream strategies" },
-      { url: moneyImages[1] || moneyImages[0], description: "Digital Profit Optimization - Maximizing your earning potential" },
-      { url: moneyImages[2] || moneyImages[0], description: "Passive Income Systems - Automated revenue generation methods" }
-    ];
-  }
-
-  // Default mockups based on category
-  const category = determineCategory(lowerQuery);
-  const images = aiImagesByCategory[category] || aiImagesByCategory.ai;
-  
-  return [
-    { url: images[0], description: `Professional ${category} strategy - Advanced techniques and best practices` },
-    { url: images[1] || images[0], description: `${category} optimization - Data-driven approach to success` },
-    { url: images[2] || images[0], description: `${category} automation - AI-powered tools and workflows` }
-  ];
-};
-
-// Helper function to determine category
-const determineCategory = (query: string): string => {
-  if (query.includes('clickbank') || query.includes('affiliate')) return 'marketing';
-  if (query.includes('facebook') || query.includes('social')) return 'social';
-  if (query.includes('tiktok') || query.includes('youtube')) return 'social';
-  if (query.includes('seo') || query.includes('search')) return 'seo';
-  if (query.includes('content') || query.includes('blog')) return 'content';
-  if (query.includes('email') || query.includes('newsletter')) return 'email';
-  if (query.includes('marketing') || query.includes('promotion')) return 'marketing';
-  if (query.includes('traffic') || query.includes('organic')) return 'traffic';
-  return 'ai';
-};
-
-// Enhanced function to get videos based on search query
-export const getVideoBySearchQuery = (searchQuery: string) => {
-  const lowerQuery = searchQuery.toLowerCase();
-  
-  let category = 'ai'; // default
-  
-  if (lowerQuery.includes('seo') || lowerQuery.includes('search') || lowerQuery.includes('ranking')) {
-    category = 'seo';
-  } else if (lowerQuery.includes('social') || lowerQuery.includes('media')) {
-    category = 'social';
-  } else if (lowerQuery.includes('content') || lowerQuery.includes('blog') || lowerQuery.includes('article')) {
-    category = 'content';
-  } else if (lowerQuery.includes('email') || lowerQuery.includes('newsletter')) {
-    category = 'email';
-  } else if (lowerQuery.includes('marketing') || lowerQuery.includes('promotion')) {
-    category = 'marketing';
-  } else if (lowerQuery.includes('traffic') || lowerQuery.includes('organic') || lowerQuery.includes('visitor')) {
-    category = 'traffic';
-  }
-  
-  const videos = videosByCategory[category] || videosByCategory['ai'];
-  const selectedVideo = videos[Math.floor(Math.random() * videos.length)];
-  
-  return {
-    url: selectedVideo.url,
-    title: selectedVideo.title,
-    description: `${selectedVideo.description} - Optimized for "${searchQuery}"`,
-    duration: selectedVideo.duration,
-    category: category
-  };
-};
-
-// Enhanced function to get 30-second intro videos based on subject with better keyword matching
-export const getIntroVideoBySubject = (subject: string) => {
-  const lowerSubject = subject.toLowerCase();
-  
-  // Determine category based on subject keywords
-  let category = 'ai'; // default
-  
-  if (lowerSubject.includes('seo') || lowerSubject.includes('search') || lowerSubject.includes('ranking')) {
-    category = 'seo';
-  } else if (lowerSubject.includes('traffic') || lowerSubject.includes('organic') || lowerSubject.includes('visitor')) {
-    category = 'traffic';
-  } else if (lowerSubject.includes('digital') || lowerSubject.includes('toolkit') || lowerSubject.includes('tool')) {
-    category = 'digital';
-  } else if (lowerSubject.includes('marketing') || lowerSubject.includes('campaign') || lowerSubject.includes('promotion')) {
-    category = 'marketing';
-  } else if (lowerSubject.includes('ai') || lowerSubject.includes('powered') || lowerSubject.includes('artificial')) {
-    category = 'ai';
-  } else if (lowerSubject.includes('social') || lowerSubject.includes('media') || lowerSubject.includes('facebook') || lowerSubject.includes('instagram')) {
-    category = 'social';
-  } else if (lowerSubject.includes('content') || lowerSubject.includes('blog') || lowerSubject.includes('article')) {
-    category = 'content';
-  } else if (lowerSubject.includes('email') || lowerSubject.includes('newsletter')) {
-    category = 'email';
-  }
-  
-  const videos = videosByCategory[category] || videosByCategory['ai'];
-  const selectedVideo = videos[Math.floor(Math.random() * videos.length)];
-  
-  return {
-    url: selectedVideo.url,
-    title: selectedVideo.title,
-    description: `${selectedVideo.description} - Optimized for "${subject}"`,
-    duration: selectedVideo.duration,
-    category: category
-  };
-};
-
-// New function to get content based on search terms
-export const getContentBySearchTerm = (searchTerm: string) => {
-  const lowerSearchTerm = searchTerm.toLowerCase();
-  
-  if (lowerSearchTerm.includes('seo')) {
-    return "🚀 Master SEO with our AI-powered tools and strategies. Transform your search rankings with intelligent keyword research, automated content optimization, and proven techniques that drive organic traffic growth.";
-  } else if (lowerSearchTerm.includes('social media')) {
-    return "📱 Revolutionize your social media presence with AI-enhanced content creation, automated posting schedules, and intelligent audience engagement strategies that boost your organic reach.";
-  } else if (lowerSearchTerm.includes('content marketing')) {
-    return "✍️ Elevate your content marketing with AI-powered creation tools, smart distribution strategies, and data-driven optimization techniques that attract and convert your target audience.";
-  } else if (lowerSearchTerm.includes('email marketing')) {
-    return "📧 Transform your email campaigns with AI-generated content, intelligent segmentation, and automated personalization that increases open rates and drives conversions.";
-  }
-  
-  return getRandomContent();
-};
-
-export const getRandomContent = () => {
-  return organicTrafficContent[Math.floor(Math.random() * organicTrafficContent.length)];
-};
-
-export const getRandomImage = () => {
-  const allImages = Object.values(aiImagesByCategory).flat();
-  return allImages[Math.floor(Math.random() * allImages.length)];
-};
-
-// Updated to get 30-second intro videos
-export const getRandomVideo = () => {
-  const randomIntro = aiIntroVideos[Math.floor(Math.random() * aiIntroVideos.length)];
-  return randomIntro.url;
 };
 
 // Email content generator function with exact search term matching
@@ -530,6 +291,24 @@ Discover the exact Facebook advertising strategies used by top marketers to crea
 Start dominating Facebook advertising today!`;
   }
   
+  if (lowerSearchTerm.includes('make money with tiktok')) {
+    return `🎵 Turn your TikTok passion into profit with our comprehensive TikTok monetization system!
+
+Discover how everyday creators are earning $1,000+ monthly through TikTok using proven strategies that work. From viral content creation to brand partnerships, we'll show you exactly how to monetize your TikTok presence.
+
+✨ Inside This Complete TikTok System:
+• Viral TikTok content formulas that guarantee engagement
+• TikTok Creator Fund optimization strategies
+• Brand partnership negotiation tactics for TikTok
+• Affiliate marketing through TikTok content
+• TikTok live streaming monetization techniques
+• Advanced TikTok analytics and growth hacking
+
+🎯 Designed specifically for organic traffic audiences ready to tap into the TikTok goldmine.
+
+Start your TikTok money journey today!`;
+  }
+  
   if (lowerSearchTerm.includes('make money from home')) {
     return `🏠 Transform your home into a profit-generating headquarters with our comprehensive work-from-home system!
 
@@ -548,24 +327,6 @@ Say goodbye to the daily commute and hello to financial freedom. Our proven syst
 Start building your home-based empire today!`;
   }
   
-  if (lowerSearchTerm.includes('tiktok')) {
-    return `🎵 Turn your TikTok passion into profit with our comprehensive TikTok monetization system!
-
-Discover how everyday creators are earning $1,000+ monthly through TikTok using proven strategies that work. From viral content creation to brand partnerships, we'll show you exactly how to monetize your TikTok presence.
-
-✨ Inside This Complete TikTok System:
-• Viral TikTok content formulas that guarantee engagement
-• TikTok Creator Fund optimization strategies
-• Brand partnership negotiation tactics for TikTok
-• Affiliate marketing through TikTok content
-• TikTok live streaming monetization techniques
-• Advanced TikTok analytics and growth hacking
-
-🎯 Designed specifically for organic traffic audiences ready to tap into the TikTok goldmine.
-
-Start your TikTok money journey today!`;
-  }
-  
   // Default content for other search terms
   return `🚀 Discover the AI-powered strategies that are revolutionizing ${searchTerm}!
 
@@ -582,4 +343,8 @@ Our comprehensive system combines cutting-edge artificial intelligence with prov
 🎯 Specifically designed for organic traffic audiences who want to leverage technology for ${searchTerm} business growth.
 
 Ready to transform your ${searchTerm} results? Get started today!`;
+};
+
+export const getRandomContent = () => {
+  return organicTrafficContent[Math.floor(Math.random() * organicTrafficContent.length)];
 };

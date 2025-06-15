@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +14,7 @@ import { EmailList } from "@/components/email-campaign/EmailList";
 import { CampaignStats } from "@/components/email-campaign/CampaignStats";
 import { EmailDialogs } from "@/components/email-campaign/EmailDialogs";
 
-const EmailCampaignTool = () => {
+export default function EmailCampaignTool() {
   const [activeTab, setActiveTab] = useState("campaigns");
   const [previewEmail, setPreviewEmail] = useState(null);
   const [editingEmail, setEditingEmail] = useState(null);
@@ -152,12 +151,12 @@ const EmailCampaignTool = () => {
           <EmailList
             emailList={emailList}
             isPublishing={isPublishing}
-            onPublishEmail={handlePublishEmail}
+            onPublishEmail={(email) => handlePublishEmail(email.id)}
             onPreviewEmail={handlePreviewEmail}
             onEditEmail={handleEditEmail}
             onViewAnalytics={handleViewAnalytics}
-            onDuplicateEmail={handleDuplicateEmail}
-            onDeleteEmail={handleDeleteEmail}
+            onDuplicateEmail={(email) => handleDuplicateEmail(email.id)}
+            onDeleteEmail={(email) => handleDeleteEmail(email.id)}
           />
         </TabsContent>
 
@@ -292,11 +291,9 @@ const EmailCampaignTool = () => {
         setIsAnalyticsDialogOpen={setIsAnalyticsDialogOpen}
         setEditingEmail={setEditingEmail}
         onSaveEdit={handleSaveEdit}
-        onPublishEmail={handlePublishEmail}
+        onPublishEmail={(email) => handlePublishEmail(email.id)}
         onEditEmail={handleEditEmail}
       />
     </div>
   );
 };
-
-export default EmailCampaignTool;

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -32,6 +33,8 @@ export interface NewEmail {
   targetAudience?: string;
   recipients?: string[];
   scheduleDate?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export const useEmailCampaign = () => {
@@ -72,25 +75,34 @@ export const useEmailCampaign = () => {
     }, 2000);
   };
 
-  const handlePublishEmail = (email: EmailCampaign) => {
+  const handlePublishEmail = (emailId: number) => {
+    const email = emailList.find(e => e.id === emailId);
+    if (!email) return;
+
     setIsPublishing(true);
     toast.info(`🚀 Publishing: "${email.subject}"...`);
 
     setTimeout(() => {
       setEmailList(emailList.map(e =>
-        e.id === email.id ? { ...e, status: "Published" } : e
+        e.id === emailId ? { ...e, status: "Published" } : e
       ));
       setIsPublishing(false);
       toast.success(`✅ Published: "${email.subject}"!`);
     }, 2000);
   };
 
-  const handleDeleteEmail = (email: EmailCampaign) => {
-    setEmailList(emailList.filter(e => e.id !== email.id));
+  const handleDeleteEmail = (emailId: number) => {
+    const email = emailList.find(e => e.id === emailId);
+    if (!email) return;
+
+    setEmailList(emailList.filter(e => e.id !== emailId));
     toast.success(`🗑️ Deleted: "${email.subject}"`);
   };
 
-  const handleDuplicateEmail = (email: EmailCampaign) => {
+  const handleDuplicateEmail = (emailId: number) => {
+    const email = emailList.find(e => e.id === emailId);
+    if (!email) return;
+
     const duplicatedEmail: EmailCampaign = {
       ...email,
       id: emailList.length + 1,
