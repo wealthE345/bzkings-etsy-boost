@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles, VolumeX, Volume2, Volume1, Mic, Captions } from "lucide-react";
+import { Wand2, Target, Video, ImageIcon, Play, Pause, Eye, X, Edit, Save, Sparkles, VolumeX, Volume2, Volume1, Mic, Captions, Film } from "lucide-react";
 import { EmailCampaign } from "@/hooks/useEmailCampaign";
 import { generateEmailContent } from "@/utils/aiContentGenerator";
-import { generateSynchronizedVideoContent, getCurrentVideoSegment, getSynchronizedNarrationWords, SynchronizedVideoContent } from "@/utils/videoContentGenerator";
+import { generateSynchronizedVideoContent, getCurrentVideoSegment, getSynchronizedNarrationWords, getSynchronizedVideoScript, SynchronizedVideoContent } from "@/utils/videoContentGenerator";
 import { toast } from "sonner";
 
 interface CampaignViewerProps {
@@ -24,6 +24,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
   const [editedCampaign, setEditedCampaign] = useState<EmailCampaign | null>(null);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const [showCaptions, setShowCaptions] = useState(true);
+  const [showVideoScript, setShowVideoScript] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [videoContent, setVideoContent] = useState<SynchronizedVideoContent | null>(null);
   const [isNarratorSpeaking, setIsNarratorSpeaking] = useState(false);
@@ -44,7 +45,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                          campaign.subject.toLowerCase().includes('fitness') ? 'fitness & health' :
                          campaign.subject.toLowerCase().includes('real estate') ? 'real estate' :
                          'subject-specific';
-      toast.success(`🎬 Generated ${contentType} video content with ${content.segments.length} segments for "${campaign.subject}"`);
+      toast.success(`🎬 Generated ${contentType} video content with synchronized script for "${campaign.subject}"`);
     }
     setEditedCampaign(campaign);
     setIsEditing(isEditable);
@@ -189,6 +190,11 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     toast.info(showCaptions ? "📝 Live synchronized text disabled" : "📝 Live synchronized text enabled");
   };
 
+  const toggleVideoScript = () => {
+    setShowVideoScript(!showVideoScript);
+    toast.info(showVideoScript ? "📝 Video script display disabled" : "📝 Video script display enabled");
+  };
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -204,6 +210,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
   const currentCampaign = editedCampaign || campaign;
   const currentSegment = videoContent ? getCurrentVideoSegment(videoContent, currentTime) : null;
   const narrationWords = videoContent ? getSynchronizedNarrationWords(videoContent, currentTime) : { words: [], currentIndex: 0 };
+  const currentVideoScript = videoContent ? getSynchronizedVideoScript(videoContent, currentTime) : '';
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -224,7 +231,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
               <DialogDescription>
                 {isEditing 
                   ? "Edit your campaign with AI-powered content generation"
-                  : "Full campaign preview with 2-minute synchronized video content and AI narrator only"
+                  : "Full campaign preview with synchronized video script matching AI narration"
                 }
               </DialogDescription>
             </div>
@@ -329,7 +336,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
           {/* Enhanced Video with Dynamic Content */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Dynamic AI Video Content (2 Minutes)</h3>
+              <h3 className="text-lg font-semibold">AI Creative Video with Synchronized Script</h3>
               <div className="flex gap-2">
                 <Badge variant="default" className="bg-red-600">
                   <Video className="h-3 w-3 mr-1" />
@@ -343,6 +350,15 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                 >
                   <Captions className="h-4 w-4 mr-1" />
                   {showCaptions ? "Hide" : "Show"} Text
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleVideoScript}
+                  className={showVideoScript ? "bg-green-50 border-green-300" : ""}
+                >
+                  <Film className="h-4 w-4 mr-1" />
+                  {showVideoScript ? "Hide" : "Show"} Script
                 </Button>
               </div>
             </div>
@@ -415,6 +431,31 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                 </div>
               </div>
               
+              {/* Synchronized Video Script Display */}
+              {showVideoScript && isVideoPlaying && currentVideoScript && (
+                <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Film className="h-5 w-5 text-green-600" />
+                    <span className="text-sm font-semibold text-green-700">
+                      SYNCHRONIZED VIDEO SCRIPT
+                    </span>
+                    <div className="w-32 h-2 bg-green-200 rounded-full">
+                      <div 
+                        className="h-full bg-green-500 rounded-full transition-all duration-500" 
+                        style={{width: `${videoContent ? (currentTime / videoContent.totalDuration) * 100 : 0}%`}}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="text-sm leading-relaxed text-green-800 font-mono bg-white p-3 rounded border">
+                    {currentVideoScript}
+                  </div>
+                  <div className="text-xs text-green-600 mt-2">
+                    🎬 Video script automatically matches what the AI narrator is saying • 
+                    Shows exactly what visuals should appear on screen
+                  </div>
+                </div>
+              )}
+              
               {/* Synchronized Text Display (No Box) */}
               {showCaptions && isVideoPlaying && currentSegment && (
                 <div className="mt-6 text-center space-y-4">
@@ -459,11 +500,11 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
               )}
               
               <p className="text-sm text-gray-600 mt-3 text-center italic">
-                Dynamic 2-minute video content matching "{currentCampaign.subject}" • AI narrator synchronized with visuals
+                AI creative video with synchronized script matching "{currentCampaign.subject}" • Script shows exactly what visuals match the narration
               </p>
               
               <p className="text-xs text-gray-500 mt-1 text-center">
-                🎬 Video & images automatically match search term • 🎤 AI narrator only • 📝 Words highlight in real-time
+                🎬 Video script matches AI narration perfectly • 📝 Shows exact visuals for each segment • 🎤 AI narrator synchronized with script timing
               </p>
             </div>
           </div>
@@ -515,9 +556,9 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                 </p>
               </div>
               <div className="p-4 border rounded-lg">
-                <h4 className="font-medium text-gray-900">Content Generation</h4>
+                <h4 className="font-medium text-gray-900">AI Video Content</h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  {currentCampaign.aiGenerated ? "AI-Powered Content with Synchronized Video & Real-time Narration" : "Manual Content Creation"}
+                  {currentCampaign.aiGenerated ? "AI-Generated Video with Synchronized Script & Real-time Narration" : "Manual Content Creation"}
                 </p>
               </div>
             </div>
