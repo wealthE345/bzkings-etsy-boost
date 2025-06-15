@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target } from "lucide-react";
 import { toast } from "sonner";
 import { NewEmail } from "@/hooks/useEmailCampaign";
-import { getRandomContent, getRandomImage, getRandomVideo } from "@/utils/aiContentGenerator";
+import { getRandomContent, getRandomImage, getVideoBySubject } from "@/utils/aiContentGenerator";
 
 interface EmailCreationFormProps {
   newEmail: NewEmail;
@@ -42,8 +41,8 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       if (isVideoCreative) {
         randomCreative = {
           type: "video" as const,
-          url: getRandomVideo(),
-          alt: "AI-generated video showcasing organic traffic growth strategies and digital marketing tools"
+          url: getVideoBySubject(newEmail.subject),
+          alt: `AI-generated video for ${newEmail.subject} showcasing organic traffic growth strategies`
         };
       } else {
         randomCreative = {
@@ -95,14 +94,14 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     toast.info("🎬 AI is generating an optimized video for organic traffic...");
 
     setTimeout(() => {
-      const randomVideo = getRandomVideo();
+      const subjectBasedVideo = getVideoBySubject(newEmail.subject || "AI digital marketing");
       
       setNewEmail({
         ...newEmail,
         creative: {
           type: "video",
-          url: randomVideo,
-          alt: "AI-generated video optimized for organic traffic and SEO campaigns"
+          url: subjectBasedVideo,
+          alt: `AI-generated video for ${newEmail.subject || 'email campaign'} optimized for organic traffic`
         },
         aiGenerated: true
       });
@@ -131,14 +130,14 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
     setTimeout(() => {
       if (isCurrentVideo) {
-        const randomVideo = getRandomVideo();
+        const subjectBasedVideo = getVideoBySubject(newEmail.subject || "AI digital marketing");
         
         setNewEmail({
           ...newEmail,
           creative: {
             type: "video",
-            url: randomVideo,
-            alt: "AI-regenerated video optimized for organic traffic campaigns"
+            url: subjectBasedVideo,
+            alt: `AI-regenerated video for ${newEmail.subject} optimized for organic traffic campaigns`
           }
         });
         

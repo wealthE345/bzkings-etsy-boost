@@ -23,6 +23,35 @@ export const aiVideos = [
   "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
 ];
 
+// Enhanced video collection with more specific content
+export const videosByCategory = {
+  seo: [
+    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+  ],
+  traffic: [
+    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4"
+  ],
+  digital: [
+    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4"
+  ],
+  ai: [
+    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4"
+  ],
+  marketing: [
+    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+  ]
+};
+
 export const getRandomContent = () => {
   return organicTrafficContent[Math.floor(Math.random() * organicTrafficContent.length)];
 };
@@ -33,4 +62,26 @@ export const getRandomImage = () => {
 
 export const getRandomVideo = () => {
   return aiVideos[Math.floor(Math.random() * aiVideos.length)];
+};
+
+export const getVideoBySubject = (subject: string) => {
+  const lowerSubject = subject.toLowerCase();
+  
+  // Determine category based on subject keywords
+  let category = 'ai'; // default
+  
+  if (lowerSubject.includes('seo') || lowerSubject.includes('search')) {
+    category = 'seo';
+  } else if (lowerSubject.includes('traffic') || lowerSubject.includes('organic')) {
+    category = 'traffic';
+  } else if (lowerSubject.includes('digital') || lowerSubject.includes('toolkit')) {
+    category = 'digital';
+  } else if (lowerSubject.includes('marketing') || lowerSubject.includes('campaign')) {
+    category = 'marketing';
+  } else if (lowerSubject.includes('ai') || lowerSubject.includes('powered')) {
+    category = 'ai';
+  }
+  
+  const videos = videosByCategory[category] || aiVideos;
+  return videos[Math.floor(Math.random() * videos.length)];
 };

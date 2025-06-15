@@ -53,6 +53,13 @@ export const EmailList = ({
     videoRefs.current[emailId] = ref;
   };
 
+  const handleVideoEnd = (emailId: number) => {
+    setIsVideoPlaying(prev => ({
+      ...prev,
+      [emailId]: false
+    }));
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -95,30 +102,42 @@ export const EmailList = ({
                 {email.creative?.url && (
                   <div className="mb-2">
                     {email.creative.type === "video" ? (
-                      <div className="relative w-32 h-20 inline-block mr-3">
+                      <div className="relative w-48 h-32 inline-block mr-3 group">
                         <video 
                           ref={(ref) => handleVideoRef(email.id, ref)}
                           src={email.creative.url} 
-                          className="w-full h-full object-cover rounded"
+                          className="w-full h-full object-cover rounded-lg"
                           muted
                           preload="metadata"
+                          onEnded={() => handleVideoEnd(email.id)}
+                          poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                         />
-                        <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
                           <Button
-                            size="sm"
+                            size="lg"
                             variant="secondary"
-                            className="bg-black/50 hover:bg-black/70 text-white border-none"
+                            className="bg-white/90 hover:bg-white text-black border-none shadow-lg"
                             onClick={() => toggleVideoPlayback(email.id)}
                           >
-                            {isVideoPlaying[email.id] ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                            {isVideoPlaying[email.id] ? (
+                              <Pause className="h-6 w-6" />
+                            ) : (
+                              <Play className="h-6 w-6" />
+                            )}
                           </Button>
+                        </div>
+                        <div className="absolute top-2 right-2">
+                          <Badge variant="secondary" className="bg-black/70 text-white">
+                            <Video className="h-3 w-3 mr-1" />
+                            Video
+                          </Badge>
                         </div>
                       </div>
                     ) : (
                       <img 
                         src={email.creative.url} 
                         alt={email.creative.alt}
-                        className="w-32 h-20 object-cover rounded mr-3 inline-block"
+                        className="w-48 h-32 object-cover rounded-lg mr-3 inline-block"
                       />
                     )}
                   </div>
