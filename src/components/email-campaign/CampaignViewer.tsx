@@ -32,12 +32,17 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
-    // Generate subject-specific synchronized video content
+    // Generate subject-specific synchronized video content using the email subject as search term
     if (campaign?.subject) {
       const content = generateSynchronizedVideoContent(campaign.subject);
       setVideoContent(content);
+      
+      // Dynamic toast message based on content type
       const contentType = campaign.subject.toLowerCase().includes('money') ? 'money-focused' : 
                          campaign.subject.toLowerCase().includes('facebook') ? 'Facebook marketing' : 
+                         campaign.subject.toLowerCase().includes('crypto') ? 'cryptocurrency' :
+                         campaign.subject.toLowerCase().includes('fitness') ? 'fitness & health' :
+                         campaign.subject.toLowerCase().includes('real estate') ? 'real estate' :
                          'subject-specific';
       toast.success(`🎬 Generated ${contentType} video content with ${content.segments.length} segments for "${campaign.subject}"`);
     }
@@ -321,10 +326,10 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
             </div>
           )}
 
-          {/* Enhanced Video with Subject-Specific Content */}
+          {/* Enhanced Video with Dynamic Content */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Subject-Specific AI Video (2 Minutes)</h3>
+              <h3 className="text-lg font-semibold">Dynamic AI Video Content (2 Minutes)</h3>
               <div className="flex gap-2">
                 <Badge variant="default" className="bg-red-600">
                   <Video className="h-3 w-3 mr-1" />
@@ -359,7 +364,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                   Your browser does not support the video tag.
                 </video>
                 
-                {/* Subject-Specific Visual Overlay */}
+                {/* Dynamic Visual Overlay that matches search term */}
                 {currentSegment && (
                   <div 
                     className="absolute inset-0 w-full h-80 rounded-lg shadow-lg bg-cover bg-center bg-no-repeat opacity-90"
@@ -454,11 +459,11 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
               )}
               
               <p className="text-sm text-gray-600 mt-3 text-center italic">
-                Subject-specific 2-minute video for "{currentCampaign.subject}" • AI narrator synchronized with content
+                Dynamic 2-minute video content matching "{currentCampaign.subject}" • AI narrator synchronized with visuals
               </p>
               
               <p className="text-xs text-gray-500 mt-1 text-center">
-                🎬 Real video content matches subject • 🎤 AI narrator only • 📝 Words highlight in real-time
+                🎬 Video & images automatically match search term • 🎤 AI narrator only • 📝 Words highlight in real-time
               </p>
             </div>
           </div>
