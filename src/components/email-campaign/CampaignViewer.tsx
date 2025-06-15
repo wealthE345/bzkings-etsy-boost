@@ -28,9 +28,11 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
   const [showTextToSpeech, setShowTextToSpeech] = useState(false);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const [isNarratorSpeaking, setIsNarratorSpeaking] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const captionIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const wordIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     // Reset video state when campaign changes
@@ -44,35 +46,63 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     setIsEditing(isEditable);
   }, [campaign, isEditable, volume]);
 
-  // Enhanced function to get text-to-speech content with better captions based on email subject
-  const getTextToSpeechContent = () => {
-    if (!currentCampaign?.creative || currentCampaign.creative.type !== "video") return "";
+  // Enhanced function to get topic-specific promotional content
+  const getPromotionalContent = () => {
+    if (!currentCampaign?.subject) return "";
     
-    const searchTerm = currentCampaign.subject || "digital marketing";
-    const lowerSearchTerm = searchTerm.toLowerCase();
+    const searchTerm = currentCampaign.subject.toLowerCase();
     
-    if (lowerSearchTerm.includes('tiktok')) {
-      return "Welcome to TikTok Money Mastery! Are you ready to turn your TikTok passion into profit? This comprehensive training reveals how everyday creators are earning one thousand dollars plus monthly through TikTok. Learn viral content creation strategies, Creator Fund optimization techniques, brand partnership negotiation, and affiliate marketing through TikTok. Discover the secrets of TikTok algorithm success. Master trending hashtags and viral video formulas. Build your personal brand on TikTok. Monetize your creativity and turn followers into income. Don't just scroll TikTok, start earning from it today! Transform your TikTok account into a money-making machine!";
-    } else if (lowerSearchTerm.includes('clickbank')) {
-      return "Unlock the ClickBank profit system that's generating five hundred dollars plus daily for smart affiliates! Learn insider strategies that top ClickBank affiliates use to generate consistent commissions. Master high-converting product selection, traffic generation methods, and commission optimization for maximum ClickBank profits! Discover the secrets of ClickBank marketplace success. Learn advanced affiliate marketing techniques. Build automated income streams through ClickBank. Scale your affiliate business to six figures. Join thousands of successful ClickBank affiliates earning passive income!";
-    } else if (lowerSearchTerm.includes('facebook ads')) {
-      return "Master Facebook Ads with our comprehensive advertising blueprint that's generating three hundred percent ROI! Discover advanced targeting strategies, high-converting ad creatives, and optimization techniques used by top marketers. Learn Facebook pixel mastery, audience research methods, and campaign scaling strategies. Master the Facebook advertising algorithm. Create compelling ad copy that converts. Build profitable sales funnels with Facebook Ads. Dominate your competition with advanced Facebook marketing. Start dominating Facebook advertising today!";
-    } else if (lowerSearchTerm.includes('make money from home')) {
-      return "Transform your home into a profit-generating headquarters! Say goodbye to the daily commute and hello to financial freedom. Learn multiple income streams you can build from home, time management strategies, and scaling techniques for location independence! Discover work from home opportunities that actually work. Master online business models and digital entrepreneurship. Build passive income from your living room. Create financial freedom through home-based businesses. Escape the nine to five grind forever!";
+    if (searchTerm.includes('tiktok') || searchTerm.includes('tik tok')) {
+      return "Welcome to TikTok Money Mastery! Transform your TikTok passion into profit! Learn how creators are earning thousands monthly through viral content. Master the TikTok Creator Fund. Build your personal brand. Negotiate lucrative brand partnerships. Create engaging viral videos. Use trending hashtags effectively. Turn your followers into income streams. Start your TikTok money-making journey today!";
+    } else if (searchTerm.includes('google') || searchTerm.includes('search')) {
+      return "Unlock Google Money Secrets! Discover how to make money with Google AdSense, YouTube monetization, and Google Ads. Learn search engine optimization strategies. Master Google My Business for local profits. Create profitable Google Play apps. Monetize your content with Google platforms. Build passive income through Google services. Start earning with Google today!";
+    } else if (searchTerm.includes('facebook') || searchTerm.includes('meta')) {
+      return "Facebook Profit Blueprint! Master Facebook Ads for maximum ROI. Create viral Facebook content that converts. Build profitable Facebook groups. Monetize your Facebook page effectively. Learn advanced targeting strategies. Scale your business with Facebook marketing. Turn social media into serious income. Dominate Facebook advertising now!";
+    } else if (searchTerm.includes('instagram') || searchTerm.includes('insta')) {
+      return "Instagram Money Machine! Transform your Instagram into a profit center. Learn influencer marketing secrets. Master Instagram Reels for viral growth. Build engaged followers who buy. Create stunning content that sells. Monetize through sponsored posts. Use Instagram Shopping features. Start your Instagram empire today!";
+    } else if (searchTerm.includes('youtube')) {
+      return "YouTube Revenue Revolution! Build a profitable YouTube channel from scratch. Master YouTube monetization strategies. Create viral video content. Optimize for YouTube algorithm success. Build subscriber loyalty. Generate multiple income streams. Scale your YouTube business. Turn your passion into YouTube profits!";
+    } else if (searchTerm.includes('affiliate') || searchTerm.includes('clickbank')) {
+      return "Affiliate Marketing Mastery! Generate passive income through affiliate commissions. Master high-converting product selection. Learn traffic generation strategies. Build automated sales funnels. Scale affiliate campaigns profitably. Create multiple income streams. Join top affiliate networks. Start earning affiliate commissions today!";
+    } else if (searchTerm.includes('crypto') || searchTerm.includes('bitcoin')) {
+      return "Cryptocurrency Profit Guide! Learn smart crypto investment strategies. Master DeFi yield farming. Understand blockchain technology. Trade cryptocurrencies profitably. Build crypto passive income. Navigate market volatility safely. Create diversified crypto portfolios. Start your crypto wealth journey!";
+    } else if (searchTerm.includes('dropshipping') || searchTerm.includes('ecommerce')) {
+      return "Dropshipping Empire Builder! Create profitable online stores without inventory. Master product research strategies. Build high-converting sales pages. Scale with profitable advertising. Automate your dropshipping business. Find winning products consistently. Generate passive ecommerce income. Launch your store today!";
     }
     
-    return `Welcome to this promotional video about ${searchTerm}! This AI-generated content will help you understand the key benefits and strategies for success. Our comprehensive system delivers maximum results and helps you achieve your goals with ${searchTerm}. Discover proven techniques and advanced strategies. Master the fundamentals and scale your success. Transform your results with our expert guidance. Start your journey to success today!`;
+    return `Discover powerful strategies for ${currentCampaign.subject}! Learn proven methods that generate real results. Master advanced techniques used by successful entrepreneurs. Build sustainable income streams. Scale your success systematically. Transform your financial future. Start your journey to success today with our comprehensive training program!`;
+  };
+
+  // Get topic-specific video URL based on email subject
+  const getTopicVideoUrl = () => {
+    if (!currentCampaign?.subject) return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+    
+    const searchTerm = currentCampaign.subject.toLowerCase();
+    
+    if (searchTerm.includes('tiktok')) {
+      return "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"; // TikTok promotional style
+    } else if (searchTerm.includes('google')) {
+      return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"; // Tech/business style
+    } else if (searchTerm.includes('facebook')) {
+      return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"; // Social media style
+    } else if (searchTerm.includes('instagram')) {
+      return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"; // Visual/creative style
+    } else if (searchTerm.includes('youtube')) {
+      return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"; // Video content style
+    }
+    
+    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
   };
 
   // Split narration into words for real-time highlighting
   const getNarrationWords = () => {
-    const fullText = getTextToSpeechContent();
+    const fullText = getPromotionalContent();
     return fullText.split(' ').filter(word => word.trim().length > 0);
   };
 
   // Split into sentences for sentence-by-sentence display
   const getNarrationSentences = () => {
-    const fullText = getTextToSpeechContent();
+    const fullText = getPromotionalContent();
     const sentences = fullText.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
     return sentences.map(sentence => sentence.trim() + '.');
   };
@@ -84,8 +114,26 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     const sentences = getNarrationSentences();
     setCurrentWordIndex(0);
     setCurrentSentenceIndex(0);
+    setIsNarratorSpeaking(true);
     
-    // Animate words faster for real-time effect
+    // Start text-to-speech narration
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(getPromotionalContent());
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = isMuted ? 0 : volume;
+      
+      utterance.onend = () => {
+        setIsNarratorSpeaking(false);
+        stopNarrationAnimation();
+      };
+      
+      speechSynthesisRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+      toast.success("🎤 AI narrator is now speaking the promotional content!");
+    }
+    
+    // Animate words to sync with speech (approximately)
     wordIntervalRef.current = setInterval(() => {
       setCurrentWordIndex(prev => {
         if (prev >= words.length - 1) {
@@ -93,9 +141,9 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
         }
         return prev + 1;
       });
-    }, 400); // Change word every 400ms for natural speech pace
+    }, 600); // Adjusted timing for natural speech pace
     
-    // Animate sentences every 4 seconds
+    // Animate sentences every 5 seconds
     captionIntervalRef.current = setInterval(() => {
       setCurrentSentenceIndex(prev => {
         if (prev >= sentences.length - 1) {
@@ -103,10 +151,17 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
         }
         return prev + 1;
       });
-    }, 4000);
+    }, 5000);
   };
 
   const stopNarrationAnimation = () => {
+    setIsNarratorSpeaking(false);
+    
+    // Stop text-to-speech
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    
     if (captionIntervalRef.current) {
       clearInterval(captionIntervalRef.current);
       captionIntervalRef.current = null;
@@ -129,11 +184,11 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
       stopNarrationAnimation();
     } else {
       video.currentTime = 0;
-      video.volume = isMuted ? 0 : volume;
+      video.volume = isMuted ? 0 : 0.3; // Lower video volume so narrator is clear
       video.play().then(() => {
         setIsVideoPlaying(true);
         startNarrationAnimation();
-        toast.success("🎬 Video playing with live narrator speech text!");
+        toast.success("🎬 Video playing with synchronized AI narrator!");
       }).catch(console.error);
     }
   };
@@ -357,216 +412,215 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
             </div>
           )}
 
-          {/* Enhanced AI Creative Content with Live Narrator Text */}
-          {currentCampaign.creative?.url && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Promotional Video with Live Narrator Speech</h3>
-                <div className="flex gap-2">
-                  {currentCampaign.creative.type === "video" && (
-                    <>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={toggleCaptions}
-                        className={showCaptions ? "bg-blue-50 border-blue-300" : ""}
-                      >
-                        <Captions className="h-4 w-4 mr-1" />
-                        {showCaptions ? "Hide" : "Show"} Live Text
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShowTextToSpeech(!showTextToSpeech)}
-                      >
-                        <Mic className="h-4 w-4 mr-1" />
-                        Full Script
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Full Text-to-Speech Script Display */}
-              {showTextToSpeech && currentCampaign.creative.type === "video" && (
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
-                    <Mic className="h-4 w-4" />
-                    Complete Video Narration Script
-                  </h4>
-                  <p className="text-sm text-blue-800 italic leading-relaxed">
-                    {getTextToSpeechContent()}
-                  </p>
-                </div>
-              )}
-
-              <div className="relative">
-                {currentCampaign.creative.type === "video" ? (
-                  <div className="relative w-full max-w-2xl mx-auto group">
-                    <video 
-                      ref={videoRef}
-                      src={currentCampaign.creative.url} 
-                      className="w-full h-80 object-cover rounded-lg shadow-lg"
-                      preload="metadata"
-                      onEnded={handleVideoEnd}
-                      onError={handleVideoError}
-                      poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
-                      loop
-                    />
-                    
-                    {/* Live Narrator Speech Text Overlay - Enhanced with word highlighting */}
-                    {showCaptions && isVideoPlaying && (
-                      <div className="absolute bottom-16 left-4 right-4 bg-black/90 text-white p-4 rounded-lg">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Mic className="h-4 w-4 text-green-400 animate-pulse" />
-                          <span className="text-xs text-green-400 font-medium">LIVE NARRATOR SPEECH</span>
-                          <div className="flex-1 h-0.5 bg-green-400/30 rounded">
-                            <div className="h-full bg-green-400 rounded animate-pulse" style={{width: `${(currentWordIndex / narrationWords.length) * 100}%`}}></div>
-                          </div>
-                        </div>
-                        
-                        {/* Current sentence with word highlighting */}
-                        <div className="text-lg leading-relaxed mb-2">
-                          {currentSentence.split(' ').map((word, index) => {
-                            const globalWordIndex = narrationWords.findIndex((w, i) => i >= currentWordIndex - 10 && w === word);
-                            const isCurrentWord = Math.abs(globalWordIndex - currentWordIndex) < 2;
-                            
-                            return (
-                              <span
-                                key={index}
-                                className={`mr-1 transition-all duration-300 ${
-                                  isCurrentWord 
-                                    ? 'bg-yellow-400 text-black px-1 rounded font-semibold shadow-lg transform scale-110' 
-                                    : 'text-white'
-                                }`}
-                              >
-                                {word}
-                              </span>
-                            );
-                          })}
-                        </div>
-                        
-                        {/* Progress indicators */}
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-gray-300">
-                            Speaking: "{narrationWords[currentWordIndex] || ''}"
-                          </span>
-                          <span className="text-gray-300">
-                            {currentWordIndex + 1} / {narrationWords.length} words
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Play/Pause Button */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
-                      <Button
-                        size="lg"
-                        variant="secondary"
-                        className="bg-white/90 hover:bg-white text-black border-none shadow-lg transform scale-110"
-                        onClick={toggleVideoPlayback}
-                      >
-                        {isVideoPlaying ? (
-                          <Pause className="h-8 w-8" />
-                        ) : (
-                          <Play className="h-8 w-8" />
-                        )}
-                      </Button>
-                    </div>
-
-                    {/* Top Controls */}
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <Badge variant="secondary" className="bg-black/70 text-white">
-                        <Video className="h-3 w-3 mr-1" />
-                        Promotional Video
-                      </Badge>
-                      {showCaptions && (
-                        <Badge variant="outline" className="bg-green-600 text-white border-white/30">
-                          <Captions className="h-3 w-3 mr-1" />
-                          Captions On
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Bottom Volume Controls */}
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="bg-black/70 hover:bg-black/80 text-white"
-                        onClick={toggleMute}
-                      >
-                        {isMuted ? (
-                          <VolumeX className="h-4 w-4" />
-                        ) : volume > 0.5 ? (
-                          <Volume2 className="h-4 w-4" />
-                        ) : (
-                          <Volume1 className="h-4 w-4" />
-                        )}
-                      </Button>
-                      
-                      <div className="flex-1 max-w-32">
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.1"
-                          value={volume}
-                          onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                          className="w-full h-2 bg-white/30 rounded-lg appearance-none cursor-pointer"
-                        />
-                      </div>
-                      
-                      <Badge variant="outline" className="bg-black/70 text-white border-white/30">
-                        {Math.round(volume * 100)}%
-                      </Badge>
-                    </div>
-
-                    {/* Status Indicators */}
-                    {isVideoPlaying && (
-                      <div className="absolute top-4 left-4 flex gap-2">
-                        <Badge variant="default" className="bg-green-600">
-                          <Play className="h-3 w-3 mr-1" />
-                          Playing
-                        </Badge>
-                        {!isMuted && (
-                          <Badge variant="outline" className="bg-blue-600 text-white border-white/30">
-                            <Mic className="h-3 w-3 mr-1" />
-                            Narration On
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="relative w-full max-w-2xl mx-auto">
-                    <img 
-                      src={currentCampaign.creative.url} 
-                      alt={currentCampaign.creative.alt}
-                      className="w-full h-80 object-cover rounded-lg shadow-lg"
-                    />
-                    <Badge 
-                      variant="default"
-                      className="absolute top-4 right-4"
-                    >
-                      <ImageIcon className="h-3 w-3 mr-1" />
-                      AI Generated Image
-                    </Badge>
-                  </div>
-                )}
-                
-                <p className="text-sm text-gray-600 mt-2 text-center italic">
-                  {currentCampaign.creative.alt}
-                </p>
-                
-                {currentCampaign.creative.type === "video" && (
-                  <p className="text-xs text-gray-500 mt-1 text-center">
-                    📢 AI promotional video with synchronized narrator speech text • Live words highlight as narrator speaks
-                  </p>
-                )}
+          {/* Enhanced AI Promotional Video with Synchronized Text-to-Speech */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">AI Promotional Video with Synchronized Narrator</h3>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleCaptions}
+                  className={showCaptions ? "bg-blue-50 border-blue-300" : ""}
+                >
+                  <Captions className="h-4 w-4 mr-1" />
+                  {showCaptions ? "Hide" : "Show"} Live Text
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowTextToSpeech(!showTextToSpeech)}
+                >
+                  <Mic className="h-4 w-4 mr-1" />
+                  Full Script
+                </Button>
               </div>
             </div>
-          )}
+
+            {/* Full Promotional Script Display */}
+            {showTextToSpeech && (
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
+                  <Mic className="h-4 w-4" />
+                  Complete AI Promotional Video Script for "{currentCampaign.subject}"
+                </h4>
+                <p className="text-sm text-blue-800 italic leading-relaxed">
+                  {getPromotionalContent()}
+                </p>
+              </div>
+            )}
+
+            <div className="relative">
+              <div className="relative w-full max-w-2xl mx-auto group">
+                <video 
+                  ref={videoRef}
+                  src={getTopicVideoUrl()}
+                  className="w-full h-80 object-cover rounded-lg shadow-lg"
+                  preload="metadata"
+                  onEnded={() => {
+                    setIsVideoPlaying(false);
+                    stopNarrationAnimation();
+                    toast.info("🎬 Promotional video completed!");
+                  }}
+                  onError={() => {
+                    console.log("Video playback error, but continuing...");
+                    setIsVideoPlaying(false);
+                  }}
+                  poster={`https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&q=80`}
+                  loop
+                />
+                
+                {/* Live Synchronized Narrator Text Overlay */}
+                {showCaptions && isVideoPlaying && (
+                  <div className="absolute bottom-16 left-4 right-4 bg-black/95 text-white p-4 rounded-lg border border-yellow-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Mic className={`h-4 w-4 ${isNarratorSpeaking ? 'text-green-400 animate-pulse' : 'text-gray-400'}`} />
+                      <span className="text-xs text-green-400 font-medium">
+                        {isNarratorSpeaking ? 'AI NARRATOR SPEAKING' : 'NARRATOR READY'}
+                      </span>
+                      <div className="flex-1 h-0.5 bg-green-400/30 rounded">
+                        <div 
+                          className="h-full bg-green-400 rounded transition-all duration-300" 
+                          style={{width: `${(currentWordIndex / narrationWords.length) * 100}%`}}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    {/* Current sentence with synchronized word highlighting */}
+                    <div className="text-lg leading-relaxed mb-2">
+                      {currentSentence.split(' ').map((word, index) => {
+                        const sentenceStartIndex = narrationWords.findIndex(w => 
+                          currentSentence.toLowerCase().includes(w.toLowerCase())
+                        );
+                        const wordInSentence = index + sentenceStartIndex;
+                        const isCurrentWord = Math.abs(wordInSentence - currentWordIndex) < 2;
+                        
+                        return (
+                          <span
+                            key={index}
+                            className={`mr-1 transition-all duration-500 ${
+                              isCurrentWord && isNarratorSpeaking
+                                ? 'bg-yellow-400 text-black px-1 rounded font-bold shadow-lg transform scale-110 animate-pulse' 
+                                : 'text-white'
+                            }`}
+                          >
+                            {word}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Progress and status indicators */}
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-green-300 flex items-center gap-1">
+                        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        Now saying: "{narrationWords[currentWordIndex] || ''}"
+                      </span>
+                      <span className="text-gray-300">
+                        {currentWordIndex + 1} / {narrationWords.length} words
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Play/Pause Button */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="bg-white/90 hover:bg-white text-black border-none shadow-lg transform scale-110"
+                    onClick={toggleVideoPlayback}
+                  >
+                    {isVideoPlaying ? (
+                      <Pause className="h-8 w-8" />
+                    ) : (
+                      <Play className="h-8 w-8" />
+                    )}
+                  </Button>
+                </div>
+
+                {/* Status Indicators */}
+                <div className="absolute top-4 left-4 right-4 flex justify-between">
+                  <div className="flex gap-2">
+                    <Badge variant="secondary" className="bg-black/70 text-white">
+                      <Video className="h-3 w-3 mr-1" />
+                      AI Promotional Video
+                    </Badge>
+                    {isNarratorSpeaking && (
+                      <Badge variant="default" className="bg-green-600 animate-pulse">
+                        <Mic className="h-3 w-3 mr-1" />
+                        Narrator Speaking
+                      </Badge>
+                    )}
+                  </div>
+                  {showCaptions && (
+                    <Badge variant="outline" className="bg-blue-600 text-white border-white/30">
+                      <Captions className="h-3 w-3 mr-1" />
+                      Live Text On
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Bottom Controls */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="bg-black/70 hover:bg-black/80 text-white"
+                    onClick={toggleMute}
+                  >
+                    {isMuted ? (
+                      <VolumeX className="h-4 w-4" />
+                    ) : volume > 0.5 ? (
+                      <Volume2 className="h-4 w-4" />
+                    ) : (
+                      <Volume1 className="h-4 w-4" />
+                    )}
+                  </Button>
+                  
+                  <div className="flex-1 max-w-32">
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={volume}
+                      onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                      className="w-full h-2 bg-white/30 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
+                  
+                  <Badge variant="outline" className="bg-black/70 text-white border-white/30">
+                    {Math.round(volume * 100)}%
+                  </Badge>
+                </div>
+
+                {/* Status Indicators */}
+                {isVideoPlaying && (
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    <Badge variant="default" className="bg-green-600">
+                      <Play className="h-3 w-3 mr-1" />
+                      Playing
+                    </Badge>
+                    {!isMuted && (
+                      <Badge variant="outline" className="bg-blue-600 text-white border-white/30">
+                        <Mic className="h-3 w-3 mr-1" />
+                        Narration On
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              <p className="text-sm text-gray-600 mt-2 text-center italic">
+                AI-generated promotional video for "{currentCampaign.subject}" with synchronized text-to-speech narration
+              </p>
+              
+              <p className="text-xs text-gray-500 mt-1 text-center">
+                🎤 AI narrator reads the script • 📝 Words highlight as spoken • 🎬 Topic-specific promotional content
+              </p>
+            </div>
+          </div>
 
           {/* Email Content */}
           <div className="space-y-4">
