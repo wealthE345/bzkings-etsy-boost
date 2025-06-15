@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Mail, Calendar, Zap, Target } from "lucide-react";
 import { toast } from "sonner";
-import { useEmailCampaign, NewEmail } from "@/hooks/useEmailCampaign";
+import { useEmailCampaign, NewEmail, EmailCampaign } from "@/hooks/useEmailCampaign";
 import { EmailCreationForm } from "@/components/email-campaign/EmailCreationForm";
 import { EmailList } from "@/components/email-campaign/EmailList";
 import { CampaignStats } from "@/components/email-campaign/CampaignStats";
@@ -16,9 +17,9 @@ import { EmailDialogs } from "@/components/email-campaign/EmailDialogs";
 
 export default function EmailCampaignTool() {
   const [activeTab, setActiveTab] = useState("campaigns");
-  const [previewEmail, setPreviewEmail] = useState(null);
-  const [editingEmail, setEditingEmail] = useState(null);
-  const [analyticsEmail, setAnalyticsEmail] = useState(null);
+  const [previewEmail, setPreviewEmail] = useState<EmailCampaign | null>(null);
+  const [editingEmail, setEditingEmail] = useState<EmailCampaign | null>(null);
+  const [analyticsEmail, setAnalyticsEmail] = useState<EmailCampaign | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
   const [isAnalyticsDialogOpen, setIsAnalyticsDialogOpen] = useState(false);
@@ -77,13 +78,13 @@ export default function EmailCampaignTool() {
     }, 2000);
   };
 
-  const handlePreviewEmail = (email) => {
+  const handlePreviewEmail = (email: EmailCampaign) => {
     setPreviewEmail(email);
     setIsPreviewDialogOpen(true);
     toast.info(`👀 Previewing: "${email.subject}"`);
   };
 
-  const handleEditEmail = (email) => {
+  const handleEditEmail = (email: EmailCampaign) => {
     if (email.status === "Published") {
       toast.error("Cannot edit published campaigns. Create a new campaign instead.");
       return;
@@ -94,13 +95,13 @@ export default function EmailCampaignTool() {
     toast.info(`✏️ Editing: "${email.subject}"`);
   };
 
-  const handleSaveEdit = (email) => {
+  const handleSaveEdit = (email: EmailCampaign) => {
     setEmailList(emailList.map(e => 
       e.id === email.id ? email : e
     ));
   };
 
-  const handleViewAnalytics = (email) => {
+  const handleViewAnalytics = (email: EmailCampaign) => {
     if (email.status !== "Published") {
       toast.info("📊 Analytics are only available for published campaigns");
       return;
