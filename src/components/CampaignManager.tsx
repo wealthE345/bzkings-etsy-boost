@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown } from "lucide-react";
+import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown, Trash2, Crown, Zap, Rocket } from "lucide-react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 
@@ -45,6 +45,16 @@ interface Campaign {
   qualifiedLeads?: number;
   costPerLead?: number;
   salesConversionRate?: number;
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  campaignLimit: number;
+  features: string[];
+  popular?: boolean;
+  icon: React.ReactNode;
 }
 
 const CampaignManager = () => {
@@ -120,6 +130,8 @@ const CampaignManager = () => {
   ]);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showPlansSelection, setShowPlansSelection] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [newCampaign, setNewCampaign] = useState({
     title: '',
     platform: '',
@@ -143,6 +155,59 @@ const CampaignManager = () => {
   const [generatingVariations, setGeneratingVariations] = useState(false);
   const [seoRecommendations, setSeoRecommendations] = useState<string[]>([]);
 
+  const plans: Plan[] = [
+    {
+      id: 'starter',
+      name: 'Starter Plan',
+      price: 29,
+      campaignLimit: 3,
+      features: [
+        'Up to 3 active campaigns',
+        'Basic AI content generation',
+        'Standard lead quality tracking',
+        'Email support',
+        'Basic analytics dashboard'
+      ],
+      icon: <Zap className="h-6 w-6" />
+    },
+    {
+      id: 'professional',
+      name: 'Professional Plan',
+      price: 79,
+      campaignLimit: 10,
+      popular: true,
+      features: [
+        'Up to 10 active campaigns',
+        'Advanced AI content & image generation',
+        'Premium lead quality scoring',
+        'Geographical performance tracking',
+        'Priority support',
+        'Advanced analytics & reporting',
+        'SEO optimization tools',
+        'A/B testing for ad variations'
+      ],
+      icon: <Crown className="h-6 w-6" />
+    },
+    {
+      id: 'enterprise',
+      name: 'Enterprise Plan',
+      price: 199,
+      campaignLimit: -1, // unlimited
+      features: [
+        'Unlimited active campaigns',
+        'Premium AI suite with custom models',
+        'Enterprise lead quality analytics',
+        'Multi-region campaign management',
+        'Dedicated account manager',
+        'Custom integrations',
+        'White-label solutions',
+        'Advanced geographical targeting',
+        'Real-time campaign optimization'
+      ],
+      icon: <Rocket className="h-6 w-6" />
+    }
+  ];
+
   const performanceData = [
     { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3, sales: 2, leadQuality: 75 },
     { date: 'Day 2', impressions: 1850, clicks: 67, conversions: 5, sales: 4, leadQuality: 82 },
@@ -165,6 +230,26 @@ const CampaignManager = () => {
     { region: 'Texas', leads: 28, sales: 22, revenue: 6600 },
     { region: 'Florida', leads: 25, sales: 20, revenue: 6000 }
   ];
+
+  const deleteCampaign = (id: string) => {
+    setCampaigns(prev => prev.filter(campaign => campaign.id !== id));
+    toast.success('Campaign deleted successfully!');
+  };
+
+  const handleCreateCampaignClick = () => {
+    setShowPlansSelection(true);
+  };
+
+  const selectPlan = (plan: Plan) => {
+    if (plan.campaignLimit !== -1 && campaigns.length >= plan.campaignLimit) {
+      toast.error(`You've reached the campaign limit for the ${plan.name}. Please upgrade or delete existing campaigns.`);
+      return;
+    }
+    setSelectedPlan(plan);
+    setShowPlansSelection(false);
+    setShowCreateForm(true);
+    toast.success(`${plan.name} selected! You can now create your campaign.`);
+  };
 
   const generateAIImage = async () => {
     setGeneratingImage(true);
@@ -281,6 +366,16 @@ const CampaignManager = () => {
       return;
     }
 
+    if (!selectedPlan) {
+      toast.error('Please select a plan first');
+      return;
+    }
+
+    if (selectedPlan.campaignLimit !== -1 && campaigns.length >= selectedPlan.campaignLimit) {
+      toast.error(`You've reached the campaign limit for the ${selectedPlan.name}. Please upgrade your plan.`);
+      return;
+    }
+
     const campaign: Campaign = {
       id: Date.now().toString(),
       title: newCampaign.title,
@@ -333,7 +428,8 @@ const CampaignManager = () => {
     });
     setSeoRecommendations([]);
     setShowCreateForm(false);
-    toast.success('High-converting AI campaign created and optimized for quality lead generation!');
+    setSelectedPlan(null);
+    toast.success(`High-converting AI campaign created with ${selectedPlan.name}!`);
   };
 
   const toggleCampaignStatus = (id: string) => {
@@ -369,7 +465,7 @@ const CampaignManager = () => {
           <h2 className="text-2xl font-bold">AI Lead Generation & Sales Campaign Tool</h2>
           <p className="text-muted-foreground">Create high-converting campaigns that generate quality leads and drive sales in targeted geographical areas</p>
         </div>
-        <Button onClick={() => setShowCreateForm(!showCreateForm)} className="flex items-center gap-2">
+        <Button onClick={handleCreateCampaignClick} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
           Create Lead Generation Campaign
         </Button>
@@ -446,12 +542,77 @@ const CampaignManager = () => {
         </Card>
       </div>
 
-      {showCreateForm && (
+      {/* Plans Selection Modal */}
+      {showPlansSelection && (
+        <Card className="border-2 border-purple-200">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5" />
+              Choose Your Lead Generation Plan
+            </CardTitle>
+            <CardDescription>Select the perfect plan for your campaign needs and start generating high-quality leads</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {plans.map((plan) => (
+                <Card key={plan.id} className={`relative cursor-pointer transition-all hover:shadow-lg ${plan.popular ? 'border-2 border-purple-500' : 'border'}`}>
+                  {plan.popular && (
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-purple-500 text-white">Most Popular</Badge>
+                    </div>
+                  )}
+                  <CardContent className="p-6">
+                    <div className="text-center mb-6">
+                      <div className="flex justify-center mb-2 text-purple-600">
+                        {plan.icon}
+                      </div>
+                      <h3 className="text-xl font-bold">{plan.name}</h3>
+                      <div className="mt-2">
+                        <span className="text-3xl font-bold">${plan.price}</span>
+                        <span className="text-muted-foreground">/month</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {plan.campaignLimit === -1 ? 'Unlimited campaigns' : `Up to ${plan.campaignLimit} campaigns`}
+                      </p>
+                    </div>
+                    
+                    <ul className="space-y-2 mb-6">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-center gap-2 text-sm">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <Button 
+                      onClick={() => selectPlan(plan)} 
+                      className={`w-full ${plan.popular ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
+                      variant={plan.popular ? 'default' : 'outline'}
+                    >
+                      Select {plan.name}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            <div className="flex justify-center mt-6">
+              <Button onClick={() => setShowPlansSelection(false)} variant="outline">
+                Cancel
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {showCreateForm && selectedPlan && (
         <Card className="border-2 border-purple-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
               AI Lead Generation Campaign Builder
+              <Badge className="ml-2 bg-purple-100 text-purple-800">{selectedPlan.name}</Badge>
             </CardTitle>
             <CardDescription>Create campaigns optimized for high-quality leads and sales conversion in targeted geographical areas</CardDescription>
           </CardHeader>
@@ -760,7 +921,10 @@ const CampaignManager = () => {
                 <Target className="h-4 w-4" />
                 Launch Lead Generation Campaign
               </Button>
-              <Button onClick={() => setShowCreateForm(false)} variant="outline">
+              <Button onClick={() => {
+                setShowCreateForm(false);
+                setSelectedPlan(null);
+              }} variant="outline">
                 Cancel
               </Button>
             </div>
@@ -822,6 +986,14 @@ const CampaignManager = () => {
                       onClick={() => toggleCampaignStatus(campaign.id)}
                     >
                       {campaign.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => deleteCampaign(campaign.id)}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
