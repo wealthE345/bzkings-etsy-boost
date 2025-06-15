@@ -1,10 +1,9 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Users, Eye, MousePointer, ArrowUpRight, ExternalLink } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import CampaignManager from "./CampaignManager";
 
 const TrafficDashboard = () => {
   const trafficData = [
@@ -136,58 +135,18 @@ const TrafficDashboard = () => {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Current Campaign Performance</CardTitle>
-          <CardDescription>Track your active marketing campaigns</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <h4 className="font-medium">Google Ads - Digital Templates</h4>
-                <p className="text-sm text-muted-foreground">Running for 5 days</p>
-              </div>
-              <Badge variant="outline" className="text-green-600 border-green-300">Active</Badge>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Campaign Progress</span>
-                <span>75%</span>
-              </div>
-              <Progress value={75} className="h-2" />
-            </div>
-          </div>
+      <CampaignManager />
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <h4 className="font-medium">Facebook Ads - Printables</h4>
-                <p className="text-sm text-muted-foreground">Running for 12 days</p>
-              </div>
-              <Badge variant="outline" className="text-blue-600 border-blue-300">Active</Badge>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Campaign Progress</span>
-                <span>92%</span>
-              </div>
-              <Progress value={92} className="h-2" />
-            </div>
-          </div>
-
-          <div className="pt-4">
-            <Button 
-              className="w-full" 
-              variant="outline"
-              onClick={() => window.open("https://bzkingsdigitalmall.etsy.com", "_blank")}
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              View Your Etsy Store Performance
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="pt-4">
+        <Button 
+          className="w-full" 
+          variant="outline"
+          onClick={() => window.open("https://bzkingsdigitalmall.etsy.com", "_blank")}
+        >
+          <ExternalLink className="mr-2 h-4 w-4" />
+          View Your Etsy Store Performance
+        </Button>
+      </div>
     </div>
   );
 };
