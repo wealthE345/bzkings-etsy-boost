@@ -132,7 +132,7 @@ const CampaignManager = () => {
     };
 
     setCampaigns(prev => [...prev, campaign]);
-    setNewCampaign({ title: '', platform: '', budget: '', adContent: '', startDate: '', endDate: '' });
+    setNewCampaign({ title: '', platform: '', budget: '', adContent: '', startDate: '', endDate: '', imageUrl: '' });
     setShowCreateForm(false);
     toast.success('Campaign created successfully!');
   };
