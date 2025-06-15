@@ -1,5 +1,4 @@
-
-// Enhanced AI content generation with search-based matching
+// Enhanced AI content generation with search-based matching and advanced images
 
 export const organicTrafficContent = [
   "🚀 Transform your organic traffic with AI-powered SEO strategies and cutting-edge digital tools. Our comprehensive suite helps entrepreneurs build sustainable online businesses through proven organic growth methods, advanced keyword optimization, and intelligent content marketing systems.",
@@ -10,42 +9,56 @@ export const organicTrafficContent = [
   "⚡ Experience the difference that AI-enhanced organic traffic makes for your business. Our digital products combine artificial intelligence with proven SEO methodologies to deliver exceptional results in search rankings and sustainable traffic growth."
 ];
 
-// Enhanced AI image collection with specific categories
+// Enhanced AI image collection with advanced, attractive campaign images
 export const aiImagesByCategory = {
   seo: [
-    "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop", // analytics dashboard
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop", // data visualization
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop", // charts and graphs
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // advanced analytics dashboard
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // data visualization charts
+    "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop&auto=format&q=80", // professional analytics
+    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // marketing analytics
+    "https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?w=800&h=400&fit=crop&auto=format&q=80", // SEO analytics screen
   ],
   social: [
-    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop", // social media
-    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop", // social networks
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop", // mobile social
+    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=400&fit=crop&auto=format&q=80", // social media strategy
+    "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&auto=format&q=80", // social networks visualization
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // mobile social engagement
+    "https://images.unsplash.com/photo-1570194065650-d99bf9d4d665?w=800&h=400&fit=crop&auto=format&q=80", // social media icons
+    "https://images.unsplash.com/photo-1562577309-2592ab84b1bc?w=800&h=400&fit=crop&auto=format&q=80", // social media marketing
   ],
   content: [
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop", // content creation
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop", // writing
-    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop", // blogging
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop&auto=format&q=80", // content creation workspace
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop&auto=format&q=80", // professional writing
+    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&fit=crop&auto=format&q=80", // blogging setup
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop&auto=format&q=80", // content strategy
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop&auto=format&q=80", // creative writing
   ],
   email: [
-    "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=400&fit=crop", // email marketing
-    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop", // email on mobile
-    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop", // digital communication
+    "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=400&fit=crop&auto=format&q=80", // email marketing campaign
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop&auto=format&q=80", // email on device
+    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop&auto=format&q=80", // digital communication
+    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=400&fit=crop&auto=format&q=80", // email newsletter design
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop&auto=format&q=80", // email automation
   ],
   ai: [
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop", // AI technology
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop", // AI brain
-    "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop", // AI automation
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop&auto=format&q=80", // AI technology visualization
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop&auto=format&q=80", // AI neural network
+    "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop&auto=format&q=80", // AI automation concept
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop&auto=format&q=80", // AI futuristic interface
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=800&h=400&fit=crop&auto=format&q=80", // AI digital brain
   ],
   marketing: [
-    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop", // marketing tools
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop", // marketing analytics
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop", // marketing data
+    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // marketing strategy tools
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // marketing analytics
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // marketing data insights
+    "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&h=400&fit=crop&auto=format&q=80", // digital marketing campaign
+    "https://images.unsplash.com/photo-1556155092-490a1ba16284?w=800&h=400&fit=crop&auto=format&q=80", // marketing funnel
   ],
   traffic: [
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop", // traffic analytics
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop", // web traffic
-    "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop", // website analytics
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&auto=format&q=80", // traffic analytics dashboard
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop&auto=format&q=80", // web traffic visualization
+    "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&h=400&fit=crop&auto=format&q=80", // website analytics
+    "https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?w=800&h=400&fit=crop&auto=format&q=80", // organic traffic growth
+    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&h=400&fit=crop&auto=format&q=80", // traffic optimization tools
   ]
 };
 

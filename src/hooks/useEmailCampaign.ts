@@ -17,6 +17,8 @@ export interface EmailCampaign {
   };
   aiGenerated: boolean;
   targetAudience: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface NewEmail {
@@ -31,6 +33,8 @@ export interface NewEmail {
   };
   aiGenerated: boolean;
   targetAudience: string;
+  startDate: string;
+  endDate: string;
 }
 
 const initialEmailList: EmailCampaign[] = [
@@ -48,7 +52,9 @@ const initialEmailList: EmailCampaign[] = [
       alt: "AI-generated video showcasing organic traffic growth strategies and digital marketing tools"
     },
     aiGenerated: true,
-    targetAudience: "organic-traffic"
+    targetAudience: "organic-traffic",
+    startDate: "2024-01-15T09:00",
+    endDate: "2024-02-15T17:00"
   },
   { 
     id: 2, 
@@ -64,7 +70,9 @@ const initialEmailList: EmailCampaign[] = [
       alt: "AI-generated image featuring SEO tools and organic traffic analytics dashboard"
     },
     aiGenerated: true,
-    targetAudience: "organic-traffic"
+    targetAudience: "organic-traffic",
+    startDate: "2024-02-01T08:00",
+    endDate: "2024-03-01T18:00"
   },
   { 
     id: 3, 
@@ -80,7 +88,9 @@ const initialEmailList: EmailCampaign[] = [
       alt: "AI-generated video presenting organic traffic masterclass with digital marketing strategies"
     },
     aiGenerated: true,
-    targetAudience: "organic-traffic"
+    targetAudience: "organic-traffic",
+    startDate: "2024-02-10T10:00",
+    endDate: "2024-03-10T16:00"
   },
 ];
 
@@ -95,7 +105,9 @@ const initialNewEmail: NewEmail = {
     alt: ""
   },
   aiGenerated: false,
-  targetAudience: "organic-traffic"
+  targetAudience: "organic-traffic",
+  startDate: "",
+  endDate: ""
 };
 
 export const useEmailCampaign = () => {
@@ -107,6 +119,16 @@ export const useEmailCampaign = () => {
   const handleCreateEmail = () => {
     if (!newEmail.subject.trim() || !newEmail.content.trim()) {
       toast.error("Please fill in both subject and content");
+      return;
+    }
+
+    if (!newEmail.startDate || !newEmail.endDate) {
+      toast.error("Please set both start and end dates for the campaign");
+      return;
+    }
+
+    if (new Date(newEmail.endDate) <= new Date(newEmail.startDate)) {
+      toast.error("End date must be after start date");
       return;
     }
 
@@ -124,7 +146,9 @@ export const useEmailCampaign = () => {
         content: newEmail.content,
         creative: newEmail.creative,
         aiGenerated: newEmail.aiGenerated,
-        targetAudience: newEmail.targetAudience
+        targetAudience: newEmail.targetAudience,
+        startDate: newEmail.startDate,
+        endDate: newEmail.endDate
       };
 
       setEmailList([newEmailItem, ...emailList]);
@@ -194,7 +218,9 @@ export const useEmailCampaign = () => {
       content: email.content,
       creative: { ...email.creative },
       aiGenerated: email.aiGenerated,
-      targetAudience: email.targetAudience
+      targetAudience: email.targetAudience,
+      startDate: email.startDate,
+      endDate: email.endDate
     };
 
     setEmailList([duplicatedEmail, ...emailList]);
