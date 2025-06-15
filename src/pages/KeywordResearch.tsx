@@ -29,17 +29,20 @@ const KeywordResearch = () => {
     try {
       const trending = await KeywordScrapingService.getTrendingKeywords();
       setTrendingKeywords(trending);
-      console.log('Loaded trending keywords:', trending);
+      console.log('Loaded fresh trending keywords from search engines:', trending);
+      toast.success(`Loaded ${trending.length} trending keywords from search engines`);
     } catch (error) {
-      console.error('Error loading trending keywords:', error);
+      console.error('Error loading trending keywords from search engines:', error);
+      toast.error("Failed to load trending keywords from search engines");
     } finally {
       setIsLoadingTrending(false);
     }
   };
 
-  const handleTrendingKeywordClick = (trendingKeyword: string) => {
+  const handleTrendingKeywordClick = async (trendingKeyword: string) => {
     setKeyword(trendingKeyword);
-    handleSearch(trendingKeyword);
+    console.log('Clicked trending keyword, starting live search for:', trendingKeyword);
+    await handleSearch(trendingKeyword);
   };
 
   const handleSearch = async (searchKeyword?: string) => {
@@ -57,7 +60,7 @@ const KeywordResearch = () => {
     // Reset used keywords for fresh search
     KeywordScrapingService.resetUsedKeywords();
     
-    console.log('Starting fresh organic keyword scraping for:', keywordToSearch);
+    console.log('Starting fresh live keyword scraping from search engines for:', keywordToSearch);
     
     try {
       const response = await KeywordScrapingService.scrapeKeywords(keywordToSearch, 0);
@@ -66,15 +69,15 @@ const KeywordResearch = () => {
         setDisplayedResults(response.data);
         setCurrentPage(1);
         setHasSearched(true);
-        toast.success(`Found ${response.data.length} organic keyword suggestions from search engines`);
-        console.log('Scraped fresh organic keywords:', response.data);
+        toast.success(`Found ${response.data.length} fresh keywords from search engines for "${keywordToSearch}"`);
+        console.log('Live scraped fresh keywords:', response.data);
       } else {
-        toast.error(response.error || "Failed to scrape organic keyword data from search engines");
-        console.error('Scraping failed:', response.error);
+        toast.error(response.error || "Failed to scrape live keyword data from search engines");
+        console.error('Live scraping failed:', response.error);
       }
     } catch (error) {
-      console.error('Error during organic keyword scraping:', error);
-      toast.error("Failed to scrape organic keyword data from search engines");
+      console.error('Error during live keyword scraping from search engines:', error);
+      toast.error("Failed to scrape live keyword data from search engines");
     } finally {
       setIsSearching(false);
     }
@@ -83,7 +86,7 @@ const KeywordResearch = () => {
   const handleShowMore = async () => {
     setIsLoadingMore(true);
     
-    console.log(`Fetching more keywords from search engines for: ${keyword}, page: ${currentPage}`);
+    console.log(`Fetching more live keywords from search engines for: ${keyword}, page: ${currentPage}`);
     
     try {
       // Fetch fresh keywords from search engines for the current page
@@ -92,14 +95,14 @@ const KeywordResearch = () => {
       if (response.success && response.data && response.data.length > 0) {
         setDisplayedResults(prev => [...prev, ...response.data]);
         setCurrentPage(prev => prev + 1);
-        toast.success(`Loaded ${response.data.length} more keywords from search engines`);
-        console.log(`Added ${response.data.length} more fresh keywords from search engines`);
+        toast.success(`Loaded ${response.data.length} more fresh keywords from search engines`);
+        console.log(`Added ${response.data.length} more live keywords from search engines`);
       } else {
-        toast.info("No more keywords available from search engines");
+        toast.info("No more live keywords available from search engines");
       }
     } catch (error) {
-      console.error('Error loading more keywords from search engines:', error);
-      toast.error("Failed to load more keywords from search engines");
+      console.error('Error loading more live keywords from search engines:', error);
+      toast.error("Failed to load more live keywords from search engines");
     } finally {
       setIsLoadingMore(false);
     }
@@ -140,16 +143,31 @@ const KeywordResearch = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Flame className="h-5 w-5 text-orange-600" />
-              Trending Keywords
+              Live Trending Keywords
             </CardTitle>
-            <CardDescription>
-              Popular keywords that are currently trending in search results
+            <CardDescription className="flex items-center gap-2">
+              <Globe className="h-3 w-3" />
+              Fresh trending keywords from search engines - updated in real-time
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="flex items-center justify-between mb-4">
+              <Badge variant="outline" className="text-green-600 border-green-600">
+                <Globe className="h-3 w-3 mr-1" />
+                Live Data from Search Engines
+              </Badge>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={loadTrendingKeywords}
+                disabled={isLoadingTrending}
+              >
+                {isLoadingTrending ? "Refreshing..." : "Refresh Trending"}
+              </Button>
+            </div>
             {isLoadingTrending ? (
               <div className="flex items-center justify-center py-4">
-                <div className="text-gray-500">Loading trending keywords...</div>
+                <div className="text-gray-500">Loading fresh trending keywords from search engines...</div>
               </div>
             ) : (
               <div className="flex flex-wrap gap-2">
@@ -157,12 +175,15 @@ const KeywordResearch = () => {
                   <Badge
                     key={index}
                     variant="outline"
-                    className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors"
+                    className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors p-2"
                     onClick={() => handleTrendingKeywordClick(trending.keyword)}
                   >
                     <TrendingUp className="h-3 w-3 mr-1 text-orange-600" />
                     {trending.keyword}
                     <span className="ml-1 text-xs text-orange-600">{trending.trend}</span>
+                    <span className="ml-2 text-xs text-gray-500">
+                      {typeof trending.volume === 'number' ? trending.volume.toLocaleString() : trending.volume}/mo
+                    </span>
                   </Badge>
                 ))}
               </div>
@@ -194,7 +215,7 @@ const KeywordResearch = () => {
                 disabled={isSearching}
                 className="gradient-primary text-white"
               >
-                {isSearching ? "Fetching..." : "Get Keywords"}
+                {isSearching ? "Fetching Live Data..." : "Get Live Keywords"}
                 <Globe className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -208,11 +229,11 @@ const KeywordResearch = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-800">
-                Live Keyword Results ({displayedResults.length} keywords from search engines)
+                Live Keyword Results for "{keyword}" ({displayedResults.length} keywords from search engines)
               </h2>
               <Badge variant="outline" className="text-green-600 border-green-600">
                 <Globe className="h-3 w-3 mr-1" />
-                Live Data
+                Live Data from Search Engines
               </Badge>
             </div>
             
@@ -224,9 +245,15 @@ const KeywordResearch = () => {
                       <h3 className="text-xl font-semibold text-purple-700">
                         {result.keyword}
                       </h3>
-                      <Badge className={getDifficultyColor(result.difficulty)}>
-                        {result.difficulty} SEO Difficulty
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getDifficultyColor(result.difficulty)}>
+                          {result.difficulty} SEO Difficulty
+                        </Badge>
+                        <Badge variant="outline" className="text-green-600 border-green-600">
+                          <Globe className="h-3 w-3 mr-1" />
+                          Live
+                        </Badge>
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -235,7 +262,7 @@ const KeywordResearch = () => {
                         <div className="text-2xl font-bold text-blue-600">
                           {typeof result.volume === 'number' ? result.volume.toLocaleString() : result.volume}
                         </div>
-                        <div className="text-sm text-gray-600">Est. Monthly Searches</div>
+                        <div className="text-sm text-gray-600">Live Monthly Searches</div>
                       </div>
                       
                       <div className="text-center p-4 bg-green-50 rounded-lg">
@@ -243,7 +270,7 @@ const KeywordResearch = () => {
                         <div className="text-2xl font-bold text-green-600">
                           ${typeof result.cpc === 'number' ? result.cpc.toFixed(2) : result.cpc}
                         </div>
-                        <div className="text-sm text-gray-600">Est. Cost Per Click</div>
+                        <div className="text-sm text-gray-600">Live Cost Per Click</div>
                       </div>
                       
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
@@ -251,14 +278,14 @@ const KeywordResearch = () => {
                         <div className="text-2xl font-bold text-purple-600">
                           {result.trend}
                         </div>
-                        <div className="text-sm text-gray-600">Search Trend</div>
+                        <div className="text-sm text-gray-600">Live Search Trend</div>
                       </div>
                       
                       <div className="text-center p-4 bg-amber-50 rounded-lg">
                         <Badge variant="outline" className="mb-2">
                           {result.competition}
                         </Badge>
-                        <div className="text-sm text-gray-600">Competition Level</div>
+                        <div className="text-sm text-gray-600">Live Competition Level</div>
                       </div>
                     </div>
                   </CardContent>
@@ -275,7 +302,7 @@ const KeywordResearch = () => {
                   size="lg"
                   className="bg-white hover:bg-purple-50 border-purple-200 text-purple-700"
                 >
-                  {isLoadingMore ? "Fetching from Search Engines..." : "Show 20 More Keywords"}
+                  {isLoadingMore ? "Fetching Live Data from Search Engines..." : "Show 20 More Live Keywords"}
                   <Plus className="ml-2 h-4 w-4" />
                 </Button>
               </div>
