@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,12 +14,14 @@ import TrafficDashboard from "@/components/TrafficDashboard";
 import SEOTools from "@/components/SEOTools";
 import SocialMediaBooster from "@/components/SocialMediaBooster";
 import ConversionTracker from "@/components/ConversionTracker";
+import Banner from "@/components/Banner";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-amber-50">
+      <Banner />
       <Navigation />
       <HeroSection />
       
@@ -45,7 +46,7 @@ const Index = () => {
               <CardContent className="p-6 text-center">
                 <Download className="h-8 w-8 text-purple-600 mx-auto mb-3" />
                 <h3 className="font-semibold mb-2">AI App Hub</h3>
-                <p className="text-sm text-gray-600">Download free & premium AI apps</p>
+                <p className="text-sm text-gray-600">Download SEO & mobile apps</p>
               </CardContent>
             </Card>
           </Link>
@@ -70,19 +71,18 @@ const Index = () => {
             </Card>
           </Link>
 
-          <Button
+          <div
             onClick={() => window.open("https://bzkingsdigitalmall.etsy.com", "_blank")}
-            className="h-full"
-            variant="outline"
+            className="cursor-pointer"
           >
-            <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-green-100 hover:border-green-300 w-full">
+            <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-green-100 hover:border-green-300 h-full">
               <CardContent className="p-6 text-center">
                 <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-3" />
                 <h3 className="font-semibold mb-2">Visit Store</h3>
                 <p className="text-sm text-gray-600">Go to Etsy store</p>
               </CardContent>
             </Card>
-          </Button>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -201,6 +201,24 @@ const Index = () => {
           </Card>
         </div>
       </div>
+
+      {/* Footer with Disclaimer Link */}
+      <footer className="bg-gray-50 border-t py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gray-600 mb-4">© 2024 BZ Kings Digital Mall. All rights reserved.</p>
+          <div className="flex justify-center gap-6">
+            <Link to="/disclaimer" className="text-purple-600 hover:text-purple-800 transition-colors">
+              Terms & Disclaimer
+            </Link>
+            <Link to="/reviews" className="text-purple-600 hover:text-purple-800 transition-colors">
+              Customer Reviews
+            </Link>
+            <Link to="/about" className="text-purple-600 hover:text-purple-800 transition-colors">
+              About Us
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
