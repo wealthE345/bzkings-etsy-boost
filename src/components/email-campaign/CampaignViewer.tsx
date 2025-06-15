@@ -25,6 +25,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
   const [editedCampaign, setEditedCampaign] = useState<EmailCampaign | null>(null);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
   const [showCaptions, setShowCaptions] = useState(true);
+  const [showTextToSpeech, setShowTextToSpeech] = useState(false);
   const [currentCaptionIndex, setCurrentCaptionIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const captionIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -43,7 +44,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
 
   // Enhanced function to get text-to-speech content with better captions
   const getTextToSpeechContent = () => {
-    if (!currentCampaign.creative?.type === "video") return "";
+    if (!currentCampaign?.creative || currentCampaign.creative.type !== "video") return "";
     
     const searchTerm = currentCampaign.subject || "digital marketing";
     const lowerSearchTerm = searchTerm.toLowerCase();
