@@ -8,7 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target, Search, Play } from "lucide-react";
 import { toast } from "sonner";
 import { NewEmail } from "@/hooks/useEmailCampaign";
-import { getRandomContent, getRandomImage, getIntroVideoBySubject, getContentBySearchTerm } from "@/utils/aiContentGenerator";
+import { 
+  getRandomContent, 
+  getImageBySearchQuery, 
+  getVideoBySearchQuery, 
+  getContentBySearchTerm,
+  generateAITitle
+} from "@/utils/aiContentGenerator";
 
 interface EmailCreationFormProps {
   newEmail: NewEmail;
@@ -36,8 +42,8 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     toast.info(`🔍 Searching for content related to "${searchTerm}"...`);
 
     setTimeout(() => {
-      // Generate AI subject based on search term
-      const aiSubject = `🚀 AI-Powered: ${searchTerm} - Transform Your Organic Traffic Strategy`;
+      // Generate AI subject based on search term using AI title generator
+      const aiSubject = generateAITitle(searchTerm);
       
       setNewEmail({
         ...newEmail,
@@ -45,7 +51,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       });
 
       setIsSearching(false);
-      toast.success(`✨ Generated subject for "${searchTerm}"!`);
+      toast.success(`✨ Generated AI title for "${searchTerm}"!`);
       toast.info("📝 Now generate AI content and 30-second intro videos based on this subject");
     }, 2000);
   };
@@ -66,7 +72,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       let randomCreative;
 
       if (isVideoCreative) {
-        const introVideo = getIntroVideoBySubject(searchContext);
+        const introVideo = getVideoBySearchQuery(searchContext);
         randomCreative = {
           type: "video" as const,
           url: introVideo.url,
@@ -76,8 +82,8 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       } else {
         randomCreative = {
           type: "image" as const,
-          url: getRandomImage(),
-          alt: `AI-generated image for ${searchContext} featuring SEO tools and organic traffic analytics`
+          url: getImageBySearchQuery(searchContext),
+          alt: `AI-generated image for ${searchContext} featuring relevant visual content`
         };
       }
 
@@ -90,7 +96,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       });
 
       setIsGeneratingContent(false);
-      toast.success("✨ AI content and 30-second intro video generated successfully!");
+      toast.success("✨ AI content and creative generated successfully!");
       toast.info("🎯 Content optimized for organic traffic and SEO engagement");
     }, 3000);
   };
@@ -101,13 +107,13 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     toast.info(`🖼️ AI is generating an optimized image for "${searchContext}"...`);
 
     setTimeout(() => {
-      const randomImage = getRandomImage();
+      const optimizedImage = getImageBySearchQuery(searchContext);
       
       setNewEmail({
         ...newEmail,
         creative: {
           type: "image",
-          url: randomImage,
+          url: optimizedImage,
           alt: `AI-generated image for ${searchContext} optimized for organic traffic campaigns`
         },
         aiGenerated: true
@@ -125,7 +131,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     toast.info(`🎬 AI is generating a 30-second intro video for "${searchContext}"...`);
 
     setTimeout(() => {
-      const introVideo = getIntroVideoBySubject(searchContext);
+      const introVideo = getVideoBySearchQuery(searchContext);
       
       setNewEmail({
         ...newEmail,
@@ -162,7 +168,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
     setTimeout(() => {
       if (isCurrentVideo) {
-        const introVideo = getIntroVideoBySubject(searchContext);
+        const introVideo = getVideoBySearchQuery(searchContext);
         
         setNewEmail({
           ...newEmail,
@@ -176,13 +182,13 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
         setIsGeneratingVideo(false);
         toast.success(`🎬 30-second intro video regenerated: "${introVideo.title}"!`);
       } else {
-        const randomImage = getRandomImage();
+        const optimizedImage = getImageBySearchQuery(searchContext);
         
         setNewEmail({
           ...newEmail,
           creative: {
             type: "image",
-            url: randomImage,
+            url: optimizedImage,
             alt: `AI-regenerated image for ${searchContext} optimized for organic traffic campaigns`
           }
         });
@@ -295,7 +301,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               ) : (
                 <>
                   <Search className="mr-2 h-4 w-4" />
-                  Search
+                  Search & Generate Title
                 </>
               )}
             </Button>
@@ -303,7 +309,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
         </div>
 
         <Input
-          placeholder="Email Subject (or use search above to generate)"
+          placeholder="Email Subject (or use search above to generate AI title)"
           value={newEmail.subject}
           onChange={(e) => setNewEmail({ ...newEmail, subject: e.target.value })}
         />
@@ -323,7 +329,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             ) : (
               <>
                 <Wand2 className="mr-2 h-4 w-4" />
-                Generate AI Content + 30s Intro
+                Generate AI Content + Creative
               </>
             )}
           </Button>
@@ -352,7 +358,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
         {/* AI Creative Generation Buttons */}
         <div className="space-y-3">
-          <div className="text-sm font-medium text-gray-700">AI Creative Generation:</div>
+          <div className="text-sm font-medium text-gray-700">AI Creative Generation (Based on Search):</div>
           <div className="grid grid-cols-2 gap-2">
             <Button 
               onClick={handleGenerateAIImage}
@@ -368,7 +374,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               ) : (
                 <>
                   <ImageIcon className="mr-2 h-4 w-4" />
-                  AI Image
+                  AI Image (Search-Based)
                 </>
               )}
             </Button>
@@ -387,7 +393,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               ) : (
                 <>
                   <Video className="mr-2 h-4 w-4" />
-                  AI 30s Intro Video
+                  AI 30s Video (Search-Based)
                 </>
               )}
             </Button>
@@ -464,6 +470,9 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                     src={newEmail.creative.url} 
                     className="w-full h-32 object-cover rounded-lg"
                     controls
+                    autoPlay
+                    muted
+                    loop
                     poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                   />
                   <div className="absolute top-2 right-2 flex gap-1">
@@ -489,7 +498,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                 )}
                 <Badge variant="outline" className="bg-green-50 text-green-600 border-green-300">
                   <Target className="h-3 w-3 mr-1" />
-                  Organic Traffic
+                  Search-Based
                 </Badge>
               </div>
             </div>
