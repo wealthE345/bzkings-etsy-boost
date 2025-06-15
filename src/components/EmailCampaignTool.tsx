@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -152,12 +151,12 @@ export default function EmailCampaignTool() {
           <EmailList
             emailList={emailList}
             isPublishing={isPublishing}
-            onPublishEmail={(email) => handlePublishEmail(email.id)}
+            onPublishEmail={handlePublishEmail}
             onPreviewEmail={handlePreviewEmail}
             onEditEmail={handleEditEmail}
             onViewAnalytics={handleViewAnalytics}
-            onDuplicateEmail={(email) => handleDuplicateEmail(email.id)}
-            onDeleteEmail={(email) => handleDeleteEmail(email.id)}
+            onDuplicateEmail={handleDuplicateEmail}
+            onDeleteEmail={handleDeleteEmail}
           />
         </TabsContent>
 
@@ -292,7 +291,7 @@ export default function EmailCampaignTool() {
         setIsAnalyticsDialogOpen={setIsAnalyticsDialogOpen}
         setEditingEmail={setEditingEmail}
         onSaveEdit={handleSaveEdit}
-        onPublishEmail={(email) => handlePublishEmail(email.id)}
+        onPublishEmail={handlePublishEmail}
         onEditEmail={handleEditEmail}
       />
     </div>
