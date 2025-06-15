@@ -53,6 +53,126 @@ const KeywordResearch = () => {
       cpc: 1.95,
       trend: "↗️ +20%",
       competition: "High"
+    },
+    {
+      keyword: "printable stickers",
+      volume: 9800,
+      difficulty: "Low",
+      cpc: 0.75,
+      trend: "↗️ +25%",
+      competition: "Low"
+    },
+    {
+      keyword: "digital art prints",
+      volume: 14300,
+      difficulty: "Medium",
+      cpc: 1.35,
+      trend: "↗️ +18%",
+      competition: "Medium"
+    },
+    {
+      keyword: "resume template",
+      volume: 19500,
+      difficulty: "High",
+      cpc: 2.25,
+      trend: "↗️ +10%",
+      competition: "High"
+    },
+    {
+      keyword: "printable calendar",
+      volume: 11200,
+      difficulty: "Low",
+      cpc: 0.95,
+      trend: "↗️ +5%",
+      competition: "Low"
+    },
+    {
+      keyword: "logo design template",
+      volume: 16800,
+      difficulty: "High",
+      cpc: 2.40,
+      trend: "↗️ +22%",
+      competition: "High"
+    },
+    {
+      keyword: "printable labels",
+      volume: 7600,
+      difficulty: "Low",
+      cpc: 0.68,
+      trend: "↗️ +12%",
+      competition: "Low"
+    },
+    {
+      keyword: "digital scrapbook paper",
+      volume: 5400,
+      difficulty: "Low",
+      cpc: 0.55,
+      trend: "↗️ +8%",
+      competition: "Low"
+    },
+    {
+      keyword: "invitation template",
+      volume: 13700,
+      difficulty: "Medium",
+      cpc: 1.45,
+      trend: "↗️ +15%",
+      competition: "Medium"
+    },
+    {
+      keyword: "printable quotes",
+      volume: 8200,
+      difficulty: "Low",
+      cpc: 0.72,
+      trend: "↗️ +20%",
+      competition: "Low"
+    },
+    {
+      keyword: "digital clipart",
+      volume: 10500,
+      difficulty: "Medium",
+      cpc: 1.15,
+      trend: "↗️ +18%",
+      competition: "Medium"
+    },
+    {
+      keyword: "printable journal pages",
+      volume: 6800,
+      difficulty: "Low",
+      cpc: 0.65,
+      trend: "↗️ +14%",
+      competition: "Low"
+    },
+    {
+      keyword: "powerpoint template",
+      volume: 17200,
+      difficulty: "High",
+      cpc: 2.15,
+      trend: "↗️ +16%",
+      competition: "High"
+    },
+    {
+      keyword: "printable party decorations",
+      volume: 9100,
+      difficulty: "Medium",
+      cpc: 1.05,
+      trend: "↗️ +28%",
+      competition: "Medium"
+    },
+    {
+      keyword: "digital patterns",
+      volume: 4900,
+      difficulty: "Low",
+      cpc: 0.58,
+      trend: "↗️ +10%",
+      competition: "Low"
+    },
+    {
+      keyword: "printable coloring pages",
+      volume: 12800,
+      difficulty: "Medium",
+      cpc: 0.88,
+      trend: "↗️ +22%",
+      competition: "Medium"
     }
   ];
 
@@ -67,17 +187,10 @@ const KeywordResearch = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    // Filter and return relevant results based on search term
-    const filteredResults = mockKeywordData.filter(item => 
-      item.keyword.toLowerCase().includes(keyword.toLowerCase()) ||
-      keyword.toLowerCase().split(' ').some(word => 
-        item.keyword.toLowerCase().includes(word)
-      )
-    );
-
-    setResults(filteredResults.length > 0 ? filteredResults : mockKeywordData.slice(0, 3));
+    // Return all 20 results
+    setResults(mockKeywordData);
     setIsSearching(false);
-    toast.success(`Found ${filteredResults.length || 3} keyword suggestions`);
+    toast.success(`Found ${mockKeywordData.length} keyword suggestions`);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -140,7 +253,7 @@ const KeywordResearch = () => {
 
         {results.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">Search Results</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Search Results ({results.length} keywords found)</h2>
             <div className="grid grid-cols-1 gap-6">
               {results.map((result, index) => (
                 <Card key={index} className="hover:shadow-lg transition-all duration-300">
