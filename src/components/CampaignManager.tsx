@@ -48,16 +48,6 @@ interface Campaign {
   salesConversionRate?: number;
 }
 
-interface Plan {
-  id: string;
-  name: string;
-  price: number;
-  campaignLimit: number;
-  features: string[];
-  popular?: boolean;
-  icon: React.ReactNode;
-}
-
 const CampaignManager = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([
     {
@@ -131,10 +121,6 @@ const CampaignManager = () => {
   ]);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showPlansSelection, setShowPlansSelection] = useState(false);
-  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const [selectedPaymentPackage, setSelectedPaymentPackage] = useState<any>(null);
   const [newCampaign, setNewCampaign] = useState({
     title: '',
     platform: '',
@@ -157,42 +143,6 @@ const CampaignManager = () => {
   const [analyzingSEO, setAnalyzingSEO] = useState(false);
   const [generatingVariations, setGeneratingVariations] = useState(false);
   const [seoRecommendations, setSeoRecommendations] = useState<string[]>([]);
-
-  const paymentPackages = [
-    {
-      id: 'starter_impressions',
-      name: 'Starter Package',
-      impressions: 1000,
-      price: 15,
-      costPer100: 1.50,
-      features: ['1,000 organic impressions', 'Basic targeting', 'Standard reporting']
-    },
-    {
-      id: 'professional_impressions',
-      name: 'Professional Package',
-      impressions: 5000,
-      price: 65,
-      costPer100: 1.30,
-      features: ['5,000 organic impressions', 'Advanced targeting', 'Detailed analytics', 'A/B testing'],
-      popular: true
-    },
-    {
-      id: 'enterprise_impressions',
-      name: 'Enterprise Package',
-      impressions: 15000,
-      price: 180,
-      costPer100: 1.20,
-      features: ['15,000 organic impressions', 'Premium targeting', 'Real-time analytics', 'Priority support']
-    },
-    {
-      id: 'custom_impressions',
-      name: 'Custom Package',
-      impressions: 0,
-      price: 0,
-      costPer100: 1.00,
-      features: ['Custom impression count', 'Bulk discount pricing', 'Dedicated account manager']
-    }
-  ];
 
   const performanceData = [
     { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3, sales: 2, leadQuality: 75 },
@@ -291,35 +241,12 @@ const CampaignManager = () => {
     }
   };
 
-  const handlePaymentSelection = (pkg: any) => {
-    setSelectedPaymentPackage(pkg);
-    setShowPaymentDialog(false);
-    
-    if (pkg.id === 'custom_impressions') {
-      toast.info('Contact us for custom pricing on bulk impressions');
-      return;
-    }
-    
-    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-paypal-email@example.com&item_name=${encodeURIComponent(pkg.name + ' - ' + pkg.impressions + ' Organic Impressions')}&amount=${pkg.price}&currency_code=USD&return=https://yoursite.com/payment-success&cancel_return=https://yoursite.com/payment-cancelled`;
-    
-    toast.success(`Redirecting to PayPal for ${pkg.name} payment ($${pkg.price})`);
-    
-    setTimeout(() => {
-      toast.success(`Payment successful! You now have ${pkg.impressions.toLocaleString()} organic impressions available.`);
-    }, 2000);
-  };
-
   const generateAdVariations = async () => {
     if (!newCampaign.adContent) {
       toast.error('Please generate or enter ad content first');
       return;
     }
 
-    setShowPaymentDialog(true);
-    return;
-  };
-
-  const processAdVariations = async () => {
     setGeneratingVariations(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -344,61 +271,69 @@ const CampaignManager = () => {
       return;
     }
 
-    const campaign: Campaign = {
-      id: Date.now().toString(),
-      title: newCampaign.title,
-      platform: newCampaign.platform,
-      status: 'active',
-      budget: parseFloat(newCampaign.budget),
-      spent: 0,
-      impressions: 0,
-      clicks: 0,
-      conversions: 0,
-      sales: 0,
-      leadQualityScore: 0,
-      qualifiedLeads: 0,
-      costPerLead: 0,
-      salesConversionRate: 0,
-      startDate: newCampaign.startDate,
-      endDate: newCampaign.endDate,
-      adContent: newCampaign.adContent,
-      imageUrl: newCampaign.imageUrl || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop',
-      progress: 0,
-      websiteUrl: newCampaign.websiteUrl,
-      productName: newCampaign.productName,
-      targetAge: newCampaign.targetAge,
-      targetRegion: newCampaign.targetRegion,
-      targetGender: newCampaign.targetGender,
-      objectives: newCampaign.objectives,
-      leadQuality: 'high',
-      seoKeywords: newCampaign.seoKeywords ? newCampaign.seoKeywords.split(',').map(k => k.trim()) : [],
-      adVariations: newCampaign.adVariations,
-      geographicalPerformance: []
-    };
+    // Calculate PayPal payment amount based on budget
+    const budget = parseFloat(newCampaign.budget);
+    const impressions = budget * 100; // Assuming $1 = 100 impressions
+    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=your-paypal-email@example.com&item_name=${encodeURIComponent('Organic Traffic Campaign - ' + newCampaign.title)}&amount=${budget}&currency_code=USD&return=https://yoursite.com/payment-success&cancel_return=https://yoursite.com/payment-cancelled`;
+    
+    toast.success(`Redirecting to PayPal for payment of $${budget} for ${impressions.toLocaleString()} organic impressions`);
+    
+    // Simulate PayPal redirect
+    setTimeout(() => {
+      const campaign: Campaign = {
+        id: Date.now().toString(),
+        title: newCampaign.title,
+        platform: newCampaign.platform,
+        status: 'active',
+        budget: parseFloat(newCampaign.budget),
+        spent: 0,
+        impressions: 0,
+        clicks: 0,
+        conversions: 0,
+        sales: 0,
+        leadQualityScore: 0,
+        qualifiedLeads: 0,
+        costPerLead: 0,
+        salesConversionRate: 0,
+        startDate: newCampaign.startDate,
+        endDate: newCampaign.endDate,
+        adContent: newCampaign.adContent,
+        imageUrl: newCampaign.imageUrl || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop',
+        progress: 0,
+        websiteUrl: newCampaign.websiteUrl,
+        productName: newCampaign.productName,
+        targetAge: newCampaign.targetAge,
+        targetRegion: newCampaign.targetRegion,
+        targetGender: newCampaign.targetGender,
+        objectives: newCampaign.objectives,
+        leadQuality: 'high',
+        seoKeywords: newCampaign.seoKeywords ? newCampaign.seoKeywords.split(',').map(k => k.trim()) : [],
+        adVariations: newCampaign.adVariations,
+        geographicalPerformance: []
+      };
 
-    setCampaigns(prev => [...prev, campaign]);
-    setNewCampaign({ 
-      title: '', 
-      platform: '', 
-      budget: '', 
-      adContent: '', 
-      startDate: '', 
-      endDate: '', 
-      imageUrl: '',
-      websiteUrl: '',
-      productName: '',
-      targetAge: '',
-      targetRegion: '',
-      targetGender: '',
-      objectives: '',
-      seoKeywords: '',
-      adVariations: []
-    });
-    setSeoRecommendations([]);
-    setShowCreateForm(false);
-    setSelectedPlan(null);
-    setSelectedPaymentPackage(null);
-    toast.success(`High-converting AI campaign created with organic impressions!`);
+      setCampaigns(prev => [...prev, campaign]);
+      setNewCampaign({ 
+        title: '', 
+        platform: '', 
+        budget: '', 
+        adContent: '', 
+        startDate: '', 
+        endDate: '', 
+        imageUrl: '',
+        websiteUrl: '',
+        productName: '',
+        targetAge: '',
+        targetRegion: '',
+        targetGender: '',
+        objectives: '',
+        seoKeywords: '',
+        adVariations: []
+      });
+      setSeoRecommendations([]);
+      setShowCreateForm(false);
+      toast.success(`Payment successful! Campaign "${campaign.title}" launched with ${impressions.toLocaleString()} organic impressions!`);
+    }, 2000);
   };
 
   const toggleCampaignStatus = (id: string) => {
@@ -426,8 +361,6 @@ const CampaignManager = () => {
       default: return 'text-gray-600 bg-gray-100';
     }
   };
-
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -512,86 +445,12 @@ const CampaignManager = () => {
         </Card>
       </div>
 
-      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
-              Choose Your Impression Package
-            </DialogTitle>
-            <DialogDescription>
-              Pay only for the organic impressions you need - Real traffic, real results
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            {paymentPackages.map((pkg) => (
-              <Card key={pkg.id} className={`relative cursor-pointer transition-all hover:shadow-lg ${pkg.popular ? 'border-2 border-blue-500' : 'border'}`}>
-                {pkg.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-blue-500 text-white">Best Value</Badge>
-                  </div>
-                )}
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold">{pkg.name}</h3>
-                    <div className="mt-2">
-                      <span className="text-3xl font-bold">${pkg.price}</span>
-                      {pkg.impressions > 0 && (
-                        <div className="text-sm text-muted-foreground mt-1">
-                          <p>{pkg.impressions.toLocaleString()} organic impressions</p>
-                          <p className="text-green-600 font-medium">${pkg.costPer100}/100 impressions</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <ul className="space-y-2 mb-6">
-                    {pkg.features.map((feature, index) => (
-                      <li key={index} className="flex items-center gap-2 text-sm">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Button 
-                    onClick={() => handlePaymentSelection(pkg)} 
-                    className={`w-full ${pkg.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                    variant={pkg.popular ? 'default' : 'outline'}
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Pay with PayPal
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="mt-6 p-4 bg-green-50 rounded-lg">
-            <h4 className="font-semibold text-green-800 mb-2">Why Choose Our Organic Impressions?</h4>
-            <ul className="text-sm text-green-700 space-y-1">
-              <li>• 100% real, organic traffic from actual users</li>
-              <li>• Geo-targeted to your specified regions</li>
-              <li>• Higher engagement rates than standard ads</li>
-              <li>• No bots or fake traffic - guaranteed quality</li>
-              <li>• Instant PayPal payment processing</li>
-            </ul>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {showCreateForm && (
         <Card className="border-2 border-green-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
               AI Campaign Builder - Pay Per Organic Impression
-              {selectedPaymentPackage && (
-                <Badge className="ml-2 bg-green-100 text-green-800">
-                  {selectedPaymentPackage.impressions.toLocaleString()} impressions purchased
-                </Badge>
-              )}
             </CardTitle>
             <CardDescription>Create campaigns with real organic traffic - pay only for actual impressions delivered</CardDescription>
           </CardHeader>
@@ -634,6 +493,11 @@ const CampaignManager = () => {
                     value={newCampaign.budget}
                     onChange={(e) => setNewCampaign(prev => ({ ...prev, budget: e.target.value }))}
                   />
+                  {newCampaign.budget && (
+                    <p className="text-sm text-green-600">
+                      ≈ {(parseFloat(newCampaign.budget) * 100).toLocaleString()} organic impressions ($1.00/100 impressions)
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Campaign Objective</label>
@@ -771,49 +635,23 @@ const CampaignManager = () => {
                   </div>
                 </div>
 
-                {!selectedPaymentPackage && (
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CreditCard className="h-4 w-4 text-blue-600" />
-                      <p className="font-medium text-blue-800">Organic Impression Pricing</p>
-                    </div>
-                    <p className="text-sm text-blue-700 mb-3">
-                      Generate high-converting ad variations with real organic impressions starting at $1.50/100 impressions
-                    </p>
-                    <Button
-                      onClick={() => setShowPaymentDialog(true)}
-                      size="sm"
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      View Impression Packages
-                    </Button>
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                    <p className="font-medium text-blue-800">Generate high-converting ad variations with real organic impressions starting at $1.50/100 impressions</p>
                   </div>
-                )}
-
-                {selectedPaymentPackage && !newCampaign.adVariations.length && (
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                    <p className="text-sm text-green-700 mb-3">
-                      Ready to generate variations with your purchased {selectedPaymentPackage.impressions.toLocaleString()} organic impressions
-                    </p>
-                    <Button
-                      onClick={processAdVariations}
-                      disabled={generatingVariations}
-                      size="sm"
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      {generatingVariations ? 'Creating...' : 'Create Variations Now'}
-                    </Button>
-                  </div>
-                )}
+                  <p className="text-sm text-blue-700">
+                    Create multiple ad variations to test and optimize your campaign performance with guaranteed organic traffic
+                  </p>
+                </div>
 
                 {newCampaign.adVariations.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Organic Traffic Ad Variations</label>
+                    <label className="text-sm font-medium">Generated High-Converting Ad Variations</label>
                     <div className="grid gap-2">
                       {newCampaign.adVariations.map((variation, index) => (
                         <div key={index} className="p-3 bg-green-50 rounded-md border border-green-200">
-                          <p className="text-sm font-medium text-green-600">Organic Variation {index + 1}:</p>
+                          <p className="text-sm font-medium text-green-600">Variation {index + 1}:</p>
                           <p className="text-sm">{variation}</p>
                         </div>
                       ))}
@@ -925,13 +763,11 @@ const CampaignManager = () => {
 
             <div className="flex gap-2">
               <Button onClick={createCampaign} className="flex items-center gap-2">
-                <Target className="h-4 w-4" />
+                <CreditCard className="h-4 w-4" />
                 Launch Organic Traffic Campaign
               </Button>
               <Button onClick={() => {
                 setShowCreateForm(false);
-                setSelectedPlan(null);
-                setSelectedPaymentPackage(null);
               }} variant="outline">
                 Cancel
               </Button>
