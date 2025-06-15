@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon } from "lucide-react";
+import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon, RotateCcw, Shuffle } from "lucide-react";
 import { EmailCampaign, NewEmail } from "@/hooks/useEmailCampaign";
 import { generateAITitle, getMockupImagesBySearchQuery, getPromotionalVideoBySearchQuery, generateEmailContent } from "@/utils/aiContentGenerator";
 import { ImageMockupSelector } from "./ImageMockupSelector";
@@ -23,11 +22,15 @@ interface EmailCreationFormProps {
 export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCreateEmail }: EmailCreationFormProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [isRegeneratingImage, setIsRegeneratingImage] = useState(false);
+  const [isRegeneratingVideo, setIsRegeneratingVideo] = useState(false);
   const [showMockups, setShowMockups] = useState(false);
   const [mockupImages, setMockupImages] = useState<Array<{url: string, description: string}>>([]);
   const [mockupVideos, setMockupVideos] = useState<Array<{url: string, description: string, title: string}>>([]);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [previewCampaign, setPreviewCampaign] = useState<EmailCampaign | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   const handleSearchCampaignIdeas = () => {
     if (!searchTerm.trim()) {
@@ -35,26 +38,89 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       return;
     }
 
-    toast.info(`🔍 Searching for campaign ideas: "${searchTerm}"`);
+    toast.info(`🔍 Generating unique promotional content for: "${searchTerm}"`);
     
     // Generate AI title based on search term
     const aiTitle = generateAITitle(searchTerm);
     
-    // Get mockup images and promotional videos
+    // Get fresh mockup images and promotional videos for this specific search
     const images = getMockupImagesBySearchQuery(searchTerm);
     const videos = getPromotionalVideoBySearchQuery(searchTerm);
     
     setMockupImages(images);
     setMockupVideos(videos);
+    setCurrentImageIndex(0);
+    setCurrentVideoIndex(0);
     setShowMockups(true);
     
-    // Update email with AI-generated title
+    // Update email with AI-generated title and first promotional video
     setNewEmail({
       ...newEmail,
-      subject: aiTitle
+      subject: aiTitle,
+      creative: {
+        type: "video",
+        url: videos[0].url,
+        alt: videos[0].description
+      }
     });
 
-    toast.success(`✨ Found ${images.length} images and ${videos.length} videos for "${searchTerm}"`);
+    toast.success(`✨ Generated unique promotional content: ${images.length} images and ${videos.length} videos for "${searchTerm}"`);
+  };
+
+  const handleRegenerateImage = () => {
+    if (!searchTerm.trim()) {
+      toast.error("Please search for campaign ideas first");
+      return;
+    }
+
+    setIsRegeneratingImage(true);
+    toast.info("🎨 Regenerating promotional image...");
+
+    setTimeout(() => {
+      // Get next image from the available images
+      const nextIndex = (currentImageIndex + 1) % mockupImages.length;
+      setCurrentImageIndex(nextIndex);
+      
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "image",
+          url: mockupImages[nextIndex].url,
+          alt: mockupImages[nextIndex].description
+        }
+      });
+
+      setIsRegeneratingImage(false);
+      toast.success(`🎨 New promotional image generated for "${searchTerm}"!`);
+    }, 1500);
+  };
+
+  const handleRegenerateVideo = () => {
+    if (!searchTerm.trim()) {
+      toast.error("Please search for campaign ideas first");
+      return;
+    }
+
+    setIsRegeneratingVideo(true);
+    toast.info("🎬 Generating new promotional video...");
+
+    setTimeout(() => {
+      // Get next video from the available videos
+      const nextIndex = (currentVideoIndex + 1) % mockupVideos.length;
+      setCurrentVideoIndex(nextIndex);
+      
+      setNewEmail({
+        ...newEmail,
+        creative: {
+          type: "video",
+          url: mockupVideos[nextIndex].url,
+          alt: mockupVideos[nextIndex].description
+        }
+      });
+
+      setIsRegeneratingVideo(false);
+      toast.success(`🎬 New promotional video generated for "${searchTerm}"!`);
+    }, 2000);
   };
 
   const handleGenerateAIContent = async () => {
@@ -177,7 +243,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               Organic Traffic Focus
             </Badge>
           </CardTitle>
-          <CardDescription>Create AI-powered email campaigns optimized for organic traffic audiences</CardDescription>
+          <CardDescription>Create AI-powered email campaigns with unique promotional videos for each search term</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Search for Campaign Ideas */}
@@ -222,29 +288,41 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             </Select>
           </div>
 
-          {/* AI Creative Generation */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">AI Creative Generation:</label>
-            <Button 
-              onClick={handleGenerateAIContent}
-              disabled={isGeneratingAI || !newEmail.subject?.trim()}
-              className="w-full bg-purple-600 hover:bg-purple-700"
-            >
-              <Wand2 className="mr-2 h-4 w-4" />
-              {isGeneratingAI ? "Generating AI Content & Video..." : "Generate AI Content & Promotional Video"}
-            </Button>
-          </div>
-
-          {/* Current Creative Preview */}
-          {newEmail.creative && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Current Creative:</label>
+          {/* Current Creative Preview with Regeneration Options */}
+          {newEmail.creative && searchTerm && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">Promotional Creative for "{searchTerm}":</label>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleRegenerateImage}
+                    disabled={isRegeneratingImage}
+                    className="hover:bg-blue-50"
+                  >
+                    <RotateCcw className={`h-3 w-3 mr-1 ${isRegeneratingImage ? 'animate-spin' : ''}`} />
+                    {isRegeneratingImage ? "Generating..." : "New Image"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleRegenerateVideo}
+                    disabled={isRegeneratingVideo}
+                    className="hover:bg-purple-50"
+                  >
+                    <Shuffle className={`h-3 w-3 mr-1 ${isRegeneratingVideo ? 'animate-spin' : ''}`} />
+                    {isRegeneratingVideo ? "Generating..." : "New Video"}
+                  </Button>
+                </div>
+              </div>
+              
               <div className="relative">
                 {newEmail.creative.type === "video" ? (
                   <div className="relative">
                     <video 
                       src={newEmail.creative.url} 
-                      className="w-full h-32 object-cover rounded-lg"
+                      className="w-full h-40 object-cover rounded-lg"
                       controls
                       poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                     />
@@ -253,7 +331,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                       className="absolute top-2 right-2"
                     >
                       <Video className="h-3 w-3 mr-1" />
-                      AI Generated Video
+                      Promotional Video #{currentVideoIndex + 1}
                     </Badge>
                   </div>
                 ) : (
@@ -261,21 +339,36 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                     <img 
                       src={newEmail.creative.url} 
                       alt={newEmail.creative.alt}
-                      className="w-full h-32 object-cover rounded-lg"
+                      className="w-full h-40 object-cover rounded-lg"
                     />
                     <Badge 
                       variant="default"
                       className="absolute top-2 right-2"
                     >
                       <ImageIcon className="h-3 w-3 mr-1" />
-                      AI Generated Image
+                      Promotional Image #{currentImageIndex + 1}
                     </Badge>
                   </div>
                 )}
               </div>
-              <p className="text-sm text-gray-600">{newEmail.creative.alt}</p>
+              <p className="text-sm text-gray-600">
+                {newEmail.creative.alt} - Optimized for "{searchTerm}" campaigns
+              </p>
             </div>
           )}
+
+          {/* AI Creative Generation */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">AI Content Generation:</label>
+            <Button 
+              onClick={handleGenerateAIContent}
+              disabled={isGeneratingAI || !newEmail.subject?.trim()}
+              className="w-full bg-purple-600 hover:bg-purple-700"
+            >
+              <Wand2 className="mr-2 h-4 w-4" />
+              {isGeneratingAI ? "Generating AI Content..." : "Generate AI Content & Email Copy"}
+            </Button>
+          </div>
 
           {/* Email Content */}
           <div className="space-y-2">
@@ -297,7 +390,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               disabled={!newEmail.subject?.trim() || !newEmail.content?.trim()}
             >
               <Eye className="mr-2 h-4 w-4" />
-              View Campaign
+              Preview Campaign
             </Button>
             <Button 
               onClick={onCreateEmail}

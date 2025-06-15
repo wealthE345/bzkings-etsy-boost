@@ -1,4 +1,4 @@
-// Enhanced video content generation with real web videos that match email subjects
+// Enhanced video content generation with more diverse promotional videos for each search term
 
 export interface VideoSegment {
   startTime: number;
@@ -6,45 +6,110 @@ export interface VideoSegment {
   image: string;
   text: string;
   narration: string;
-  videoScript: string; // Added video script that matches narration
+  videoScript: string;
 }
 
 export interface SynchronizedVideoContent {
   totalDuration: number;
   segments: VideoSegment[];
   fullNarration: string;
-  fullVideoScript: string; // Added full video script
+  fullVideoScript: string;
   backgroundMusic?: string;
   videoUrl: string;
 }
 
-// Real video URLs for different subjects/topics with more specific matching
-const getSubjectSpecificVideo = (searchTerm: string): string => {
+// Expanded video library with more promotional videos for each category
+const getPromotionalVideosByCategory = (searchTerm: string): string[] => {
   const lowerTerm = searchTerm.toLowerCase();
   
   if (lowerTerm.includes('money') || lowerTerm.includes('cash') || lowerTerm.includes('earn') || lowerTerm.includes('profit') || lowerTerm.includes('income') || lowerTerm.includes('revenue')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", // Wealth building
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", // Investment growth
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", // Financial success
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", // Passive income
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" // Money making strategies
+    ];
   } else if (lowerTerm.includes('tiktok') || lowerTerm.includes('social media') || lowerTerm.includes('viral') || lowerTerm.includes('content creation')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", // Viral content
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", // TikTok growth
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // Social media marketing
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // Content strategy
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" // Influencer marketing
+    ];
   } else if (lowerTerm.includes('facebook') || lowerTerm.includes('fb ads') || lowerTerm.includes('meta') || lowerTerm.includes('social advertising')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // Facebook ads mastery
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", // Ad optimization
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Campaign scaling
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", // ROI maximization
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" // Advanced targeting
+    ];
   } else if (lowerTerm.includes('clickbank') || lowerTerm.includes('affiliate') || lowerTerm.includes('commission') || lowerTerm.includes('promotion')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // Affiliate mastery
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", // Commission optimization
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", // Product selection
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", // Traffic generation
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" // Conversion strategies
+    ];
   } else if (lowerTerm.includes('work from home') || lowerTerm.includes('remote work') || lowerTerm.includes('freelance') || lowerTerm.includes('online business')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Home business
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", // Remote work success
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", // Online income
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // Digital nomad
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" // Freelance freedom
+    ];
   } else if (lowerTerm.includes('email marketing') || lowerTerm.includes('email') || lowerTerm.includes('newsletter') || lowerTerm.includes('automation')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-  } else if (lowerTerm.includes('campaign') || lowerTerm.includes('research') || lowerTerm.includes('ideas') || lowerTerm.includes('strategy') || lowerTerm.includes('planning')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", // Email marketing
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // Newsletter growth
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Email automation
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", // List building
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" // Email conversions
+    ];
   } else if (lowerTerm.includes('crypto') || lowerTerm.includes('bitcoin') || lowerTerm.includes('blockchain') || lowerTerm.includes('trading')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", // Crypto trading
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", // Bitcoin investment
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", // Blockchain technology
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", // DeFi strategies
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" // Crypto portfolio
+    ];
   } else if (lowerTerm.includes('fitness') || lowerTerm.includes('health') || lowerTerm.includes('workout') || lowerTerm.includes('nutrition')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", // Fitness transformation
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", // Workout motivation
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", // Health coaching
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", // Nutrition guide
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" // Wellness journey
+    ];
   } else if (lowerTerm.includes('real estate') || lowerTerm.includes('property') || lowerTerm.includes('investment') || lowerTerm.includes('housing')) {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4";
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", // Real estate investment
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", // Property flipping
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", // Market analysis
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Rental income
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" // Real estate empire
+    ];
   } else {
-    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
+    // General business/marketing videos
+    return [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+    ];
   }
+};
+
+// Get specific promotional video based on search term and index
+export const getSubjectSpecificVideo = (searchTerm: string, videoIndex: number = 0): string => {
+  const videos = getPromotionalVideosByCategory(searchTerm);
+  return videos[videoIndex % videos.length];
 };
 
 // Generate images that match the specific search term
@@ -700,9 +765,9 @@ const generateAffiliateMarketingVideoContent = (searchTerm: string, videoUrl: st
 };
 
 // Generate synchronized video content based on search term (2 minutes)
-export const generateSynchronizedVideoContent = (searchTerm: string): SynchronizedVideoContent => {
+export const generateSynchronizedVideoContent = (searchTerm: string, videoIndex: number = 0): SynchronizedVideoContent => {
   const lowerTerm = searchTerm.toLowerCase();
-  const videoUrl = getSubjectSpecificVideo(searchTerm);
+  const videoUrl = getSubjectSpecificVideo(searchTerm, videoIndex);
   const images = getSearchTermSpecificImages(searchTerm);
   
   // Check for specific content types first, then fall back to dynamic generation
