@@ -20,8 +20,6 @@ interface CampaignViewerProps {
 
 export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable = false }: CampaignViewerProps) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(0.7);
   const [isEditing, setIsEditing] = useState(isEditable);
   const [editedCampaign, setEditedCampaign] = useState<EmailCampaign | null>(null);
   const [isGeneratingContent, setIsGeneratingContent] = useState(false);
@@ -69,12 +67,12 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     
     setIsNarratorSpeaking(true);
     
-    // Start text-to-speech narration
+    // Start text-to-speech narration with proper timing for 2-minute video
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(videoContent.fullNarration);
-      utterance.rate = 0.9;
+      utterance.rate = 0.85; // Slower rate to match 2-minute duration
       utterance.pitch = 1;
-      utterance.volume = isMuted ? 0 : volume * 0.8;
+      utterance.volume = 0.8; // Full volume for narrator only
       
       utterance.onend = () => {
         setIsNarratorSpeaking(false);
@@ -115,40 +113,12 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
     } else {
       video.currentTime = 0;
       setCurrentTime(0);
-      video.volume = isMuted ? 0 : 0.2;
+      video.volume = 0; // Mute video completely
       video.play().then(() => {
         setIsVideoPlaying(true);
         startNarrationAnimation();
-        toast.success("🎬 Playing 2-minute synchronized video with AI narrator!");
+        toast.success("🎬 Playing 2-minute video with AI narrator only!");
       }).catch(console.error);
-    }
-  };
-
-  const handleVolumeChange = (newVolume: number) => {
-    setVolume(newVolume);
-    const video = videoRef.current;
-    if (video) {
-      video.volume = newVolume * 0.2;
-      if (newVolume === 0) {
-        setIsMuted(true);
-      } else {
-        setIsMuted(false);
-      }
-    }
-  };
-
-  const toggleMute = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isMuted) {
-      video.volume = volume * 0.2;
-      setIsMuted(false);
-      toast.info("🔊 Video audio enabled");
-    } else {
-      video.volume = 0;
-      setIsMuted(true);
-      toast.info("🔇 Video audio muted");
     }
   };
 
@@ -243,7 +213,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
               <DialogDescription>
                 {isEditing 
                   ? "Edit your campaign with AI-powered content generation"
-                  : "Full campaign preview with 2-minute synchronized video content and AI narrator"
+                  : "Full campaign preview with 2-minute synchronized video content and AI narrator only"
                 }
               </DialogDescription>
             </div>
@@ -348,7 +318,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
           {/* Enhanced Playable Video with Dynamic Content */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">2-Minute Synchronized AI Video</h3>
+              <h3 className="text-lg font-semibold">2-Minute AI Video (Narrator Audio Only)</h3>
               <div className="flex gap-2">
                 <Badge variant="default" className="bg-red-600">
                   <Video className="h-3 w-3 mr-1" />
@@ -361,7 +331,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                   className={showCaptions ? "bg-blue-50 border-blue-300" : ""}
                 >
                   <Captions className="h-4 w-4 mr-1" />
-                  {showCaptions ? "Hide" : "Show"} Sync Text
+                  {showCaptions ? "Hide" : "Show"} Text
                 </Button>
               </div>
             </div>
@@ -375,6 +345,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                   preload="metadata"
                   onEnded={handleVideoEnd}
                   onError={handleVideoError}
+                  muted // Video is always muted
                   loop={false}
                   poster={currentSegment?.image || 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop&q=80'}
                 >
@@ -404,55 +375,6 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                   </div>
                 )}
                 
-                {/* Live Synchronized Narrator Text Overlay */}
-                {showCaptions && isVideoPlaying && currentSegment && (
-                  <div className="absolute bottom-4 left-4 right-4 bg-black/95 text-white p-4 rounded-lg border border-yellow-400">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Mic className={`h-4 w-4 ${isNarratorSpeaking ? 'text-green-400 animate-pulse' : 'text-gray-400'}`} />
-                      <span className="text-xs text-green-400 font-medium">
-                        {isNarratorSpeaking ? 'AI NARRATOR SPEAKING' : 'NARRATOR READY'}
-                      </span>
-                      <div className="flex-1 h-0.5 bg-green-400/30 rounded">
-                        <div 
-                          className="h-full bg-green-400 rounded transition-all duration-300" 
-                          style={{width: `${videoContent ? (currentTime / videoContent.totalDuration) * 100 : 0}%`}}
-                        ></div>
-                      </div>
-                    </div>
-                    
-                    {/* Current narration with synchronized word highlighting */}
-                    <div className="text-lg leading-relaxed mb-2">
-                      {narrationWords.words.map((word, index) => {
-                        const isCurrentWord = index === narrationWords.currentIndex;
-                        
-                        return (
-                          <span
-                            key={index}
-                            className={`mr-1 transition-all duration-300 ${
-                              isCurrentWord && isNarratorSpeaking
-                                ? 'bg-yellow-400 text-black px-1 rounded font-bold shadow-lg transform scale-110 animate-pulse' 
-                                : 'text-white'
-                            }`}
-                          >
-                            {word}
-                          </span>
-                        );
-                      })}
-                    </div>
-                    
-                    {/* Progress and status indicators */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-green-300 flex items-center gap-1">
-                        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        Now: "{narrationWords.words[narrationWords.currentIndex] || ''}"
-                      </span>
-                      <span className="text-gray-300">
-                        {Math.floor(currentTime)}s / {videoContent?.totalDuration || 120}s
-                      </span>
-                    </div>
-                  </div>
-                )}
-                
                 {/* Play/Pause Button */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
                   <Button
@@ -473,65 +395,69 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                 <div className="absolute top-4 left-4 right-4 flex justify-between">
                   <div className="flex gap-2">
                     <Badge variant="secondary" className="bg-black/70 text-white">
-                      <Video className="h-3 w-3 mr-1" />
-                      2-Min Playable Video
+                      <VolumeX className="h-3 w-3 mr-1" />
+                      Video Muted
                     </Badge>
                     {isNarratorSpeaking && (
                       <Badge variant="default" className="bg-green-600 animate-pulse">
                         <Mic className="h-3 w-3 mr-1" />
-                        AI Narrator Active
+                        AI Narrator Speaking
                       </Badge>
                     )}
                   </div>
-                  {showCaptions && (
-                    <Badge variant="outline" className="bg-blue-600 text-white border-white/30">
-                      <Captions className="h-3 w-3 mr-1" />
-                      Live Sync Text
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Bottom Controls */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="bg-black/70 hover:bg-black/80 text-white"
-                    onClick={toggleMute}
-                  >
-                    {isMuted ? (
-                      <VolumeX className="h-4 w-4" />
-                    ) : volume > 0.5 ? (
-                      <Volume2 className="h-4 w-4" />
-                    ) : (
-                      <Volume1 className="h-4 w-4" />
-                    )}
-                  </Button>
-                  
-                  <div className="flex-1 max-w-32">
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={volume}
-                      onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                      className="w-full h-2 bg-white/30 rounded-lg appearance-none cursor-pointer"
-                    />
-                  </div>
-                  
-                  <Badge variant="outline" className="bg-black/70 text-white border-white/30">
-                    {Math.round(volume * 100)}%
-                  </Badge>
                 </div>
               </div>
               
+              {/* Live Synchronized Text Display (No Box) */}
+              {showCaptions && isVideoPlaying && currentSegment && (
+                <div className="mt-4 text-center">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <Mic className={`h-4 w-4 ${isNarratorSpeaking ? 'text-green-400 animate-pulse' : 'text-gray-400'}`} />
+                    <span className="text-xs text-green-600 font-medium">
+                      {isNarratorSpeaking ? 'AI NARRATOR SPEAKING' : 'NARRATOR READY'}
+                    </span>
+                    <div className="w-32 h-1 bg-green-400/30 rounded">
+                      <div 
+                        className="h-full bg-green-400 rounded transition-all duration-300" 
+                        style={{width: `${videoContent ? (currentTime / videoContent.totalDuration) * 100 : 0}%`}}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  {/* Current narration with synchronized word highlighting */}
+                  <div className="text-2xl leading-relaxed mb-2 px-4">
+                    {narrationWords.words.map((word, index) => {
+                      const isCurrentWord = index === narrationWords.currentIndex;
+                      
+                      return (
+                        <span
+                          key={index}
+                          className={`mr-2 transition-all duration-300 ${
+                            isCurrentWord && isNarratorSpeaking
+                              ? 'text-yellow-500 font-bold text-3xl transform scale-110' 
+                              : 'text-gray-700'
+                          }`}
+                        >
+                          {word}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Progress indicator */}
+                  <div className="text-sm text-gray-500">
+                    Now: "{narrationWords.words[narrationWords.currentIndex] || ''}" • 
+                    {Math.floor(currentTime)}s / {videoContent?.totalDuration || 120}s
+                  </div>
+                </div>
+              )}
+              
               <p className="text-sm text-gray-600 mt-2 text-center italic">
-                Interactive 2-minute video for "{currentCampaign.subject}" with {videoContent?.segments.length || 0} synchronized segments
+                Interactive 2-minute video for "{currentCampaign.subject}" with AI narrator only (video muted)
               </p>
               
               <p className="text-xs text-gray-500 mt-1 text-center">
-                🎬 Click play to watch • 🎤 AI narrator synced with visuals • 📝 Words highlight as spoken
+                🎬 Click play to watch • 🎤 AI narrator audio only • 📝 Words highlight as spoken
               </p>
             </div>
           </div>
