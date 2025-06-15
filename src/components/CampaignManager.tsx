@@ -72,7 +72,8 @@ const CampaignManager = () => {
     budget: '',
     adContent: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
+    imageUrl: ''
   });
   const [generatingImage, setGeneratingImage] = useState(false);
 
