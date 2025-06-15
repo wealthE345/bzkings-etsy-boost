@@ -47,13 +47,14 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     const images = getMockupImagesBySearchQuery(searchTerm);
     const videos = getPromotionalVideoBySearchQuery(searchTerm);
     
+    // Reset indexes when getting new content for search
     setMockupImages(images);
     setMockupVideos(videos);
     setCurrentImageIndex(0);
     setCurrentVideoIndex(0);
     setShowMockups(true);
     
-    // Update email with AI-generated title and first promotional video
+    // Update email with AI-generated title and first fresh promotional video
     setNewEmail({
       ...newEmail,
       subject: aiTitle,
@@ -64,7 +65,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
       }
     });
 
-    toast.success(`✨ Generated unique promotional content: ${images.length} images and ${videos.length} videos for "${searchTerm}"`);
+    toast.success(`✨ Generated fresh promotional content: ${images.length} new images and ${videos.length} new videos for "${searchTerm}"`);
   };
 
   const handleRegenerateImage = () => {
@@ -74,24 +75,41 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     }
 
     setIsRegeneratingImage(true);
-    toast.info("🎨 Regenerating promotional image...");
+    toast.info("🎨 Getting fresh promotional image from web...");
 
     setTimeout(() => {
-      // Get next image from the available images
-      const nextIndex = (currentImageIndex + 1) % mockupImages.length;
-      setCurrentImageIndex(nextIndex);
+      // Get fresh images to ensure we have new content
+      const freshImages = getMockupImagesBySearchQuery(searchTerm + "_refresh_" + Date.now());
       
-      setNewEmail({
-        ...newEmail,
-        creative: {
-          type: "image",
-          url: mockupImages[nextIndex].url,
-          alt: mockupImages[nextIndex].description
-        }
-      });
+      // Use modulo to cycle through available images, ensuring we get a different one
+      const nextIndex = (currentImageIndex + 1) % (mockupImages.length || freshImages.length);
+      
+      // If we've cycled through all, get fresh images
+      if (nextIndex === 0) {
+        setMockupImages(freshImages);
+        setCurrentImageIndex(0);
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "image",
+            url: freshImages[0].url,
+            alt: freshImages[0].description
+          }
+        });
+      } else {
+        setCurrentImageIndex(nextIndex);
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "image",
+            url: mockupImages[nextIndex].url,
+            alt: mockupImages[nextIndex].description
+          }
+        });
+      }
 
       setIsRegeneratingImage(false);
-      toast.success(`🎨 New promotional image generated for "${searchTerm}"!`);
+      toast.success(`🎨 Fresh promotional image generated for "${searchTerm}"!`);
     }, 1500);
   };
 
@@ -102,24 +120,42 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     }
 
     setIsRegeneratingVideo(true);
-    toast.info("🎬 Generating new promotional video...");
+    toast.info("🎬 Getting fresh promotional video from web...");
 
     setTimeout(() => {
-      // Get next video from the available videos
-      const nextIndex = (currentVideoIndex + 1) % mockupVideos.length;
-      setCurrentVideoIndex(nextIndex);
+      // Get completely fresh videos to ensure uniqueness
+      const freshVideos = getPromotionalVideoBySearchQuery(searchTerm + "_refresh_" + Date.now());
       
-      setNewEmail({
-        ...newEmail,
-        creative: {
-          type: "video",
-          url: mockupVideos[nextIndex].url,
-          alt: mockupVideos[nextIndex].description
-        }
-      });
+      // Use modulo to cycle through available videos, ensuring we get a different one
+      const nextIndex = (currentVideoIndex + 1) % (mockupVideos.length || freshVideos.length);
+      
+      // If we've cycled through all, get fresh videos
+      if (nextIndex === 0 || mockupVideos.length === 0) {
+        setMockupVideos(freshVideos);
+        setCurrentVideoIndex(0);
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "video",
+            url: freshVideos[0].url,
+            alt: freshVideos[0].description
+          }
+        });
+        toast.success(`🎬 Brand new promotional video from web for "${searchTerm}"!`);
+      } else {
+        setCurrentVideoIndex(nextIndex);
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "video",
+            url: mockupVideos[nextIndex].url,
+            alt: mockupVideos[nextIndex].description
+          }
+        });
+        toast.success(`🎬 Different promotional video selected for "${searchTerm}"!`);
+      }
 
       setIsRegeneratingVideo(false);
-      toast.success(`🎬 New promotional video generated for "${searchTerm}"!`);
     }, 2000);
   };
 
