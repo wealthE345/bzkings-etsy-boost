@@ -174,7 +174,7 @@ export const CampaignPreview = ({ campaign, onEditClick }: CampaignPreviewProps)
         {/* Recipients */}
         {campaign.recipients && (
           <div className="text-xs text-gray-600">
-            Recipients: {campaign.recipients === "organic-traffic" ? "Organic Traffic Subscribers" : campaign.recipients}
+            Recipients: {typeof campaign.recipients === "string" && campaign.recipients === "organic-traffic" ? "Organic Traffic Subscribers" : campaign.recipients}
           </div>
         )}
       </CardContent>
