@@ -5,11 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon, RotateCcw, Shuffle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Wand2, Target, Sparkles, Eye, Send, Video, ImageIcon, RotateCcw, Shuffle, Film } from "lucide-react";
 import { EmailCampaign, NewEmail } from "@/hooks/useEmailCampaign";
 import { generateAITitle, getMockupImagesBySearchQuery, getPromotionalVideoBySearchQuery, generateEmailContent } from "@/utils/aiContentGenerator";
+import { generateMovieClipsForSearch, getNewMovieClip, MovieClip } from "@/utils/movieClipsGenerator";
 import { ImageMockupSelector } from "./ImageMockupSelector";
 import { CampaignViewer } from "./CampaignViewer";
+import { MovieClipsCreator } from "./MovieClipsCreator";
 import { toast } from "sonner";
 
 interface EmailCreationFormProps {
@@ -24,13 +27,16 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [isRegeneratingImage, setIsRegeneratingImage] = useState(false);
   const [isRegeneratingVideo, setIsRegeneratingVideo] = useState(false);
+  const [isGeneratingMovieClip, setIsGeneratingMovieClip] = useState(false);
   const [showMockups, setShowMockups] = useState(false);
   const [mockupImages, setMockupImages] = useState<Array<{url: string, description: string}>>([]);
   const [mockupVideos, setMockupVideos] = useState<Array<{url: string, description: string, title: string}>>([]);
+  const [movieClips, setMovieClips] = useState<MovieClip[]>([]);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [previewCampaign, setPreviewCampaign] = useState<EmailCampaign | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentMovieClipIndex, setCurrentMovieClipIndex] = useState(0);
 
   const handleSearchCampaignIdeas = () => {
     if (!searchTerm.trim()) {
@@ -43,29 +49,32 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     // Generate AI title based on search term
     const aiTitle = generateAITitle(searchTerm);
     
-    // Get fresh mockup images and promotional videos for this specific search
+    // Get fresh mockup images, promotional videos, and movie clips for this specific search
     const images = getMockupImagesBySearchQuery(searchTerm);
     const videos = getPromotionalVideoBySearchQuery(searchTerm);
+    const clips = generateMovieClipsForSearch(searchTerm);
     
     // Reset indexes when getting new content for search
     setMockupImages(images);
     setMockupVideos(videos);
+    setMovieClips(clips);
     setCurrentImageIndex(0);
     setCurrentVideoIndex(0);
+    setCurrentMovieClipIndex(0);
     setShowMockups(true);
     
-    // Update email with AI-generated title and first fresh promotional video
+    // Update email with AI-generated title and first movie clip
     setNewEmail({
       ...newEmail,
       subject: aiTitle,
       creative: {
         type: "video",
-        url: videos[0].url,
-        alt: videos[0].description
+        url: clips[0].url,
+        alt: clips[0].description
       }
     });
 
-    toast.success(`✨ Generated fresh promotional content: ${images.length} new images and ${videos.length} new videos for "${searchTerm}"`);
+    toast.success(`✨ Generated fresh content: ${images.length} images, ${videos.length} videos, ${clips.length} movie clips for "${searchTerm}"`);
   };
 
   const handleRegenerateImage = () => {
@@ -157,6 +166,64 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
       setIsRegeneratingVideo(false);
     }, 2000);
+  };
+
+  const handleGenerateMovieClip = () => {
+    if (!searchTerm.trim()) {
+      toast.error("Please search for campaign ideas first");
+      return;
+    }
+
+    setIsGeneratingMovieClip(true);
+    toast.info("🎬 Generating cinematic movie clip from web...");
+
+    setTimeout(() => {
+      // Get fresh movie clips to ensure uniqueness
+      const freshClips = generateMovieClipsForSearch(searchTerm + "_refresh_" + Date.now());
+      
+      // Use modulo to cycle through available clips, ensuring we get a different one
+      const nextIndex = (currentMovieClipIndex + 1) % (movieClips.length || freshClips.length);
+      
+      // If we've cycled through all, get fresh clips
+      if (nextIndex === 0 || movieClips.length === 0) {
+        setMovieClips(freshClips);
+        setCurrentMovieClipIndex(0);
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "video",
+            url: freshClips[0].url,
+            alt: freshClips[0].description
+          }
+        });
+        toast.success(`🎬 Brand new ${freshClips[0].style} movie clip generated for "${searchTerm}"!`);
+      } else {
+        setCurrentMovieClipIndex(nextIndex);
+        setNewEmail({
+          ...newEmail,
+          creative: {
+            type: "video",
+            url: movieClips[nextIndex].url,
+            alt: movieClips[nextIndex].description
+          }
+        });
+        toast.success(`🎬 Different ${movieClips[nextIndex].style} movie clip selected for "${searchTerm}"!`);
+      }
+
+      setIsGeneratingMovieClip(false);
+    }, 2000);
+  };
+
+  const handleSelectMovieClip = (clip: MovieClip) => {
+    setNewEmail({
+      ...newEmail,
+      creative: {
+        type: "video",
+        url: clip.url,
+        alt: clip.description
+      }
+    });
+    toast.success(`🎬 Selected movie clip: ${clip.title} (${clip.style})`);
   };
 
   const handleGenerateAIContent = async () => {
@@ -279,7 +346,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               Organic Traffic Focus
             </Badge>
           </CardTitle>
-          <CardDescription>Create AI-powered email campaigns with unique promotional videos for each search term</CardDescription>
+          <CardDescription>Create AI-powered email campaigns with movie-style promotional videos and unique content for each search term</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Search for Campaign Ideas */}
@@ -287,7 +354,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             <label className="text-sm font-medium">Search for Campaign Ideas:</label>
             <div className="flex gap-2">
               <Input
-                placeholder="e.g., make money with clickbank, facebook ads, make money with tiktok..."
+                placeholder="e.g., make money with clickbank, facebook ads, crypto success, fitness transformation..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearchCampaignIdeas()}
@@ -324,72 +391,99 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             </Select>
           </div>
 
-          {/* Current Creative Preview with Regeneration Options */}
+          {/* Creative Content Tabs */}
           {newEmail.creative && searchTerm && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Promotional Creative for "{searchTerm}":</label>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleRegenerateImage}
-                    disabled={isRegeneratingImage}
-                    className="hover:bg-blue-50"
-                  >
-                    <RotateCcw className={`h-3 w-3 mr-1 ${isRegeneratingImage ? 'animate-spin' : ''}`} />
-                    {isRegeneratingImage ? "Generating..." : "New Image"}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleRegenerateVideo}
-                    disabled={isRegeneratingVideo}
-                    className="hover:bg-purple-50"
-                  >
-                    <Shuffle className={`h-3 w-3 mr-1 ${isRegeneratingVideo ? 'animate-spin' : ''}`} />
-                    {isRegeneratingVideo ? "Generating..." : "New Video"}
-                  </Button>
-                </div>
+                <label className="text-sm font-medium">Creative Content for "{searchTerm}":</label>
               </div>
               
-              <div className="relative">
-                {newEmail.creative.type === "video" ? (
+              <Tabs defaultValue="current" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="current">Current Creative</TabsTrigger>
+                  <TabsTrigger value="generate">Generate New</TabsTrigger>
+                  <TabsTrigger value="movie-clips">Movie Clips</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="current" className="space-y-3">
                   <div className="relative">
-                    <video 
-                      src={newEmail.creative.url} 
-                      className="w-full h-40 object-cover rounded-lg"
-                      controls
-                      poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
-                    />
-                    <Badge 
-                      variant="secondary"
-                      className="absolute top-2 right-2"
-                    >
-                      <Video className="h-3 w-3 mr-1" />
-                      Promotional Video #{currentVideoIndex + 1}
-                    </Badge>
+                    {newEmail.creative.type === "video" ? (
+                      <div className="relative">
+                        <video 
+                          src={newEmail.creative.url} 
+                          className="w-full h-40 object-cover rounded-lg"
+                          controls
+                          poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
+                        />
+                        <Badge 
+                          variant="secondary"
+                          className="absolute top-2 right-2"
+                        >
+                          <Video className="h-3 w-3 mr-1" />
+                          Current Video
+                        </Badge>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <img 
+                          src={newEmail.creative.url} 
+                          alt={newEmail.creative.alt}
+                          className="w-full h-40 object-cover rounded-lg"
+                        />
+                        <Badge 
+                          variant="default"
+                          className="absolute top-2 right-2"
+                        >
+                          <ImageIcon className="h-3 w-3 mr-1" />
+                          Current Image
+                        </Badge>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="relative">
-                    <img 
-                      src={newEmail.creative.url} 
-                      alt={newEmail.creative.alt}
-                      className="w-full h-40 object-cover rounded-lg"
-                    />
-                    <Badge 
-                      variant="default"
-                      className="absolute top-2 right-2"
+                  <p className="text-sm text-gray-600">
+                    {newEmail.creative.alt} - Optimized for "{searchTerm}" campaigns
+                  </p>
+                </TabsContent>
+                
+                <TabsContent value="generate" className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleRegenerateImage}
+                      disabled={isRegeneratingImage}
+                      className="hover:bg-blue-50"
                     >
-                      <ImageIcon className="h-3 w-3 mr-1" />
-                      Promotional Image #{currentImageIndex + 1}
-                    </Badge>
+                      <RotateCcw className={`h-3 w-3 mr-1 ${isRegeneratingImage ? 'animate-spin' : ''}`} />
+                      {isRegeneratingImage ? "Generating..." : "New Image"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleRegenerateVideo}
+                      disabled={isRegeneratingVideo}
+                      className="hover:bg-purple-50"
+                    >
+                      <Shuffle className={`h-3 w-3 mr-1 ${isRegeneratingVideo ? 'animate-spin' : ''}`} />
+                      {isRegeneratingVideo ? "Generating..." : "New Video"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleGenerateMovieClip}
+                      disabled={isGeneratingMovieClip}
+                      className="hover:bg-red-50"
+                    >
+                      <Film className={`h-3 w-3 mr-1 ${isGeneratingMovieClip ? 'animate-spin' : ''}`} />
+                      {isGeneratingMovieClip ? "Generating..." : "Movie Clip"}
+                    </Button>
                   </div>
-                )}
-              </div>
-              <p className="text-sm text-gray-600">
-                {newEmail.creative.alt} - Optimized for "{searchTerm}" campaigns
-              </p>
+                </TabsContent>
+                
+                <TabsContent value="movie-clips">
+                  <MovieClipsCreator onSelectClip={handleSelectMovieClip} />
+                </TabsContent>
+              </Tabs>
             </div>
           )}
 

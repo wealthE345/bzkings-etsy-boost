@@ -215,7 +215,7 @@ export const generateSynchronizedVideoContent = (searchTerm: string): Synchroniz
           script = "VISUAL: Content creation process with engagement metrics";
         } else if (i === 3) {
           narration = "Our targeting system helps you reach the exact audience most likely to buy.";
-          image = `https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dGFyZ2V0JTIwYXVkaWVuY2V8ZW58MHx8MHx8fDA%3D&t=${timestamp}`;
+          image = `https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFyZ2V0JTIwYXVkaWVuY2V8ZW58MHx8MHx8fDA%3D&t=${timestamp}`;
           script = "VISUAL: Audience targeting dashboard with demographic filters";
         } else if (i === 4) {
           narration = "You'll get access to our proprietary ad templates that have generated millions in revenue.";
@@ -349,6 +349,14 @@ export const getCurrentVideoSegment = (videoContent: SynchronizedVideoContent, c
 };
 
 export const getSynchronizedNarrationWords = (videoContent: SynchronizedVideoContent, currentTime: number) => {
+  // Add null safety check
+  if (!videoContent || !videoContent.narrationWords || !Array.isArray(videoContent.narrationWords)) {
+    return {
+      words: [],
+      currentIndex: 0
+    };
+  }
+  
   const words = videoContent.narrationWords;
   const currentIndex = words.findIndex(word => 
     currentTime >= word.startTime && currentTime < word.endTime
