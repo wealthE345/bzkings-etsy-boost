@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown, Trash2, Crown, Zap, Rocket, CreditCard, PayPal } from "lucide-react";
+import { TrendingUp, Plus, Play, Pause, BarChart3, Image, Target, Calendar, DollarSign, Globe, Users, MapPin, Wand2, Search, Lightbulb, Upload, ImageIcon, UserCheck, Star, Award, TrendingDown, Trash2, Crown, Zap, Rocket, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
 
@@ -223,6 +223,71 @@ const CampaignManager = () => {
 
   const handleCreateCampaignClick = () => {
     setShowCreateForm(true);
+  };
+
+  const generateAIContent = async () => {
+    if (!newCampaign.websiteUrl || !newCampaign.productName) {
+      toast.error('Please enter website URL and product name first');
+      return;
+    }
+
+    setGeneratingContent(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const generatedContent = `Discover premium ${newCampaign.productName} at ${newCampaign.websiteUrl} - Transform your experience with our high-quality solutions designed for ${newCampaign.targetAge || 'professionals'}`;
+      setNewCampaign(prev => ({ ...prev, adContent: generatedContent }));
+      toast.success('AI-generated organic traffic content ready!');
+    } catch (error) {
+      toast.error('Failed to generate content');
+    } finally {
+      setGeneratingContent(false);
+    }
+  };
+
+  const generateAIImage = async () => {
+    if (!newCampaign.productName) {
+      toast.error('Please enter product name first');
+      return;
+    }
+
+    setGeneratingImage(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const imageUrl = `https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop&auto=format`;
+      setNewCampaign(prev => ({ ...prev, imageUrl }));
+      toast.success('AI-generated organic traffic image created!');
+    } catch (error) {
+      toast.error('Failed to generate image');
+    } finally {
+      setGeneratingImage(false);
+    }
+  };
+
+  const analyzeSEO = async () => {
+    if (!newCampaign.websiteUrl || !newCampaign.productName) {
+      toast.error('Please enter website URL and product name first');
+      return;
+    }
+
+    setAnalyzingSEO(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const recommendations = [
+        `Target high-intent keywords like "buy ${newCampaign.productName}" for quality leads`,
+        `Optimize landing page for "${newCampaign.productName} reviews" to build trust`,
+        `Use location-based keywords for ${newCampaign.targetRegion || 'your target region'}`,
+        `Create urgency with "limited time ${newCampaign.productName} offer"`,
+        `Include social proof and testimonials to increase conversion rates`
+      ];
+      setSeoRecommendations(recommendations);
+      const keywords = `${newCampaign.productName}, buy ${newCampaign.productName}, ${newCampaign.productName} reviews, best ${newCampaign.productName}`;
+      setNewCampaign(prev => ({ ...prev, seoKeywords: keywords }));
+      toast.success('SEO analysis complete with lead generation recommendations!');
+    } catch (error) {
+      toast.error('Failed to analyze SEO');
+    } finally {
+      setAnalyzingSEO(false);
+    }
   };
 
   const handlePaymentSelection = (pkg: any) => {
@@ -490,7 +555,7 @@ const CampaignManager = () => {
                       className={`w-full ${pkg.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
                       variant={pkg.popular ? 'default' : 'outline'}
                     >
-                      <PayPal className="h-4 w-4 mr-2" />
+                      <CreditCard className="h-4 w-4 mr-2" />
                       Pay with PayPal
                     </Button>
                   </CardContent>
@@ -722,7 +787,7 @@ const CampaignManager = () => {
                       size="sm"
                       className="bg-blue-600 hover:bg-blue-700"
                     >
-                      <PayPal className="h-4 w-4 mr-2" />
+                      <CreditCard className="h-4 w-4 mr-2" />
                       View Impression Packages
                     </Button>
                   </div>
