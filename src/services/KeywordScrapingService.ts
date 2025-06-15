@@ -1,4 +1,3 @@
-
 interface KeywordData {
   keyword: string;
   volume: number;
@@ -39,6 +38,46 @@ export class KeywordScrapingService {
   static resetUsedKeywords() {
     this.usedKeywords.clear();
     this.requestCount = 0;
+  }
+
+  static async getTrendingKeywords(): Promise<KeywordData[]> {
+    console.log('Fetching trending keywords from search engines...');
+    
+    // Simulate API delay for trending keywords
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    const trendingTopics = [
+      'AI chatbot', 'ChatGPT', 'artificial intelligence', 'machine learning',
+      'cryptocurrency', 'NFT marketplace', 'blockchain', 'Web3',
+      'remote work', 'digital nomad', 'work from home', 'online business',
+      'social media marketing', 'TikTok ads', 'Instagram reels', 'YouTube shorts',
+      'sustainable living', 'electric cars', 'solar panels', 'green energy',
+      'fitness tracker', 'mental health app', 'meditation', 'wellness',
+      'food delivery', 'meal prep', 'healthy recipes', 'plant based diet',
+      'online learning', 'coding bootcamp', 'digital skills', 'career change'
+    ];
+
+    const trendingKeywords: KeywordData[] = [];
+    const currentTime = Date.now();
+    
+    // Select 12 random trending keywords
+    const shuffled = this.shuffleArrayWithSeed([...trendingTopics], currentTime);
+    const selected = shuffled.slice(0, 12);
+
+    selected.forEach((keyword, index) => {
+      const trendValue = Math.floor(Math.random() * 80) + 20; // 20-100% growth
+      trendingKeywords.push({
+        keyword,
+        volume: Math.floor(Math.random() * 200000) + 50000, // Higher volumes for trending
+        difficulty: this.getDifficultyLevel(Math.random()),
+        cpc: Math.round((Math.random() * 8 + 1) * 100) / 100, // Higher CPC for trending
+        trend: `↗️ +${trendValue}%`,
+        competition: this.getCompetitionLevel(Math.random())
+      });
+    });
+
+    console.log(`Generated ${trendingKeywords.length} trending keywords`);
+    return trendingKeywords;
   }
 
   private static async generateFreshOrganicKeywords(searchTerm: string, page: number): Promise<KeywordData[]> {

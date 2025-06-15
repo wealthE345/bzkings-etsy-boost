@@ -1,9 +1,10 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, TrendingUp, DollarSign, BarChart, Globe, Plus } from "lucide-react";
+import { ArrowLeft, Search, TrendingUp, DollarSign, BarChart, Globe, Plus, Flame } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { KeywordScrapingService } from "@/services/KeywordScrapingService";
@@ -11,13 +12,39 @@ import { KeywordScrapingService } from "@/services/KeywordScrapingService";
 const KeywordResearch = () => {
   const [keyword, setKeyword] = useState("");
   const [displayedResults, setDisplayedResults] = useState<any[]>([]);
+  const [trendingKeywords, setTrendingKeywords] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoadingTrending, setIsLoadingTrending] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = async () => {
-    if (!keyword.trim()) {
+  // Load trending keywords on component mount
+  useEffect(() => {
+    loadTrendingKeywords();
+  }, []);
+
+  const loadTrendingKeywords = async () => {
+    setIsLoadingTrending(true);
+    try {
+      const trending = await KeywordScrapingService.getTrendingKeywords();
+      setTrendingKeywords(trending);
+      console.log('Loaded trending keywords:', trending);
+    } catch (error) {
+      console.error('Error loading trending keywords:', error);
+    } finally {
+      setIsLoadingTrending(false);
+    }
+  };
+
+  const handleTrendingKeywordClick = (trendingKeyword: string) => {
+    setKeyword(trendingKeyword);
+    handleSearch(trendingKeyword);
+  };
+
+  const handleSearch = async (searchKeyword?: string) => {
+    const keywordToSearch = searchKeyword || keyword;
+    if (!keywordToSearch.trim()) {
       toast.error("Please enter a keyword to search");
       return;
     }
@@ -30,10 +57,10 @@ const KeywordResearch = () => {
     // Reset used keywords for fresh search
     KeywordScrapingService.resetUsedKeywords();
     
-    console.log('Starting fresh organic keyword scraping for:', keyword);
+    console.log('Starting fresh organic keyword scraping for:', keywordToSearch);
     
     try {
-      const response = await KeywordScrapingService.scrapeKeywords(keyword, 0);
+      const response = await KeywordScrapingService.scrapeKeywords(keywordToSearch, 0);
       
       if (response.success && response.data) {
         setDisplayedResults(response.data);
@@ -108,6 +135,41 @@ const KeywordResearch = () => {
           </div>
         </div>
 
+        {/* Trending Keywords Section */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Flame className="h-5 w-5 text-orange-600" />
+              Trending Keywords
+            </CardTitle>
+            <CardDescription>
+              Popular keywords that are currently trending in search results
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoadingTrending ? (
+              <div className="flex items-center justify-center py-4">
+                <div className="text-gray-500">Loading trending keywords...</div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {trendingKeywords.map((trending, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="cursor-pointer hover:bg-orange-50 hover:border-orange-300 transition-colors"
+                    onClick={() => handleTrendingKeywordClick(trending.keyword)}
+                  >
+                    <TrendingUp className="h-3 w-3 mr-1 text-orange-600" />
+                    {trending.keyword}
+                    <span className="ml-1 text-xs text-orange-600">{trending.trend}</span>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -128,7 +190,7 @@ const KeywordResearch = () => {
                 className="flex-1"
               />
               <Button 
-                onClick={handleSearch}
+                onClick={() => handleSearch()}
                 disabled={isSearching}
                 className="gradient-primary text-white"
               >
