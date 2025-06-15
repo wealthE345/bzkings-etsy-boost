@@ -143,6 +143,7 @@ const CampaignManager = () => {
   const [analyzingSEO, setAnalyzingSEO] = useState(false);
   const [generatingVariations, setGeneratingVariations] = useState(false);
   const [seoRecommendations, setSeoRecommendations] = useState<string[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const performanceData = [
     { date: 'Day 1', impressions: 1200, clicks: 45, conversions: 3, sales: 2, leadQuality: 75 },
@@ -214,6 +215,35 @@ const CampaignManager = () => {
     }
   };
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file');
+      return;
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      // Create a URL for the uploaded image
+      const imageUrl = URL.createObjectURL(file);
+      setNewCampaign(prev => ({ ...prev, imageUrl }));
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const analyzeSEO = async () => {
     if (!newCampaign.websiteUrl || !newCampaign.productName) {
       toast.error('Please enter website URL and product name first');
@@ -242,14 +272,14 @@ const CampaignManager = () => {
   };
 
   const generateAdVariations = async () => {
-    if (!newCampaign.adContent) {
-      toast.error('Please generate or enter ad content first');
+    if (!newCampaign.websiteUrl || !newCampaign.productName) {
+      toast.error('Please enter website URL and product name first');
       return;
     }
 
     setGeneratingVariations(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       const variations = [
         `Premium Focus: "Exclusive ${newCampaign.productName} for serious buyers at ${newCampaign.websiteUrl}"`,
         `Value Proposition: "Transform your results with ${newCampaign.productName} - Visit ${newCampaign.websiteUrl}"`,
@@ -622,23 +652,21 @@ const CampaignManager = () => {
                       <Wand2 className="h-4 w-4" />
                       {generatingContent ? 'Generating...' : 'Generate Organic Content'}
                     </Button>
-                    <Button
-                      onClick={generateAdVariations}
-                      disabled={generatingVariations || !newCampaign.adContent}
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      <TrendingUp className="h-4 w-4" />
-                      Create High-Converting Variations
-                    </Button>
                   </div>
                 </div>
 
                 <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="h-4 w-4 text-blue-600" />
-                    <p className="font-medium text-blue-800">Generate high-converting ad variations with real organic impressions starting at $1.50/100 impressions</p>
+                    <Button
+                      onClick={generateAdVariations}
+                      disabled={generatingVariations}
+                      variant="ghost"
+                      size="sm"
+                      className="p-0 h-auto font-medium text-blue-800 hover:text-blue-900 hover:bg-transparent"
+                    >
+                      {generatingVariations ? 'Generating variations...' : 'Generate high-converting ad variations with real organic impressions starting at $1.50/100 impressions'}
+                    </Button>
                   </div>
                   <p className="text-sm text-blue-700">
                     Create multiple ad variations to test and optimize your campaign performance with guaranteed organic traffic
@@ -677,9 +705,21 @@ const CampaignManager = () => {
                     <Wand2 className="h-4 w-4" />
                     {generatingImage ? 'Generating...' : 'Generate Organic-Optimized Image'}
                   </Button>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Upload className="h-4 w-4" />
-                    Or upload your own creative
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="image-upload"
+                    />
+                    <label
+                      htmlFor="image-upload"
+                      className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 cursor-pointer hover:underline"
+                    >
+                      <Upload className="h-4 w-4" />
+                      {uploadingImage ? 'Uploading...' : 'Or upload your own creative'}
+                    </label>
                   </div>
                 </div>
                 {newCampaign.imageUrl && (
