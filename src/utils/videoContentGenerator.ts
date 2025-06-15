@@ -32,6 +32,8 @@ const getSubjectSpecificVideo = (subject: string): string => {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4";
   } else if (lowerSubject.includes('email marketing') || lowerSubject.includes('email')) {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+  } else if (lowerSubject.includes('campaign ideas') || lowerSubject.includes('search') || lowerSubject.includes('research')) {
+    return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4";
   } else {
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
   }
@@ -41,7 +43,18 @@ const getSubjectSpecificVideo = (subject: string): string => {
 const getSubjectSpecificImages = (subject: string): string[] => {
   const lowerSubject = subject.toLowerCase();
   
-  if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn')) {
+  if (lowerSubject.includes('campaign ideas') || lowerSubject.includes('search') || lowerSubject.includes('research')) {
+    return [
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80", // Research and analysis
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80", // Creative brainstorming
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop&q=80", // Market research
+      "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=800&h=600&fit=crop&q=80", // Strategy planning
+      "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop&q=80", // Data analysis
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop&q=80", // Team collaboration
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&q=80", // Campaign planning
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&q=80"  // Creative execution
+    ];
+  } else if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn')) {
     return [
       "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=600&fit=crop&q=80", // Money/cash
       "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=600&fit=crop&q=80", // Bitcoin/crypto
@@ -98,6 +111,76 @@ const getSubjectSpecificImages = (subject: string): string[] => {
       "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80"
     ];
   }
+};
+
+// New function for Campaign Ideas educational content
+const generateCampaignIdeasVideoContent = (subject: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Search for Campaign Ideas",
+      narration: "Welcome to the complete guide for searching and finding winning campaign ideas! Today we'll teach you proven research methods that successful marketers use to discover profitable campaign concepts that convert audiences into customers."
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Market Research Fundamentals",
+      narration: "Effective campaign research starts with understanding your target market deeply. Use Google Trends, social media insights, and competitor analysis to identify what resonates with your audience. Look for trending topics, pain points, and emerging opportunities in your niche."
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Competitor Campaign Analysis",
+      narration: "Analyze your competitors' most successful campaigns to understand what works in your industry. Study their messaging, visuals, timing, and audience targeting. Tools like Facebook Ad Library and SEMrush reveal valuable insights about competitor strategies."
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Creative Brainstorming Methods",
+      narration: "Use structured brainstorming techniques to generate innovative campaign ideas. Try mind mapping, SCAMPER method, and reverse brainstorming. Consider seasonal trends, current events, and cultural moments that align with your brand message."
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Data-Driven Idea Validation",
+      narration: "Validate your campaign ideas using data before investing resources. Test concepts through surveys, focus groups, and small-scale A/B tests. Use Google Keyword Planner and social listening tools to gauge interest levels."
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Cross-Platform Research",
+      narration: "Research campaign ideas across multiple platforms including Facebook, Instagram, TikTok, YouTube, and Pinterest. Each platform has unique content formats and audience behaviors that can inspire different campaign approaches."
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Campaign Planning Framework",
+      narration: "Organize your campaign ideas using a systematic framework. Define objectives, target audience, key messages, channels, budget, and success metrics. Create a campaign brief template for consistent planning and execution."
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Execute Your Best Ideas",
+      narration: "Transform your research into action! Start with your highest-potential campaign ideas and create detailed execution plans. Remember, the best campaign idea is worthless without proper implementation and continuous optimization."
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "educational-research",
+    videoUrl
+  };
 };
 
 // Enhanced content generation for money-focused videos
@@ -246,7 +329,9 @@ export const generateSynchronizedVideoContent = (subject: string): SynchronizedV
   const videoUrl = getSubjectSpecificVideo(subject);
   const images = getSubjectSpecificImages(subject);
   
-  if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn') || lowerSubject.includes('profit')) {
+  if (lowerSubject.includes('campaign ideas') || lowerSubject.includes('search') || lowerSubject.includes('research')) {
+    return generateCampaignIdeasVideoContent(subject, videoUrl, images);
+  } else if (lowerSubject.includes('money') || lowerSubject.includes('cash') || lowerSubject.includes('earn') || lowerSubject.includes('profit')) {
     return generateMoneyVideoContent(subject, videoUrl, images);
   } else if (lowerSubject.includes('facebook') || lowerSubject.includes('fb ads')) {
     return generateFacebookVideoContent(subject, videoUrl, images);
