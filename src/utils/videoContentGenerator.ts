@@ -214,6 +214,426 @@ const generateDynamicVideoContent = (searchTerm: string, videoUrl: string, image
   };
 };
 
+// Money-specific video content
+const generateMoneyVideoContent = (searchTerm: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Financial Success Secrets",
+      narration: `Welcome to the ultimate money-making masterclass! Today we'll reveal the exact strategies that millionaires use to build wealth and generate multiple income streams that work around the clock.`
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Wealth Building Fundamentals",
+      narration: `Discover the fundamental principles of wealth building that separate the rich from everyone else. Learn how to create passive income streams and build assets that appreciate over time.`
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Investment Strategies",
+      narration: `Master proven investment strategies that compound your wealth exponentially. From stocks and real estate to digital assets, we'll show you how to diversify and maximize returns.`
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Income Diversification",
+      narration: `Learn how to create multiple income streams that protect you from economic uncertainty. Diversification is the key to financial security and accelerated wealth building.`
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Financial Analytics",
+      narration: `Use data and analytics to optimize your financial decisions. Track your progress, identify opportunities, and make informed choices that accelerate your path to financial freedom.`
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Market Opportunities",
+      narration: `Identify and capitalize on emerging market opportunities before the masses catch on. Early adopters in trending markets often see the highest returns on investment.`
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Wealth Acceleration",
+      narration: `Implement advanced wealth acceleration techniques that fast-track your journey to financial independence. These strategies can compress decades of wealth building into years.`
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Financial Freedom",
+      narration: `Your financial freedom journey starts now! Take action on these proven money-making strategies and join thousands who have already achieved financial independence.`
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "money-focused",
+    videoUrl
+  };
+};
+
+// Facebook-specific video content
+const generateFacebookVideoContent = (searchTerm: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Facebook Marketing Mastery",
+      narration: `Welcome to Facebook Marketing Mastery! Today we'll reveal the exact strategies that top marketers use to dominate Facebook advertising and generate massive ROI from their campaigns.`
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Advanced Targeting",
+      narration: `Master Facebook's powerful targeting capabilities to reach your ideal customers with precision. Learn to use custom audiences, lookalike audiences, and interest targeting effectively.`
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Ad Creative Optimization",
+      narration: `Create high-converting Facebook ad creatives that stop the scroll and drive action. We'll show you the psychology behind effective ad design and copywriting.`
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Campaign Scaling",
+      narration: `Learn how to scale your successful Facebook campaigns while maintaining profitability. Discover the secrets of budget optimization and campaign structure.`
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Analytics & Optimization",
+      narration: `Use Facebook Analytics to optimize your campaigns for maximum performance. Track the right metrics and make data-driven decisions that improve your ROI.`
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Retargeting Strategies",
+      narration: `Implement powerful retargeting strategies that convert visitors into customers. Learn to create custom audiences based on website behavior and engagement.`
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Advanced Techniques",
+      narration: `Master advanced Facebook advertising techniques including dynamic ads, catalog marketing, and cross-platform campaign optimization for maximum reach.`
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Facebook Success",
+      narration: `Start dominating Facebook advertising today! Apply these proven strategies and join successful marketers who are generating consistent profits from Facebook ads.`
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "facebook-focused",
+    videoUrl
+  };
+};
+
+// TikTok-specific video content
+const generateTikTokVideoContent = (searchTerm: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "TikTok Money Machine",
+      narration: `Welcome to the TikTok Money Machine! Discover how ordinary creators are earning thousands monthly through TikTok using viral content strategies and monetization techniques.`
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Viral Content Creation",
+      narration: `Learn the science behind viral TikTok content. Master trending formats, hashtag strategies, and engagement techniques that guarantee millions of views.`
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "TikTok Algorithm Mastery",
+      narration: `Understand and exploit the TikTok algorithm to maximize your reach. Learn optimal posting times, content structure, and engagement strategies that boost visibility.`
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Monetization Strategies",
+      narration: `Discover multiple ways to monetize your TikTok presence including Creator Fund, brand partnerships, affiliate marketing, and product promotion strategies.`
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Audience Growth",
+      narration: `Build a massive, engaged TikTok following using proven growth tactics. Learn to create content that converts viewers into loyal followers and customers.`
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Brand Partnerships",
+      narration: `Secure lucrative brand partnerships and sponsorship deals. Learn how to pitch brands, negotiate rates, and create sponsored content that drives results.`
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Scaling Your Success",
+      narration: `Scale your TikTok success across multiple platforms and income streams. Learn to repurpose content and build a sustainable creator business.`
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "TikTok Millionaire",
+      narration: `Start your TikTok money journey today! Implement these proven strategies and join creators who are building million-dollar businesses on TikTok.`
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "tiktok-focused",
+    videoUrl
+  };
+};
+
+// ClickBank-specific video content
+const generateClickBankVideoContent = (searchTerm: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "ClickBank Profit System",
+      narration: `Welcome to the ClickBank Profit System! Learn how smart affiliates are generating $500+ daily commissions by promoting high-converting ClickBank products.`
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Product Selection Mastery",
+      narration: `Master the art of selecting winning ClickBank products. Learn to analyze gravity scores, commission rates, and sales pages to identify profitable opportunities.`
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Traffic Generation",
+      narration: `Discover proven traffic generation methods that work perfectly with ClickBank offers. From SEO to paid advertising, we'll show you what converts.`
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Commission Optimization",
+      narration: `Optimize your ClickBank campaigns for maximum commissions. Learn split-testing techniques and conversion optimization strategies that increase your earnings.`
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Email Marketing",
+      narration: `Build profitable email funnels that promote ClickBank products effectively. Learn to create sequences that build trust and drive consistent sales.`
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Scaling Strategies",
+      narration: `Scale your ClickBank affiliate business to multiple income streams. Learn to promote multiple products and build a sustainable affiliate empire.`
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Advanced Techniques",
+      narration: `Implement advanced ClickBank strategies including review sites, YouTube marketing, and social media promotion for maximum reach and conversions.`
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "ClickBank Success",
+      narration: `Start earning ClickBank commissions today! Apply these proven strategies and join successful affiliates making serious money with ClickBank products.`
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "clickbank-focused",
+    videoUrl
+  };
+};
+
+// Work from Home-specific video content
+const generateWorkFromHomeVideoContent = (searchTerm: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Work From Home Success",
+      narration: `Welcome to Work From Home Success! Discover how to build a thriving home-based business with multiple income streams and achieve true location independence.`
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Home Business Models",
+      narration: `Explore proven home business models that generate consistent income. From freelancing to e-commerce, find the perfect business model for your skills and goals.`
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Productivity Optimization",
+      narration: `Master productivity techniques that maximize your earning potential from home. Learn time management, workspace optimization, and focus strategies.`
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Income Diversification",
+      narration: `Create multiple income streams that protect you from economic uncertainty. Learn to build passive income while working from the comfort of your home.`
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Digital Marketing",
+      narration: `Master digital marketing techniques essential for home-based businesses. Learn SEO, social media marketing, and online advertising strategies.`
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Business Scaling",
+      narration: `Scale your home business to six-figure income levels. Learn automation, outsourcing, and systems that allow you to work less while earning more.`
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Financial Freedom",
+      narration: `Achieve financial freedom through your home-based business. Learn investment strategies and wealth building techniques for long-term security.`
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Home Business Empire",
+      narration: `Start building your home business empire today! Take action on these proven strategies and join thousands who have achieved success working from home.`
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "work-from-home-focused",
+    videoUrl
+  };
+};
+
+// Affiliate Marketing-specific video content
+const generateAffiliateMarketingVideoContent = (searchTerm: string, videoUrl: string, images: string[]): SynchronizedVideoContent => {
+  const segments: VideoSegment[] = [
+    {
+      startTime: 0,
+      endTime: 15,
+      image: images[0],
+      text: "Affiliate Marketing Mastery",
+      narration: `Welcome to Affiliate Marketing Mastery! Learn how to build a profitable affiliate business that generates passive income through proven promotion strategies.`
+    },
+    {
+      startTime: 15,
+      endTime: 30,
+      image: images[1],
+      text: "Niche Selection",
+      narration: `Master the art of profitable niche selection. Learn to identify high-converting niches with low competition and high commission potential.`
+    },
+    {
+      startTime: 30,
+      endTime: 45,
+      image: images[2],
+      text: "Product Research",
+      narration: `Discover how to find and evaluate affiliate products that convert. Learn to analyze commission structures, sales pages, and market demand.`
+    },
+    {
+      startTime: 45,
+      endTime: 60,
+      image: images[3],
+      text: "Content Marketing",
+      narration: `Create compelling content that drives affiliate sales. Master review writing, comparison posts, and content that builds trust and authority.`
+    },
+    {
+      startTime: 60,
+      endTime: 75,
+      image: images[4],
+      text: "Traffic Strategies",
+      narration: `Generate targeted traffic that converts into affiliate commissions. Learn SEO, paid advertising, and social media strategies that work.`
+    },
+    {
+      startTime: 75,
+      endTime: 90,
+      image: images[5],
+      text: "Conversion Optimization",
+      narration: `Optimize your affiliate campaigns for maximum conversions. Learn split-testing, landing page optimization, and psychological triggers that increase sales.`
+    },
+    {
+      startTime: 90,
+      endTime: 105,
+      image: images[6],
+      text: "Scaling Success",
+      narration: `Scale your affiliate marketing business to multiple income streams. Learn to promote multiple products and build a sustainable affiliate empire.`
+    },
+    {
+      startTime: 105,
+      endTime: 120,
+      image: images[7],
+      text: "Affiliate Success",
+      narration: `Start your affiliate marketing journey today! Apply these proven strategies and join successful affiliates earning consistent commissions online.`
+    }
+  ];
+
+  return {
+    totalDuration: 120,
+    segments,
+    fullNarration: segments.map(s => s.narration).join(' '),
+    backgroundMusic: "affiliate-marketing-focused",
+    videoUrl
+  };
+};
+
 // Generate synchronized video content based on search term (2 minutes)
 export const generateSynchronizedVideoContent = (searchTerm: string): SynchronizedVideoContent => {
   const lowerTerm = searchTerm.toLowerCase();
