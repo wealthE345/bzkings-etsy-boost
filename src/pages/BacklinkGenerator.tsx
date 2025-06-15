@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,7 +52,7 @@ const BacklinkGenerator = () => {
       name: "Free Plan",
       id: "free",
       price: "$0",
-      backlinks: "50 backlinks",
+      backlinks: "5000 backlinks",
       domains: "25 domains",
       features: ["Basic analytics", "Email support", "Manual generation"],
       color: "border-gray-300",
@@ -63,7 +62,7 @@ const BacklinkGenerator = () => {
       name: "Pro Plan",
       id: "pro",
       price: "$29/month",
-      backlinks: "500 backlinks",
+      backlinks: "5000 backlinks",
       domains: "50+ domains",
       features: ["Real-time analytics", "Priority support", "Auto-generation", "Custom anchors"],
       color: "border-blue-500",
@@ -73,7 +72,7 @@ const BacklinkGenerator = () => {
       name: "Enterprise",
       id: "enterprise",
       price: "$99/month",
-      backlinks: "2000 backlinks",
+      backlinks: "5000 backlinks",
       domains: "50+ premium domains",
       features: ["Advanced analytics", "24/7 support", "Bulk generation", "White-label", "API access"],
       color: "border-purple-500",
@@ -93,12 +92,7 @@ const BacklinkGenerator = () => {
   ];
 
   const getMaxBacklinks = () => {
-    switch (selectedPlan) {
-      case "free": return 50;
-      case "pro": return 500;
-      case "enterprise": return 2000;
-      default: return 50;
-    }
+    return 5000; // All plans now have 5000 backlinks
   };
 
   const generateBacklinks = async () => {
@@ -176,7 +170,7 @@ const BacklinkGenerator = () => {
             🔗 BZ Kings SEO - Premium Backlink Generator
           </Badge>
           <h1 className="text-4xl font-bold mb-4 text-white drop-shadow-lg">
-            Generate 2000+ High-Quality Organic Backlinks
+            Generate 5000+ High-Quality Organic Backlinks
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow">
             Build powerful backlinks automatically from 50+ premium domains with our AI-powered backlink generator. 
@@ -259,7 +253,7 @@ const BacklinkGenerator = () => {
               <CardHeader>
                 <CardTitle className="text-white">Generate Premium Backlinks</CardTitle>
                 <CardDescription className="text-white/70">
-                  Enter your target URL and keywords to generate up to {getMaxBacklinks()} high-quality backlinks from 50+ premium domains
+                  Enter your target URL and keywords to generate up to 5000 high-quality backlinks from 50+ premium domains
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -287,7 +281,7 @@ const BacklinkGenerator = () => {
 
                 <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                   <p className="text-white font-semibold mb-2">Selected Plan: {plans.find(p => p.id === selectedPlan)?.name}</p>
-                  <p className="text-white/70">Will generate up to {getMaxBacklinks()} backlinks from 50+ premium domains</p>
+                  <p className="text-white/70">Will generate up to 5000 backlinks from 50+ premium domains</p>
                 </div>
 
                 {isGenerating && (
@@ -306,7 +300,7 @@ const BacklinkGenerator = () => {
                   className="w-full gradient-primary text-white"
                   size="lg"
                 >
-                  {isGenerating ? `Generating ${getMaxBacklinks()} Backlinks...` : `Generate ${getMaxBacklinks()} Backlinks`}
+                  {isGenerating ? "Generating 5000 Backlinks..." : "Generate 5000 Backlinks"}
                   <Target className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>
