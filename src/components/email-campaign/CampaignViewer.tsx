@@ -365,61 +365,42 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
 
             <div className="relative">
               <div className="relative w-full max-w-2xl mx-auto group">
-                {/* Real Video Player */}
+                {/* Real Video Player - Now clearly visible */}
                 <video 
                   ref={videoRef}
                   className="w-full h-80 rounded-lg shadow-lg object-cover"
                   preload="metadata"
                   onEnded={handleVideoEnd}
                   onError={handleVideoError}
-                  muted // Video always muted
+                  muted={false}
                   loop={false}
+                  controls={true}
                   poster={currentSegment?.image || 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=400&fit=crop&q=80'}
                 >
                   <source src={videoContent?.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
                 
-                {/* Dynamic Visual Overlay that matches search term */}
-                {currentSegment && (
-                  <div 
-                    className="absolute inset-0 w-full h-80 rounded-lg shadow-lg bg-cover bg-center bg-no-repeat opacity-90"
-                    style={{
-                      backgroundImage: `url(${currentSegment.image})`,
-                      backgroundBlendMode: 'overlay'
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-black/50 rounded-lg"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <h2 className="text-4xl font-bold text-white text-center px-6 leading-tight shadow-lg">
-                        {currentSegment.text}
-                      </h2>
-                    </div>
+                {/* Play/Pause Control - Only shown when video is paused */}
+                {!isVideoPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
+                    <Button
+                      size="lg"
+                      variant="secondary"
+                      className="bg-white/90 hover:bg-white text-black border-none shadow-lg transform scale-110"
+                      onClick={toggleVideoPlayback}
+                    >
+                      <Play className="h-8 w-8" />
+                    </Button>
                   </div>
                 )}
                 
-                {/* Play/Pause Control */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="bg-white/90 hover:bg-white text-black border-none shadow-lg transform scale-110"
-                    onClick={toggleVideoPlayback}
-                  >
-                    {isVideoPlaying ? (
-                      <Pause className="h-8 w-8" />
-                    ) : (
-                      <Play className="h-8 w-8" />
-                    )}
-                  </Button>
-                </div>
-
                 {/* Audio Status Indicators */}
                 <div className="absolute top-4 left-4 right-4 flex justify-between">
                   <div className="flex gap-2">
                     <Badge variant="secondary" className="bg-black/70 text-white">
-                      <VolumeX className="h-3 w-3 mr-1" />
-                      Video Muted
+                      <Video className="h-3 w-3 mr-1" />
+                      Live Video
                     </Badge>
                     {isNarratorSpeaking && (
                       <Badge variant="default" className="bg-green-600 animate-pulse">
@@ -428,6 +409,16 @@ export const CampaignViewer = ({ campaign, isOpen, onClose, onSave, isEditable =
                       </Badge>
                     )}
                   </div>
+                  {isVideoPlaying && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="bg-black/70 text-white hover:bg-black/90"
+                      onClick={toggleVideoPlayback}
+                    >
+                      <Pause className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
               
