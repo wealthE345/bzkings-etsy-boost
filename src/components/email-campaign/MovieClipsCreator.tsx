@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Film, Play, Pause, Shuffle, Download, Eye, Clock, Palette, Heart } from "lucide-react";
+import { Film, Play, Pause, Shuffle, Download, Eye, Clock, Palette, Heart, Volume2, VolumeX, Maximize } from "lucide-react";
 import { generateMovieClipsForSearch, getNewMovieClip, generateMovieClipNarration, MovieClip } from "@/utils/movieClipsGenerator";
 import { toast } from "sonner";
 
@@ -18,7 +18,9 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
   const [selectedClip, setSelectedClip] = useState<MovieClip | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [playingClip, setPlayingClip] = useState<string | null>(null);
+  const [mutedClips, setMutedClips] = useState<Set<string>>(new Set());
   const [showNarration, setShowNarration] = useState(true);
+  const [fullscreenClip, setFullscreenClip] = useState<string | null>(null);
 
   const handleGenerateClips = () => {
     if (!searchTerm.trim()) {
@@ -51,7 +53,6 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
     setTimeout(() => {
       const newClip = getNewMovieClip(searchTerm, currentClip.url);
       if (newClip) {
-        // Replace the clip in the array
         const updatedClips = movieClips.map(clip => 
           clip.url === currentClip.url ? newClip : clip
         );
@@ -74,12 +75,83 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
     toast.success(`🎬 Selected: ${clip.title} (${clip.style})`);
   };
 
-  const togglePlayback = (clipUrl: string) => {
-    if (playingClip === clipUrl) {
-      setPlayingClip(null);
-    } else {
-      setPlayingClip(clipUrl);
+  const handlePlayClip = (clipUrl: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const videoElement = document.querySelector(`video[src="${clipUrl}"]`) as HTMLVideoElement;
+    
+    if (videoElement) {
+      if (playingClip === clipUrl) {
+        videoElement.pause();
+        setPlayingClip(null);
+        toast.info("⏸️ Video paused");
+      } else {
+        // Pause all other videos
+        document.querySelectorAll('video').forEach(video => {
+          if (video.src !== clipUrl) {
+            video.pause();
+          }
+        });
+        
+        videoElement.play();
+        setPlayingClip(clipUrl);
+        toast.success("▶️ Playing movie clip with sound");
+      }
     }
+  };
+
+  const handleMuteToggle = (clipUrl: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const videoElement = document.querySelector(`video[src="${clipUrl}"]`) as HTMLVideoElement;
+    
+    if (videoElement) {
+      videoElement.muted = !videoElement.muted;
+      const newMutedClips = new Set(mutedClips);
+      
+      if (videoElement.muted) {
+        newMutedClips.add(clipUrl);
+        toast.info("🔇 Video muted");
+      } else {
+        newMutedClips.delete(clipUrl);
+        toast.info("🔊 Video unmuted");
+      }
+      
+      setMutedClips(newMutedClips);
+    }
+  };
+
+  const handleDownload = (clip: MovieClip, event: React.MouseEvent) => {
+    event.stopPropagation();
+    toast.info(`⬇️ Downloading: ${clip.title}...`);
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.href = clip.url;
+    link.download = `${clip.title.replace(/\s+/g, '_')}_movie_clip.mp4`;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success(`✅ Download started: ${clip.title}`);
+  };
+
+  const handleFullscreen = (clipUrl: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const videoElement = document.querySelector(`video[src="${clipUrl}"]`) as HTMLVideoElement;
+    
+    if (videoElement) {
+      if (videoElement.requestFullscreen) {
+        videoElement.requestFullscreen();
+        setFullscreenClip(clipUrl);
+        toast.info("🖥️ Entering fullscreen mode");
+      }
+    }
+  };
+
+  const handlePreview = (clip: MovieClip, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedClip(clip);
+    toast.info(`👀 Previewing: ${clip.title}`);
   };
 
   return (
@@ -87,14 +159,14 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Film className="h-5 w-5 text-red-600" />
-          Movie Clips AI Ad Creative Generator
+          Interactive Movie Clips AI Ad Creative Generator
           <Badge variant="outline" className="text-red-600 border-red-300">
             <Heart className="h-3 w-3 mr-1" />
             Hollywood Style
           </Badge>
         </CardTitle>
         <CardDescription>
-          Generate cinematic movie-style promotional videos for your advertising campaigns
+          Generate interactive cinematic movie-style promotional videos with full playback controls, sound, and download options
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -123,7 +195,7 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
         {movieClips.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Generated Movie Clips</h3>
+              <h3 className="text-lg font-semibold">Interactive Movie Clips</h3>
               <Button
                 variant="outline"
                 size="sm"
@@ -143,31 +215,55 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
                   onClick={() => handleSelectClip(clip)}
                 >
                   <CardContent className="p-4">
-                    <div className="relative mb-3">
+                    <div className="relative mb-3 group">
                       <video
                         src={clip.url}
-                        className="w-full h-32 object-cover rounded-lg"
+                        className="w-full h-32 object-cover rounded-lg cursor-pointer"
                         poster={`https://images.unsplash.com/photo-1489599242897-bd08d00a7900?w=400&h=200&fit=crop&q=80&sig=${index}`}
-                        muted
                         loop
-                        controls={playingClip === clip.url}
+                        playsInline
+                        onEnded={() => setPlayingClip(null)}
+                        onClick={(e) => handlePlayClip(clip.url, e)}
                       />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="bg-white/90 hover:bg-white"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            togglePlayback(clip.url);
-                          }}
-                        >
-                          {playingClip === clip.url ? (
-                            <Pause className="h-4 w-4" />
-                          ) : (
-                            <Play className="h-4 w-4" />
-                          )}
-                        </Button>
+                      
+                      {/* Video Controls Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="bg-white/90 hover:bg-white"
+                            onClick={(e) => handlePlayClip(clip.url, e)}
+                          >
+                            {playingClip === clip.url ? (
+                              <Pause className="h-4 w-4" />
+                            ) : (
+                              <Play className="h-4 w-4" />
+                            )}
+                          </Button>
+                          
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="bg-white/90 hover:bg-white"
+                            onClick={(e) => handleMuteToggle(clip.url, e)}
+                          >
+                            {mutedClips.has(clip.url) ? (
+                              <VolumeX className="h-4 w-4" />
+                            ) : (
+                              <Volume2 className="h-4 w-4" />
+                            )}
+                          </Button>
+                          
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="bg-white/90 hover:bg-white"
+                            onClick={(e) => handleFullscreen(clip.url, e)}
+                          >
+                            <Maximize className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                       
                       {/* Clip Info Overlay */}
@@ -181,6 +277,15 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
                           {clip.style}
                         </Badge>
                       </div>
+
+                      {/* Playing Indicator */}
+                      {playingClip === clip.url && (
+                        <div className="absolute bottom-2 left-2">
+                          <Badge variant="default" className="bg-green-600 text-white text-xs animate-pulse">
+                            ▶️ Playing
+                          </Badge>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="space-y-2">
@@ -208,6 +313,28 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
                           {clip.style}
                         </Badge>
                       </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-1 mt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 text-xs"
+                          onClick={(e) => handlePreview(clip, e)}
+                        >
+                          <Eye className="h-3 w-3 mr-1" />
+                          Preview
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 text-xs"
+                          onClick={(e) => handleDownload(clip, e)}
+                        >
+                          <Download className="h-3 w-3 mr-1" />
+                          Download
+                        </Button>
+                      </div>
                       
                       {showNarration && (
                         <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
@@ -229,13 +356,21 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
         {selectedClip && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Selected Movie Clip</h3>
+              <h3 className="text-lg font-semibold">Selected Movie Clip - Full Preview</h3>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <Eye className="h-4 w-4 mr-1" />
-                  Preview
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={(e) => handleFullscreen(selectedClip.url, e)}
+                >
+                  <Maximize className="h-4 w-4 mr-1" />
+                  Fullscreen
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={(e) => handleDownload(selectedClip, e)}
+                >
                   <Download className="h-4 w-4 mr-1" />
                   Download
                 </Button>
@@ -245,14 +380,31 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
             <Card className="border-red-200">
               <CardContent className="p-6">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
+                  <div className="relative">
                     <video
                       src={selectedClip.url}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-48 object-cover rounded-lg cursor-pointer"
                       poster={`https://images.unsplash.com/photo-1489599242897-bd08d00a7900?w=600&h=300&fit=crop&q=80`}
                       controls
-                      muted
+                      playsInline
+                      onClick={(e) => handlePlayClip(selectedClip.url, e)}
                     />
+                    
+                    {/* Enhanced Controls */}
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="bg-black/70 text-white hover:bg-black/90"
+                        onClick={(e) => handleMuteToggle(selectedClip.url, e)}
+                      >
+                        {mutedClips.has(selectedClip.url) ? (
+                          <VolumeX className="h-3 w-3" />
+                        ) : (
+                          <Volume2 className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                   
                   <div className="space-y-4">
@@ -278,6 +430,33 @@ export const MovieClipsCreator = ({ onSelectClip }: MovieClipsCreatorProps) => {
                         <label className="text-sm font-medium text-gray-500">Category</label>
                         <p className="text-lg font-semibold">Movie Trailer</p>
                       </div>
+                    </div>
+
+                    {/* Enhanced Action Buttons */}
+                    <div className="flex gap-2">
+                      <Button
+                        className="flex-1 bg-green-600 hover:bg-green-700"
+                        onClick={(e) => handlePlayClip(selectedClip.url, e)}
+                      >
+                        {playingClip === selectedClip.url ? (
+                          <>
+                            <Pause className="h-4 w-4 mr-1" />
+                            Pause
+                          </>
+                        ) : (
+                          <>
+                            <Play className="h-4 w-4 mr-1" />
+                            Play with Sound
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={(e) => handleDownload(selectedClip, e)}
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        Download HD
+                      </Button>
                     </div>
                     
                     <div className="p-4 bg-blue-50 rounded-lg">
