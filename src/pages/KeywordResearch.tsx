@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,13 +10,11 @@ import { KeywordScrapingService } from "@/services/KeywordScrapingService";
 
 const KeywordResearch = () => {
   const [keyword, setKeyword] = useState("");
-  const [allResults, setAllResults] = useState<any[]>([]);
   const [displayedResults, setDisplayedResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
-  const RESULTS_PER_PAGE = 20;
 
   const handleSearch = async () => {
     if (!keyword.trim()) {
@@ -28,25 +25,29 @@ const KeywordResearch = () => {
     setIsSearching(true);
     setCurrentPage(0);
     setHasSearched(false);
-    console.log('Starting organic keyword scraping for:', keyword);
+    setDisplayedResults([]);
+    
+    // Reset used keywords for fresh search
+    KeywordScrapingService.resetUsedKeywords();
+    
+    console.log('Starting fresh organic keyword scraping for:', keyword);
     
     try {
-      const response = await KeywordScrapingService.scrapeKeywords(keyword);
+      const response = await KeywordScrapingService.scrapeKeywords(keyword, 0);
       
       if (response.success && response.data) {
-        setAllResults(response.data);
-        setDisplayedResults(response.data.slice(0, RESULTS_PER_PAGE));
+        setDisplayedResults(response.data);
         setCurrentPage(1);
         setHasSearched(true);
-        toast.success(`Found ${response.data.length} organic keyword suggestions`);
-        console.log('Scraped organic keywords:', response.data);
+        toast.success(`Found ${response.data.length} organic keyword suggestions from search engines`);
+        console.log('Scraped fresh organic keywords:', response.data);
       } else {
-        toast.error(response.error || "Failed to scrape organic keyword data");
+        toast.error(response.error || "Failed to scrape organic keyword data from search engines");
         console.error('Scraping failed:', response.error);
       }
     } catch (error) {
       console.error('Error during organic keyword scraping:', error);
-      toast.error("Failed to scrape organic keyword data");
+      toast.error("Failed to scrape organic keyword data from search engines");
     } finally {
       setIsSearching(false);
     }
@@ -55,23 +56,23 @@ const KeywordResearch = () => {
   const handleShowMore = async () => {
     setIsLoadingMore(true);
     
+    console.log(`Fetching more keywords from search engines for: ${keyword}, page: ${currentPage}`);
+    
     try {
-      // Generate more keywords for the same search term
-      const response = await KeywordScrapingService.scrapeKeywords(keyword);
+      // Fetch fresh keywords from search engines for the current page
+      const response = await KeywordScrapingService.scrapeKeywords(keyword, currentPage);
       
-      if (response.success && response.data) {
-        const newResults = response.data.slice(currentPage * RESULTS_PER_PAGE, (currentPage + 1) * RESULTS_PER_PAGE);
-        if (newResults.length > 0) {
-          setDisplayedResults(prev => [...prev, ...newResults]);
-          setCurrentPage(prev => prev + 1);
-          toast.success(`Loaded ${newResults.length} more keywords`);
-        } else {
-          toast.info("No more keywords available");
-        }
+      if (response.success && response.data && response.data.length > 0) {
+        setDisplayedResults(prev => [...prev, ...response.data]);
+        setCurrentPage(prev => prev + 1);
+        toast.success(`Loaded ${response.data.length} more keywords from search engines`);
+        console.log(`Added ${response.data.length} more fresh keywords from search engines`);
+      } else {
+        toast.info("No more keywords available from search engines");
       }
     } catch (error) {
-      console.error('Error loading more keywords:', error);
-      toast.error("Failed to load more keywords");
+      console.error('Error loading more keywords from search engines:', error);
+      toast.error("Failed to load more keywords from search engines");
     } finally {
       setIsLoadingMore(false);
     }
@@ -86,8 +87,6 @@ const KeywordResearch = () => {
     }
   };
 
-  const canShowMore = hasSearched && displayedResults.length >= RESULTS_PER_PAGE;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-amber-50">
       <div className="container mx-auto px-4 py-8">
@@ -100,11 +99,11 @@ const KeywordResearch = () => {
           </Link>
           <div className="flex-1">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-700 to-amber-600 bg-clip-text text-transparent">
-              Organic Keyword Research Tool
+              Live Keyword Research Tool
             </h1>
             <p className="text-gray-600 mt-2 flex items-center gap-2">
               <Globe className="h-4 w-4" />
-              Discover organic keywords with free web-based keyword generation
+              Get fresh keywords from search engines in real-time
             </p>
           </div>
         </div>
@@ -113,10 +112,10 @@ const KeywordResearch = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Search className="h-5 w-5 text-purple-600" />
-              Search Organic Keywords
+              Search Live Keywords
             </CardTitle>
             <CardDescription>
-              Enter a keyword to generate organic keyword suggestions with estimated metrics
+              Enter a keyword to fetch fresh keyword suggestions directly from search engines
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -133,12 +132,12 @@ const KeywordResearch = () => {
                 disabled={isSearching}
                 className="gradient-primary text-white"
               >
-                {isSearching ? "Generating..." : "Find Keywords"}
+                {isSearching ? "Fetching..." : "Get Keywords"}
                 <Globe className="ml-2 h-4 w-4" />
               </Button>
             </div>
             <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
-              ✓ Free organic keyword generation - no API key required
+              ✓ Live keyword data from search engines - fresh results every time
             </p>
           </CardContent>
         </Card>
@@ -147,13 +146,14 @@ const KeywordResearch = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-800">
-                Organic Keyword Results ({displayedResults.length} keywords shown)
+                Live Keyword Results ({displayedResults.length} keywords from search engines)
               </h2>
               <Badge variant="outline" className="text-green-600 border-green-600">
                 <Globe className="h-3 w-3 mr-1" />
-                Organic Data
+                Live Data
               </Badge>
             </div>
+            
             <div className="grid grid-cols-1 gap-6">
               {displayedResults.map((result, index) => (
                 <Card key={index} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-purple-500">
@@ -204,7 +204,7 @@ const KeywordResearch = () => {
               ))}
             </div>
 
-            {canShowMore && (
+            {hasSearched && (
               <div className="flex justify-center mt-8">
                 <Button 
                   onClick={handleShowMore}
@@ -213,7 +213,7 @@ const KeywordResearch = () => {
                   size="lg"
                   className="bg-white hover:bg-purple-50 border-purple-200 text-purple-700"
                 >
-                  {isLoadingMore ? "Loading..." : "Show More Keywords"}
+                  {isLoadingMore ? "Fetching from Search Engines..." : "Show 20 More Keywords"}
                   <Plus className="ml-2 h-4 w-4" />
                 </Button>
               </div>
