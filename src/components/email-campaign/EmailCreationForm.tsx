@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target, Search } from "lucide-react";
+import { Clock, Wand2, ImageIcon, Video, Upload, RefreshCw, Target, Search, Play } from "lucide-react";
 import { toast } from "sonner";
 import { NewEmail } from "@/hooks/useEmailCampaign";
-import { getRandomContent, getRandomImage, getVideoBySubject } from "@/utils/aiContentGenerator";
+import { getRandomContent, getRandomImage, getIntroVideoBySubject, getContentBySearchTerm } from "@/utils/aiContentGenerator";
 
 interface EmailCreationFormProps {
   newEmail: NewEmail;
@@ -46,7 +46,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
       setIsSearching(false);
       toast.success(`✨ Generated subject for "${searchTerm}"!`);
-      toast.info("📝 Now generate AI content and creatives based on this subject");
+      toast.info("📝 Now generate AI content and 30-second intro videos based on this subject");
     }, 2000);
   };
 
@@ -57,38 +57,41 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     }
 
     setIsGeneratingContent(true);
-    toast.info("🤖 AI is generating optimized content for organic traffic...");
+    toast.info("🤖 AI is generating optimized content and 30-second intro video...");
 
     setTimeout(() => {
-      const randomContent = getRandomContent();
-      const isVideoCreative = Math.random() > 0.5;
+      const searchContext = newEmail.subject || searchTerm || "organic traffic";
+      const contentBasedOnSearch = getContentBySearchTerm(searchContext);
+      const isVideoCreative = Math.random() > 0.3; // Higher chance for video
       let randomCreative;
 
       if (isVideoCreative) {
+        const introVideo = getIntroVideoBySubject(searchContext);
         randomCreative = {
           type: "video" as const,
-          url: getVideoBySubject(newEmail.subject),
-          alt: `AI-generated video for ${newEmail.subject} showcasing organic traffic growth strategies`
+          url: introVideo.url,
+          alt: `30-second AI intro video: ${introVideo.title} - ${introVideo.description}`
         };
+        toast.info(`🎬 Generated 30-second intro: "${introVideo.title}"`);
       } else {
         randomCreative = {
           type: "image" as const,
           url: getRandomImage(),
-          alt: `AI-generated image for ${newEmail.subject} featuring SEO tools and organic traffic analytics`
+          alt: `AI-generated image for ${searchContext} featuring SEO tools and organic traffic analytics`
         };
       }
 
       setNewEmail({
         ...newEmail,
-        content: randomContent,
+        content: contentBasedOnSearch,
         creative: randomCreative,
         aiGenerated: true,
         targetAudience: "organic-traffic"
       });
 
       setIsGeneratingContent(false);
-      toast.success("✨ AI content and creative generated successfully!");
-      toast.info("📝 Content optimized for organic traffic and SEO engagement");
+      toast.success("✨ AI content and 30-second intro video generated successfully!");
+      toast.info("🎯 Content optimized for organic traffic and SEO engagement");
     }, 3000);
   };
 
@@ -119,24 +122,24 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
   const handleGenerateAIVideo = async () => {
     setIsGeneratingVideo(true);
     const searchContext = newEmail.subject || searchTerm || "AI digital marketing";
-    toast.info(`🎬 AI is generating an optimized video for "${searchContext}"...`);
+    toast.info(`🎬 AI is generating a 30-second intro video for "${searchContext}"...`);
 
     setTimeout(() => {
-      const subjectBasedVideo = getVideoBySubject(searchContext);
+      const introVideo = getIntroVideoBySubject(searchContext);
       
       setNewEmail({
         ...newEmail,
         creative: {
           type: "video",
-          url: subjectBasedVideo,
-          alt: `AI-generated video for ${searchContext} optimized for organic traffic`
+          url: introVideo.url,
+          alt: `30-second AI intro video: ${introVideo.title} - ${introVideo.description}`
         },
         aiGenerated: true
       });
 
       setIsGeneratingVideo(false);
-      toast.success("🎥 AI video generated successfully!");
-      toast.info(`📈 Video optimized for "${searchContext}" conversion`);
+      toast.success(`🎥 30-second intro video generated: "${introVideo.title}"!`);
+      toast.info(`📈 Video optimized for "${searchContext}" conversion (${introVideo.duration})`);
     }, 4000);
   };
 
@@ -151,7 +154,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
     
     if (isCurrentVideo) {
       setIsGeneratingVideo(true);
-      toast.info("🔄 Regenerating AI video creative...");
+      toast.info("🔄 Regenerating 30-second AI intro video...");
     } else {
       setIsGeneratingImage(true);
       toast.info("🔄 Regenerating AI image creative...");
@@ -159,19 +162,19 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
 
     setTimeout(() => {
       if (isCurrentVideo) {
-        const subjectBasedVideo = getVideoBySubject(searchContext);
+        const introVideo = getIntroVideoBySubject(searchContext);
         
         setNewEmail({
           ...newEmail,
           creative: {
             type: "video",
-            url: subjectBasedVideo,
-            alt: `AI-regenerated video for ${searchContext} optimized for organic traffic campaigns`
+            url: introVideo.url,
+            alt: `30-second AI regenerated intro: ${introVideo.title} - ${introVideo.description}`
           }
         });
         
         setIsGeneratingVideo(false);
-        toast.success("🎬 AI video regenerated successfully!");
+        toast.success(`🎬 30-second intro video regenerated: "${introVideo.title}"!`);
       } else {
         const randomImage = getRandomImage();
         
@@ -260,8 +263,12 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             <Target className="h-3 w-3 mr-1" />
             Organic Traffic
           </Badge>
+          <Badge variant="outline" className="text-blue-600 border-blue-300">
+            <Play className="h-3 w-3 mr-1" />
+            30s Intros
+          </Badge>
         </CardTitle>
-        <CardDescription>Generate AI-powered email campaigns with intelligent content and creatives for organic traffic audiences</CardDescription>
+        <CardDescription>Generate AI-powered email campaigns with 30-second intro videos and intelligent content for organic traffic audiences</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Search Section */}
@@ -316,7 +323,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
             ) : (
               <>
                 <Wand2 className="mr-2 h-4 w-4" />
-                Generate AI Content
+                Generate AI Content + 30s Intro
               </>
             )}
           </Button>
@@ -380,7 +387,7 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
               ) : (
                 <>
                   <Video className="mr-2 h-4 w-4" />
-                  AI Video
+                  AI 30s Intro Video
                 </>
               )}
             </Button>
@@ -459,10 +466,10 @@ export const EmailCreationForm = ({ newEmail, setNewEmail, isCreatingEmail, onCr
                     controls
                     poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                   />
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-2 right-2 flex gap-1">
                     <Badge variant="secondary">
                       <Video className="h-3 w-3 mr-1" />
-                      Playable Video
+                      30s Intro Video
                     </Badge>
                   </div>
                 </div>

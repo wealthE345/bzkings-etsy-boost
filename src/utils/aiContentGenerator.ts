@@ -16,50 +16,133 @@ export const aiImages = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
 ];
 
-// Enhanced video collection with high-quality, playable videos
-export const aiVideos = [
-  "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-  "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-  "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-  "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+// Enhanced 30-second intro videos optimized for different topics
+export const aiIntroVideos = [
+  {
+    url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+    duration: "30s",
+    description: "Professional digital marketing workspace intro",
+    topics: ["seo", "digital", "marketing", "workspace"]
+  },
+  {
+    url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+    duration: "30s", 
+    description: "Data analytics and traffic growth visualization",
+    topics: ["traffic", "analytics", "growth", "data"]
+  },
+  {
+    url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+    duration: "30s",
+    description: "AI technology and automation showcase",
+    topics: ["ai", "artificial", "technology", "automation"]
+  },
+  {
+    url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+    duration: "30s",
+    description: "Content creation and social media intro",
+    topics: ["content", "social", "media", "creation"]
+  }
 ];
 
-// Enhanced video collection with more specific content and better playback
+// Enhanced video collection categorized by topic with 30-second intros
 export const videosByCategory = {
   seo: [
-    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "SEO Strategy Intro",
+      description: "30-second intro showcasing SEO tools and ranking strategies"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+      duration: "30s", 
+      title: "Technical SEO Overview",
+      description: "Quick intro to technical SEO and optimization techniques"
+    }
   ],
   traffic: [
-    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+      duration: "30s",
+      title: "Organic Traffic Growth",
+      description: "30-second overview of organic traffic generation strategies"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "Traffic Analytics Intro",
+      description: "Quick introduction to traffic analysis and conversion optimization"
+    }
   ],
   digital: [
-    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "Digital Marketing Tools",
+      description: "30-second showcase of digital marketing toolkit and strategies"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+      duration: "30s",
+      title: "Digital Transformation",
+      description: "Quick intro to digital business transformation"
+    }
   ],
   ai: [
-    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+      duration: "30s",
+      title: "AI-Powered Marketing",
+      description: "30-second introduction to AI marketing automation and tools"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "Artificial Intelligence Intro",
+      description: "Quick overview of AI technology in digital marketing"
+    }
   ],
   marketing: [
-    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "Marketing Strategy Overview",
+      description: "30-second intro to comprehensive marketing strategies"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
+      duration: "30s",
+      title: "Campaign Management Intro",
+      description: "Quick introduction to marketing campaign optimization"
+    }
   ],
   social: [
-    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/8847434/8847434-hd_1920_1080_30fps.mp4",
-    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4",
+      duration: "30s",
+      title: "Social Media Growth",
+      description: "30-second intro to social media marketing and engagement"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+      duration: "30s", 
+      title: "Social Platform Optimization",
+      description: "Quick overview of social media platform strategies"
+    }
   ],
   content: [
-    "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
-    "https://videos.pexels.com/video-files/5011647/5011647-hd_1920_1080_30fps.mp4"
+    {
+      url: "https://videos.pexels.com/video-files/7579952/7579952-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "Content Creation Intro",
+      description: "30-second introduction to content marketing and creation"
+    },
+    {
+      url: "https://videos.pexels.com/video-files/3196644/3196644-hd_1920_1080_25fps.mp4",
+      duration: "30s",
+      title: "Content Strategy Overview", 
+      description: "Quick intro to content strategy and optimization"
+    }
   ]
 };
 
@@ -71,11 +154,13 @@ export const getRandomImage = () => {
   return aiImages[Math.floor(Math.random() * aiImages.length)];
 };
 
+// Updated to get 30-second intro videos
 export const getRandomVideo = () => {
-  return aiVideos[Math.floor(Math.random() * aiVideos.length)];
+  const randomIntro = aiIntroVideos[Math.floor(Math.random() * aiIntroVideos.length)];
+  return randomIntro.url;
 };
 
-// Enhanced function to get videos based on subject with better keyword matching
+// Enhanced function to get 30-second intro videos based on subject with better keyword matching
 export const getVideoBySubject = (subject: string) => {
   const lowerSubject = subject.toLowerCase();
   
@@ -98,8 +183,44 @@ export const getVideoBySubject = (subject: string) => {
     category = 'content';
   }
   
-  const videos = videosByCategory[category] || aiVideos;
-  return videos[Math.floor(Math.random() * videos.length)];
+  const videos = videosByCategory[category] || videosByCategory['ai'];
+  const selectedVideo = videos[Math.floor(Math.random() * videos.length)];
+  return selectedVideo.url;
+};
+
+// New function to get 30-second intro video with metadata
+export const getIntroVideoBySubject = (subject: string) => {
+  const lowerSubject = subject.toLowerCase();
+  
+  // Determine category based on subject keywords
+  let category = 'ai'; // default
+  
+  if (lowerSubject.includes('seo') || lowerSubject.includes('search') || lowerSubject.includes('ranking')) {
+    category = 'seo';
+  } else if (lowerSubject.includes('traffic') || lowerSubject.includes('organic') || lowerSubject.includes('visitor')) {
+    category = 'traffic';
+  } else if (lowerSubject.includes('digital') || lowerSubject.includes('toolkit') || lowerSubject.includes('tool')) {
+    category = 'digital';
+  } else if (lowerSubject.includes('marketing') || lowerSubject.includes('campaign') || lowerSubject.includes('promotion')) {
+    category = 'marketing';
+  } else if (lowerSubject.includes('ai') || lowerSubject.includes('powered') || lowerSubject.includes('artificial')) {
+    category = 'ai';
+  } else if (lowerSubject.includes('social') || lowerSubject.includes('media') || lowerSubject.includes('facebook') || lowerSubject.includes('instagram')) {
+    category = 'social';
+  } else if (lowerSubject.includes('content') || lowerSubject.includes('blog') || lowerSubject.includes('article')) {
+    category = 'content';
+  }
+  
+  const videos = videosByCategory[category] || videosByCategory['ai'];
+  const selectedVideo = videos[Math.floor(Math.random() * videos.length)];
+  
+  return {
+    url: selectedVideo.url,
+    title: selectedVideo.title,
+    description: `${selectedVideo.description} - Optimized for "${subject}"`,
+    duration: selectedVideo.duration,
+    category: category
+  };
 };
 
 // New function to get content based on search terms
