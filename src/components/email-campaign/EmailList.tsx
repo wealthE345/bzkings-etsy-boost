@@ -43,7 +43,9 @@ export const EmailList = ({
         [emailId]: false
       }));
     } else {
-      video.play();
+      // Ensure video starts from beginning for 30-second intro
+      video.currentTime = 0;
+      video.play().catch(console.error);
       setIsVideoPlaying(prev => ({
         ...prev,
         [emailId]: true
@@ -52,7 +54,14 @@ export const EmailList = ({
   };
 
   const handleVideoRef = (emailId: number, ref: HTMLVideoElement | null) => {
-    videoRefs.current[emailId] = ref;
+    if (ref) {
+      videoRefs.current[emailId] = ref;
+      // Auto-configure video for 30-second intro playback
+      ref.addEventListener('loadedmetadata', () => {
+        ref.currentTime = 0;
+      });
+      ref.addEventListener('ended', () => handleVideoEnd(emailId));
+    }
   };
 
   const handleVideoEnd = (emailId: number) => {
@@ -83,7 +92,7 @@ export const EmailList = ({
               Organic Traffic Optimized
             </Badge>
           </CardTitle>
-          <CardDescription>Manage your AI-generated email campaigns with intelligent content for organic traffic audiences</CardDescription>
+          <CardDescription>Manage your AI-generated email campaigns with 30-second intro videos for organic traffic audiences</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -107,7 +116,7 @@ export const EmailList = ({
                     {email.creative?.type && (
                       <Badge variant="secondary">
                         {email.creative.type === "video" ? <Video className="h-3 w-3 mr-1" /> : <ImageIcon className="h-3 w-3 mr-1" />}
-                        {email.creative.type}
+                        {email.creative.type === "video" ? "30s AI Intro" : "AI Image"}
                       </Badge>
                     )}
                   </div>
@@ -122,7 +131,7 @@ export const EmailList = ({
                             className="w-full h-full object-cover rounded-lg"
                             muted
                             preload="metadata"
-                            onEnded={() => handleVideoEnd(email.id)}
+                            loop
                             poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
                           />
                           <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
@@ -132,7 +141,7 @@ export const EmailList = ({
                               className="bg-white/90 hover:bg-white text-black border-none shadow-lg"
                               onClick={() => toggleVideoPlayback(email.id)}
                             >
-                              {isVideoPlaying[email.id] ? (
+                              {isVideoPlaying[emailId] ? (
                                 <Pause className="h-6 w-6" />
                               ) : (
                                 <Play className="h-6 w-6" />
@@ -142,7 +151,7 @@ export const EmailList = ({
                           <div className="absolute top-2 right-2">
                             <Badge variant="secondary" className="bg-black/70 text-white">
                               <Video className="h-3 w-3 mr-1" />
-                              Video
+                              30s Intro
                             </Badge>
                           </div>
                         </div>
@@ -160,9 +169,9 @@ export const EmailList = ({
                     Sent: {email.sent.toLocaleString()} | Opens: {email.opens} ({email.sent > 0 ? ((email.opens / email.sent) * 100).toFixed(1) : 0}%) | Clicks: {email.clicks} ({email.opens > 0 ? ((email.clicks / email.opens) * 100).toFixed(1) : 0}%)
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    {email.status === "Published" && `Published • Active AI campaign targeting organic traffic audience`}
-                    {email.status === "Draft" && `Draft • AI-powered content ready to edit or publish`}
-                    {email.status === "Scheduled" && `Scheduled • AI campaign will be sent to organic traffic subscribers`}
+                    {email.status === "Published" && `Published • Active AI campaign with 30s intro video`}
+                    {email.status === "Draft" && `Draft • AI-powered content with 30s intro video ready`}
+                    {email.status === "Scheduled" && `Scheduled • AI campaign with 30s intro will be sent`}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -178,7 +187,7 @@ export const EmailList = ({
                       variant="outline"
                       onClick={() => handleViewCampaign(email)}
                       className="hover:bg-blue-50 hover:border-blue-300"
-                      title="View full campaign with playable AI video"
+                      title="View full campaign with playable 30s AI intro video"
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
@@ -255,7 +264,7 @@ export const EmailList = ({
             {emailList.length === 0 && (
               <div className="text-center py-8 text-gray-500">
                 <Wand2 className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <p>No AI email campaigns yet. Create your first AI-powered campaign for organic traffic above!</p>
+                <p>No AI email campaigns yet. Create your first AI-powered campaign with 30s intro videos above!</p>
               </div>
             )}
           </div>

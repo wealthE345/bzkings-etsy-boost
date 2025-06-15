@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,14 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
+  useEffect(() => {
+    // Reset video state when campaign changes
+    if (campaign && videoRef.current) {
+      setIsVideoPlaying(false);
+      videoRef.current.currentTime = 0;
+    }
+  }, [campaign]);
+
   const toggleVideoPlayback = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -24,12 +32,20 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
       video.pause();
       setIsVideoPlaying(false);
     } else {
-      video.play();
-      setIsVideoPlaying(true);
+      // Start from beginning for full 30-second intro experience
+      video.currentTime = 0;
+      video.play().then(() => {
+        setIsVideoPlaying(true);
+      }).catch(console.error);
     }
   };
 
   const handleVideoEnd = () => {
+    setIsVideoPlaying(false);
+  };
+
+  const handleVideoError = () => {
+    console.log("Video playback error, but continuing...");
     setIsVideoPlaying(false);
   };
 
@@ -46,7 +62,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
                 Campaign View
               </DialogTitle>
               <DialogDescription>
-                Full campaign preview with interactive AI-generated content
+                Full campaign preview with interactive 30-second AI-generated intro video
               </DialogDescription>
             </div>
             <Button variant="ghost" size="sm" onClick={onClose}>
@@ -106,10 +122,10 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
             </div>
           )}
 
-          {/* AI Creative Content */}
+          {/* AI Creative Content with Enhanced Video Playback */}
           {campaign.creative?.url && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">AI-Generated Creative</h3>
+              <h3 className="text-lg font-semibold">30-Second AI-Generated Intro</h3>
               <div className="relative">
                 {campaign.creative.type === "video" ? (
                   <div className="relative w-full max-w-2xl mx-auto group">
@@ -120,7 +136,9 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
                       muted
                       preload="metadata"
                       onEnded={handleVideoEnd}
+                      onError={handleVideoError}
                       poster="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop"
+                      loop
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors">
                       <Button
@@ -142,6 +160,14 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
                         30s AI Intro Video
                       </Badge>
                     </div>
+                    {isVideoPlaying && (
+                      <div className="absolute bottom-4 left-4">
+                        <Badge variant="default" className="bg-green-600">
+                          <Play className="h-3 w-3 mr-1" />
+                          Playing
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="relative w-full max-w-2xl mx-auto">
@@ -162,6 +188,11 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
                 <p className="text-sm text-gray-600 mt-2 text-center italic">
                   {campaign.creative.alt}
                 </p>
+                {campaign.creative.type === "video" && (
+                  <p className="text-xs text-gray-500 mt-1 text-center">
+                    Click play to watch the full 30-second AI-generated intro video
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -191,7 +222,7 @@ export const CampaignViewer = ({ campaign, isOpen, onClose }: CampaignViewerProp
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium text-gray-900">Content Generation</h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  {campaign.aiGenerated ? "AI-Powered Content & Creative" : "Manual Content Creation"}
+                  {campaign.aiGenerated ? "AI-Powered Content & 30s Intro Video" : "Manual Content Creation"}
                 </p>
               </div>
             </div>
