@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,15 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -37,18 +48,44 @@ const Signup = () => {
       return;
     }
 
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
     if (!agreeTerms) {
       toast.error("Please agree to the terms and conditions");
       return;
     }
 
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate signup process
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    const { error } = await signUp(
+      formData.email, 
+      formData.password, 
+      formData.firstName, 
+      formData.lastName
+    );
+    
+    if (error) {
+      if (error.message?.includes('User already registered')) {
+        toast.error("This email is already registered. Please try signing in instead.");
+      } else if (error.message?.includes('Password should be at least 6 characters')) {
+        toast.error("Password must be at least 6 characters long");
+      } else {
+        toast.error(error.message || "Failed to create account");
+      }
+    } else {
+      toast.success("Account created successfully! Please check your email to confirm your account.");
+      // Don't navigate immediately - let user confirm email first
+    }
     
     setIsLoading(false);
-    toast.success("Account created successfully!");
   };
 
   return (

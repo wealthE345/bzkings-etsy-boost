@@ -5,24 +5,52 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate login process
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    const { error } = await signIn(email, password);
+    
+    if (error) {
+      if (error.message?.includes('Invalid login credentials')) {
+        toast.error("Invalid email or password");
+      } else if (error.message?.includes('Email not confirmed')) {
+        toast.error("Please check your email and confirm your account");
+      } else {
+        toast.error(error.message || "Failed to sign in");
+      }
+    } else {
+      toast.success("Successfully logged in!");
+      navigate('/');
+    }
     
     setIsLoading(false);
-    toast.success("Successfully logged in!");
   };
 
   return (

@@ -9,11 +9,18 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Link } from "react-router-dom";
-import { Menu, X, Search, Star, Shield, Download, Smartphone, Users, Home } from "lucide-react";
+import { Menu, X, Search, Star, Shield, Download, Smartphone, Users, Home, LogOut, User } from "lucide-react";
 import Logo from "@/components/Logo";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut, loading } = useAuth();
+
+  const handleSignOut = () => {
+    signOut();
+    setIsMenuOpen(false);
+  };
 
   return (
     <header className="bg-white/20 backdrop-blur-sm border-b border-purple-100/30 sticky top-0 z-50 glass-effect">
@@ -140,16 +147,37 @@ const Navigation = () => {
             </NavigationMenu>
 
             <div className="flex items-center gap-4">
-              <Link to="/login">
-                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 glass-effect">
-                  Log In
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="gradient-primary text-white">
-                  Sign Up
-                </Button>
-              </Link>
+              {!loading && (
+                user ? (
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 text-white">
+                      <User className="h-4 w-4" />
+                      <span className="text-sm">Welcome back!</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="border-white/30 text-white hover:bg-white/10 glass-effect"
+                      onClick={handleSignOut}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <Link to="/login">
+                      <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 glass-effect">
+                        Log In
+                      </Button>
+                    </Link>
+                    <Link to="/signup">
+                      <Button className="gradient-primary text-white">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )
+              )}
             </div>
           </div>
 
@@ -225,16 +253,31 @@ const Navigation = () => {
                 Terms & Disclaimer
               </Link>
               <div className="flex flex-col gap-2 px-4">
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-white/30 text-white">
-                    Log In
-                  </Button>
-                </Link>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full gradient-primary text-white">
-                    Sign Up
-                  </Button>
-                </Link>
+                {!loading && (
+                  user ? (
+                    <Button
+                      variant="outline"
+                      className="w-full border-white/30 text-white"
+                      onClick={handleSignOut}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  ) : (
+                    <>
+                      <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="outline" className="w-full border-white/30 text-white">
+                          Log In
+                        </Button>
+                      </Link>
+                      <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="w-full gradient-primary text-white">
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </>
+                  )
+                )}
               </div>
             </div>
           </div>
