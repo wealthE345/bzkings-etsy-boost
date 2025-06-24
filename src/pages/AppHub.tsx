@@ -3,11 +3,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Star, Users, TrendingUp, Smartphone, Globe, Zap, Camera, Edit3, Share2, Shield, Search, Mail, Link2, BarChart3, Target, MessageSquare, Calendar, FileText, Image, Video, Music, Headphones, Monitor, Palette, Code, Database, Lock, Wifi, Cloud, Settings } from "lucide-react";
+import { Download, Star, Users, TrendingUp, Smartphone, Globe, Zap, Camera, Edit3, Share2, Shield, Search, Mail, Link2, BarChart3, Target, MessageSquare, Calendar, FileText, Image, Video, Music, Headphones, Monitor, Palette, Code, Database, Lock, Wifi, Cloud, Settings, Brain, Cpu, Bot, Workflow, Lightbulb, Eye, Mic, Layers, Filter, Scissors, PenTool, Folder, Hash, Type, MapPin, Phone, Gift, ShoppingCart, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import JSZip from 'jszip';
 
 const AppHub = () => {
   const { user } = useAuth();
@@ -23,13 +24,52 @@ const AppHub = () => {
     }
     
     toast.success(`${appName} downloaded successfully!`);
-    // Handle actual download logic here
+  };
+
+  const handlePaidAppDownload = (appName: string) => {
+    toast.info(`Redirecting to purchase ${appName}...`);
+    navigate("/payment");
+  };
+
+  const downloadAppsAsZip = async (apps: any[], sectionName: string) => {
+    if (!user) {
+      toast.info("Please sign up to download apps!");
+      navigate("/signup");
+      return;
+    }
+
+    const zip = new JSZip();
+    const folder = zip.folder(sectionName);
+
+    // Create a README file for the section
+    const readmeContent = `${sectionName} Apps Collection\n\nThis package contains ${apps.length} AI-powered applications:\n\n${apps.map(app => `- ${app.name}: ${app.description}`).join('\n')}`;
+    folder?.file("README.txt", readmeContent);
+
+    // Create individual app info files
+    apps.forEach((app, index) => {
+      const appInfo = `App Name: ${app.name}\nDescription: ${app.description}\nRating: ${app.rating} (${app.reviews} reviews)\n${app.price ? `Price: ${app.price}` : 'Type: Free'}\n\nInstallation Instructions:\n1. Extract this file\n2. Follow the setup guide\n3. Launch the application`;
+      folder?.file(`${app.name.replace(/[^a-zA-Z0-9]/g, '_')}_info.txt`, appInfo);
+    });
+
+    try {
+      const content = await zip.generateAsync({ type: "blob" });
+      const url = window.URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${sectionName.replace(/\s+/g, '_')}_Apps.zip`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success(`${sectionName} apps downloaded as ZIP file!`);
+    } catch (error) {
+      toast.error("Failed to create ZIP file");
+    }
   };
 
   const generateSocialMediaPosts = async () => {
     setIsGenerating(true);
     
-    // Simulate AI generation with sample posts
     const samplePosts = [
       {
         id: 1,
@@ -54,7 +94,6 @@ const AppHub = () => {
       }
     ];
 
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     setGeneratedPosts(samplePosts);
@@ -67,42 +106,76 @@ const AppHub = () => {
     toast.info("Redirecting to payment to start your organic campaign...");
   };
 
-  const freeApps = [
-    { name: "SEO Keyword Tracker", icon: Search, description: "Track your keyword rankings across all search engines", rating: 4.8, reviews: "2.1k" },
-    { name: "Traffic Analytics", icon: Globe, description: "Monitor your website traffic and user behavior", rating: 4.9, reviews: "1.8k" },
-    { name: "Social Media Scheduler", icon: TrendingUp, description: "Schedule and automate your social media posts", rating: 4.7, reviews: "3.2k" },
-    { name: "Email Marketing Tool", icon: Mail, description: "Create and send professional email campaigns", rating: 4.6, reviews: "2.5k" },
-    { name: "Backlink Checker", icon: Link2, description: "Monitor and analyze your website backlinks", rating: 4.8, reviews: "1.9k" },
-    { name: "Website Speed Test", icon: Zap, description: "Test and optimize your website loading speed", rating: 4.7, reviews: "2.8k" },
-    { name: "Content Generator", icon: FileText, description: "AI-powered content creation for blogs and posts", rating: 4.9, reviews: "3.5k" },
-    { name: "Image Optimizer", icon: Image, description: "Compress and optimize images for web", rating: 4.5, reviews: "1.7k" },
-    { name: "QR Code Generator", icon: Smartphone, description: "Create custom QR codes for marketing", rating: 4.6, reviews: "2.2k" },
-    { name: "Password Manager", icon: Lock, description: "Secure password storage and generation", rating: 4.8, reviews: "4.1k" },
-    { name: "Color Picker Pro", icon: Palette, description: "Advanced color selection and palette tools", rating: 4.7, reviews: "1.5k" },
-    { name: "Code Formatter", icon: Code, description: "Format and beautify your code snippets", rating: 4.6, reviews: "1.8k" },
-    { name: "Task Manager", icon: Calendar, description: "Organize and track your daily tasks", rating: 4.7, reviews: "2.9k" },
-    { name: "Video Converter", icon: Video, description: "Convert video files to different formats", rating: 4.5, reviews: "2.1k" },
-    { name: "Audio Editor", icon: Music, description: "Edit and enhance audio files", rating: 4.6, reviews: "1.6k" },
-    { name: "Screenshot Tool", icon: Monitor, description: "Capture and annotate screenshots", rating: 4.8, reviews: "3.3k" },
-    { name: "WiFi Analyzer", icon: Wifi, description: "Analyze and optimize WiFi networks", rating: 4.4, reviews: "1.4k" },
-    { name: "Cloud Storage Manager", icon: Cloud, description: "Manage files across multiple cloud services", rating: 4.7, reviews: "2.6k" },
-    { name: "System Monitor", icon: Settings, description: "Monitor system performance and resources", rating: 4.5, reviews: "1.9k" },
-    { name: "Text Editor Pro", icon: FileText, description: "Advanced text editing with syntax highlighting", rating: 4.8, reviews: "2.4k" },
-    { name: "URL Shortener", icon: Link2, description: "Create short, trackable links", rating: 4.6, reviews: "1.8k" },
-    { name: "Markdown Editor", icon: Edit3, description: "Write and preview markdown documents", rating: 4.7, reviews: "1.5k" }
+  // AI Productivity Apps Section (20 apps)
+  const productivityApps = [
+    { name: "AI Writing Assistant", icon: Edit3, description: "Advanced AI-powered writing and editing tool", rating: 4.9, reviews: "3.2k", price: "$19.99" },
+    { name: "Smart Task Manager", icon: Calendar, description: "AI-driven task prioritization and scheduling", rating: 4.8, reviews: "2.1k" },
+    { name: "Voice Transcriber Pro", icon: Mic, description: "Real-time speech-to-text with AI enhancement", rating: 4.7, reviews: "1.8k", price: "$24.99" },
+    { name: "AI Email Composer", icon: Mail, description: "Generate professional emails with AI", rating: 4.8, reviews: "2.5k" },
+    { name: "Smart Notes Organizer", icon: FileText, description: "AI-powered note organization and search", rating: 4.6, reviews: "1.9k" },
+    { name: "AI Code Generator", icon: Code, description: "Generate code snippets with AI assistance", rating: 4.9, reviews: "3.5k", price: "$39.99" },
+    { name: "Meeting Summarizer", icon: Users, description: "AI-generated meeting summaries and action items", rating: 4.7, reviews: "2.2k", price: "$29.99" },
+    { name: "Smart Calendar AI", icon: Calendar, description: "Intelligent scheduling and time management", rating: 4.5, reviews: "1.7k" },
+    { name: "AI Document Scanner", icon: Smartphone, description: "Scan and digitize documents with AI enhancement", rating: 4.6, reviews: "2.8k" },
+    { name: "Content Idea Generator", icon: Lightbulb, description: "AI-powered content brainstorming tool", rating: 4.8, reviews: "2.4k" },
+    { name: "AI Password Manager", icon: Lock, description: "Secure password generation and management", rating: 4.7, reviews: "3.1k", price: "$14.99" },
+    { name: "Smart Bookmark AI", icon: Link2, description: "AI-organized bookmark management system", rating: 4.5, reviews: "1.5k" },
+    { name: "AI Expense Tracker", icon: CreditCard, description: "Automated expense categorization and tracking", rating: 4.6, reviews: "2.0k" },
+    { name: "Research Assistant AI", icon: Search, description: "AI-powered research and fact-checking tool", rating: 4.8, reviews: "2.7k", price: "$34.99" },
+    { name: "Smart Habit Tracker", icon: Target, description: "AI-driven habit formation and tracking", rating: 4.4, reviews: "1.6k" },
+    { name: "AI Language Translator", icon: Globe, description: "Real-time language translation with context", rating: 4.7, reviews: "3.0k", price: "$22.99" },
+    { name: "Digital Wellness AI", icon: Monitor, description: "AI-powered digital health monitoring", rating: 4.5, reviews: "1.8k" },
+    { name: "AI Backup Manager", icon: Cloud, description: "Intelligent file backup and organization", rating: 4.6, reviews: "2.3k" },
+    { name: "Smart Focus Timer", icon: Zap, description: "AI-optimized focus and productivity sessions", rating: 4.7, reviews: "2.1k" },
+    { name: "AI Project Planner", icon: Workflow, description: "Intelligent project planning and management", rating: 4.8, reviews: "2.6k", price: "$44.99" }
   ];
 
-  const premiumApps = [
-    { name: "Advanced Analytics Pro", icon: Users, description: "Complete business intelligence suite with AI insights", price: "$29.99", rating: 5.0, reviews: "500+" },
-    { name: "AI Marketing Suite", icon: Zap, description: "Complete marketing automation with AI-powered campaigns", price: "$49.99", rating: 4.9, reviews: "1.2k" },
-    { name: "E-commerce Optimizer", icon: TrendingUp, description: "Advanced e-commerce analytics and optimization", price: "$39.99", rating: 4.8, reviews: "800+" },
-    { name: "Professional SEO Toolkit", icon: Search, description: "Enterprise-grade SEO analysis and optimization", price: "$59.99", rating: 4.9, reviews: "950+" },
-    { name: "Social Media Pro", icon: Share2, description: "Advanced social media management and analytics", price: "$34.99", rating: 4.7, reviews: "1.1k" },
-    { name: "Video Marketing Studio", icon: Video, description: "Professional video editing and marketing tools", price: "$79.99", rating: 4.8, reviews: "650+" },
-    { name: "Email Automation Pro", icon: Mail, description: "Advanced email marketing with automation workflows", price: "$44.99", rating: 4.9, reviews: "870+" },
-    { name: "Conversion Optimizer", icon: Target, description: "A/B testing and conversion rate optimization", price: "$54.99", rating: 4.8, reviews: "720+" },
-    { name: "Customer Analytics", icon: BarChart3, description: "Deep customer behavior analysis and insights", price: "$64.99", rating: 4.7, reviews: "540+" },
-    { name: "AI Content Creator", icon: Edit3, description: "Advanced AI content generation and optimization", price: "$69.99", rating: 4.9, reviews: "890+" }
+  // AI Creative Apps Section (20 apps)
+  const creativeApps = [
+    { name: "AI Art Generator", icon: Palette, description: "Create stunning artwork with AI algorithms", rating: 4.9, reviews: "4.2k", price: "$29.99" },
+    { name: "Smart Photo Editor", icon: Image, description: "AI-enhanced photo editing and enhancement", rating: 4.8, reviews: "3.5k" },
+    { name: "AI Music Composer", icon: Music, description: "Generate original music with artificial intelligence", rating: 4.7, reviews: "2.8k", price: "$39.99" },
+    { name: "Video AI Studio", icon: Video, description: "AI-powered video editing and creation", rating: 4.8, reviews: "3.1k", price: "$49.99" },
+    { name: "Logo Designer AI", icon: Layers, description: "Create professional logos with AI assistance", rating: 4.6, reviews: "2.4k" },
+    { name: "AI Color Palette", icon: Palette, description: "Generate harmonious color schemes with AI", rating: 4.5, reviews: "1.9k" },
+    { name: "Smart GIF Maker", icon: Video, description: "Create animated GIFs with AI optimization", rating: 4.7, reviews: "2.2k" },
+    { name: "AI Typography Tool", icon: Type, description: "Intelligent font pairing and typography design", rating: 4.6, reviews: "1.7k", price: "$24.99" },
+    { name: "3D Model Generator", icon: Layers, description: "Create 3D models with AI assistance", rating: 4.8, reviews: "2.9k", price: "$59.99" },
+    { name: "AI Sketch Enhancer", icon: PenTool, description: "Transform sketches into detailed artwork", rating: 4.7, reviews: "2.1k", price: "$34.99" },
+    { name: "Background Remover AI", icon: Scissors, description: "Remove backgrounds with pixel-perfect precision", rating: 4.9, reviews: "3.8k" },
+    { name: "AI Meme Generator", icon: Camera, description: "Create viral memes with AI humor intelligence", rating: 4.5, reviews: "2.6k" },
+    { name: "Smart Filter Creator", icon: Filter, description: "Design custom filters with AI technology", rating: 4.6, reviews: "1.8k" },
+    { name: "AI Animation Studio", icon: Video, description: "Create animations with intelligent assistance", rating: 4.8, reviews: "2.7k", price: "$44.99" },
+    { name: "Voice Changer AI", icon: Headphones, description: "Transform voices with AI vocal effects", rating: 4.4, reviews: "2.0k", price: "$19.99" },
+    { name: "AI Mockup Generator", icon: Smartphone, description: "Create product mockups with AI placement", rating: 4.7, reviews: "2.3k" },
+    { name: "Story Illustrator AI", icon: FileText, description: "Generate illustrations for stories and content", rating: 4.6, reviews: "1.5k", price: "$32.99" },
+    { name: "AI Pattern Maker", icon: Hash, description: "Create seamless patterns with AI generation", rating: 4.5, reviews: "1.6k" },
+    { name: "Smart Collage Creator", icon: Image, description: "AI-assisted photo collage composition", rating: 4.7, reviews: "2.4k" },
+    { name: "AI Watermark Tool", icon: Shield, description: "Intelligent watermark creation and removal", rating: 4.6, reviews: "1.9k", price: "$16.99" }
+  ];
+
+  // AI Business Apps Section (20 apps)
+  const businessApps = [
+    { name: "AI Sales Predictor", icon: TrendingUp, description: "Predict sales trends with machine learning", rating: 4.9, reviews: "2.1k", price: "$99.99" },
+    { name: "Customer Insight AI", icon: Users, description: "Deep customer behavior analysis and insights", rating: 4.8, reviews: "1.8k", price: "$79.99" },
+    { name: "AI Chatbot Builder", icon: Bot, description: "Create intelligent chatbots for customer service", rating: 4.7, reviews: "2.5k", price: "$59.99" },
+    { name: "Smart Invoice AI", icon: FileText, description: "Automated invoice generation and processing", rating: 4.6, reviews: "1.9k" },
+    { name: "AI Lead Generator", icon: Target, description: "Find and qualify leads with AI algorithms", rating: 4.8, reviews: "2.3k", price: "$89.99" },
+    { name: "Market Research AI", icon: BarChart3, description: "Comprehensive market analysis with AI insights", rating: 4.7, reviews: "1.7k", price: "$149.99" },
+    { name: "AI Inventory Manager", icon: Database, description: "Smart inventory tracking and optimization", rating: 4.5, reviews: "2.0k", price: "$69.99" },
+    { name: "Price Optimizer AI", icon: CreditCard, description: "Dynamic pricing strategies with AI", rating: 4.8, reviews: "1.5k", price: "$119.99" },
+    { name: "AI HR Assistant", icon: Users, description: "Streamline HR processes with intelligent automation", rating: 4.6, reviews: "1.8k", price: "$94.99" },
+    { name: "Business Plan AI", icon: FileText, description: "Generate comprehensive business plans with AI", rating: 4.7, reviews: "1.4k", price: "$49.99" },
+    { name: "AI Risk Analyzer", icon: Shield, description: "Identify and assess business risks intelligently", rating: 4.8, reviews: "1.2k", price: "$129.99" },
+    { name: "Smart CRM System", icon: Phone, description: "AI-powered customer relationship management", rating: 4.9, reviews: "2.8k", price: "$199.99" },
+    { name: "AI Competitor Tracker", icon: Eye, description: "Monitor competitors with intelligent analysis", rating: 4.6, reviews: "1.6k", price: "$74.99" },
+    { name: "Financial Forecast AI", icon: TrendingUp, description: "Predict financial outcomes with machine learning", rating: 4.8, reviews: "1.3k", price: "$159.99" },
+    { name: "AI Meeting Scheduler", icon: Calendar, description: "Intelligent meeting coordination and optimization", rating: 4.5, reviews: "2.1k" },
+    { name: "Supply Chain AI", icon: Workflow, description: "Optimize supply chain with predictive analytics", rating: 4.7, reviews: "1.1k", price: "$299.99" },
+    { name: "AI Performance Tracker", icon: BarChart3, description: "Track and improve business performance metrics", rating: 4.6, reviews: "1.7k", price: "$84.99" },
+    { name: "Smart Contract AI", icon: FileText, description: "Generate and analyze contracts with AI", rating: 4.8, reviews: "1.0k", price: "$179.99" },
+    { name: "AI Location Finder", icon: MapPin, description: "Find optimal business locations with data analysis", rating: 4.4, reviews: "1.2k", price: "$124.99" },
+    { name: "Customer Retention AI", icon: Gift, description: "Improve customer retention with intelligent strategies", rating: 4.7, reviews: "1.9k", price: "$109.99" }
   ];
 
   return (
@@ -112,48 +185,14 @@ const AppHub = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-purple-700 border-purple-300 glass-effect">
-            📱 AI App Hub
+            🤖 AI App Hub
           </Badge>
           <h1 className="text-4xl font-bold mb-4 text-white drop-shadow-lg">
-            Download Powerful AI Apps
+            AI-Powered Application Store
           </h1>
           <p className="text-xl text-white/90 max-w-3xl mx-auto drop-shadow">
-            Get access to our collection of AI-powered mobile and desktop applications
+            Discover, download, and deploy cutting-edge AI applications for productivity, creativity, and business
           </p>
-        </div>
-
-        {/* Free Apps Section */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-8 text-center">Free Apps ({freeApps.length} Available)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {freeApps.map((app, index) => (
-              <Card key={index} className="glass-effect border-white/20 hover:border-green-300 transition-all duration-300">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <app.icon className="h-8 w-8 text-green-400" />
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">Free</Badge>
-                  </div>
-                  <CardTitle className="text-white text-sm">{app.name}</CardTitle>
-                  <CardDescription className="text-white/70 text-xs">
-                    {app.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="text-white/80 text-sm">{app.rating} ({app.reviews} reviews)</span>
-                  </div>
-                  <Button 
-                    className="w-full bg-green-600 hover:bg-green-700 text-sm"
-                    onClick={() => handleFreeAppDownload(app.name)}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Free
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
 
         {/* AI Social Media Post Generator Section */}
@@ -272,30 +311,143 @@ const AppHub = () => {
           </Card>
         </div>
 
-        {/* Premium Apps Section */}
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-8 text-center">Premium Apps ({premiumApps.length} Available)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {premiumApps.map((app, index) => (
-              <Card key={index} className="glass-effect border-white/20 hover:border-amber-300 transition-all duration-300">
+        {/* AI Productivity Apps Section */}
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-white">
+              <Brain className="inline h-8 w-8 mr-2 text-blue-400" />
+              AI Productivity Apps ({productivityApps.length} Available)
+            </h2>
+            <Button 
+              onClick={() => downloadAppsAsZip(productivityApps, "AI Productivity Apps")}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download All as ZIP
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {productivityApps.map((app, index) => (
+              <Card key={index} className="glass-effect border-white/20 hover:border-blue-300 transition-all duration-300">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <app.icon className="h-8 w-8 text-amber-400" />
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800">{app.price}</Badge>
+                    <app.icon className="h-8 w-8 text-blue-400" />
+                    <Badge variant="secondary" className={app.price ? "bg-amber-100 text-amber-800" : "bg-green-100 text-green-800"}>
+                      {app.price || "Free"}
+                    </Badge>
                   </div>
-                  <CardTitle className="text-white">{app.name}</CardTitle>
-                  <CardDescription className="text-white/70">
+                  <CardTitle className="text-white text-sm">{app.name}</CardTitle>
+                  <CardDescription className="text-white/70 text-xs">
                     {app.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2 mb-4">
                     <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="text-white/80">{app.rating} ({app.reviews} reviews)</span>
+                    <span className="text-white/80 text-sm">{app.rating} ({app.reviews} reviews)</span>
                   </div>
-                  <Button className="w-full bg-amber-600 hover:bg-amber-700">
+                  <Button 
+                    className={`w-full text-sm ${app.price ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'}`}
+                    onClick={() => app.price ? handlePaidAppDownload(app.name) : handleFreeAppDownload(app.name)}
+                  >
                     <Download className="h-4 w-4 mr-2" />
-                    Purchase & Download
+                    {app.price ? "Purchase & Download" : "Download Free"}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* AI Creative Apps Section */}
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-white">
+              <Palette className="inline h-8 w-8 mr-2 text-purple-400" />
+              AI Creative Apps ({creativeApps.length} Available)
+            </h2>
+            <Button 
+              onClick={() => downloadAppsAsZip(creativeApps, "AI Creative Apps")}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download All as ZIP
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {creativeApps.map((app, index) => (
+              <Card key={index} className="glass-effect border-white/20 hover:border-purple-300 transition-all duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <app.icon className="h-8 w-8 text-purple-400" />
+                    <Badge variant="secondary" className={app.price ? "bg-amber-100 text-amber-800" : "bg-green-100 text-green-800"}>
+                      {app.price || "Free"}
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-white text-sm">{app.name}</CardTitle>
+                  <CardDescription className="text-white/70 text-xs">
+                    {app.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <span className="text-white/80 text-sm">{app.rating} ({app.reviews} reviews)</span>
+                  </div>
+                  <Button 
+                    className={`w-full text-sm ${app.price ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'}`}
+                    onClick={() => app.price ? handlePaidAppDownload(app.name) : handleFreeAppDownload(app.name)}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    {app.price ? "Purchase & Download" : "Download Free"}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* AI Business Apps Section */}
+        <div>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-white">
+              <TrendingUp className="inline h-8 w-8 mr-2 text-green-400" />
+              AI Business Apps ({businessApps.length} Available)
+            </h2>
+            <Button 
+              onClick={() => downloadAppsAsZip(businessApps, "AI Business Apps")}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download All as ZIP
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {businessApps.map((app, index) => (
+              <Card key={index} className="glass-effect border-white/20 hover:border-green-300 transition-all duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <app.icon className="h-8 w-8 text-green-400" />
+                    <Badge variant="secondary" className={app.price ? "bg-amber-100 text-amber-800" : "bg-green-100 text-green-800"}>
+                      {app.price || "Free"}
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-white text-sm">{app.name}</CardTitle>
+                  <CardDescription className="text-white/70 text-xs">
+                    {app.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <span className="text-white/80 text-sm">{app.rating} ({app.reviews} reviews)</span>
+                  </div>
+                  <Button 
+                    className={`w-full text-sm ${app.price ? 'bg-amber-600 hover:bg-amber-700' : 'bg-green-600 hover:bg-green-700'}`}
+                    onClick={() => app.price ? handlePaidAppDownload(app.name) : handleFreeAppDownload(app.name)}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    {app.price ? "Purchase & Download" : "Download Free"}
                   </Button>
                 </CardContent>
               </Card>
