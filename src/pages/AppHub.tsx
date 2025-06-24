@@ -1,8 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Download, Star, Users, TrendingUp, Smartphone, Globe, Zap, Camera, Edit3, Share2, Shield, Search, Mail, Link2, BarChart3, Target, MessageSquare, Calendar, FileText, Image, Video, Music, Headphones, Monitor, Palette, Code, Database, Lock, Wifi, Cloud, Settings, Brain, Cpu, Bot, Workflow, Lightbulb, Eye, Mic, Layers, Filter, Scissors, PenTool, Folder, Hash, Type, MapPin, Phone, Gift, ShoppingCart, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +17,13 @@ const AppHub = () => {
   const navigate = useNavigate();
   const [generatedPosts, setGeneratedPosts] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Social Media Post Generator state
+  const [postFormData, setPostFormData] = useState({
+    website: "",
+    keywords: "",
+    description: ""
+  });
 
   const handleFreeAppDownload = (appName: string) => {
     if (!user) {
@@ -27,8 +36,9 @@ const AppHub = () => {
   };
 
   const handlePaidAppDownload = (appName: string) => {
-    toast.info(`Redirecting to purchase ${appName}...`);
-    navigate("/payment");
+    // Redirect to PayPal checkout page
+    window.open("https://www.paypal.com/checkoutnow?token=your_paypal_token", "_blank");
+    toast.info(`Redirecting to PayPal checkout for ${appName}...`);
   };
 
   const downloadAppsAsZip = async (apps: any[], sectionName: string) => {
@@ -38,67 +48,53 @@ const AppHub = () => {
       return;
     }
 
-    const zip = new JSZip();
-    const folder = zip.folder(sectionName);
-
-    // Create a README file for the section
-    const readmeContent = `${sectionName} Apps Collection\n\nThis package contains ${apps.length} AI-powered applications:\n\n${apps.map(app => `- ${app.name}: ${app.description}`).join('\n')}`;
-    folder?.file("README.txt", readmeContent);
-
-    // Create individual app info files
-    apps.forEach((app, index) => {
-      const appInfo = `App Name: ${app.name}\nDescription: ${app.description}\nRating: ${app.rating} (${app.reviews} reviews)\n${app.price ? `Price: ${app.price}` : 'Type: Free'}\n\nInstallation Instructions:\n1. Extract this file\n2. Follow the setup guide\n3. Launch the application`;
-      folder?.file(`${app.name.replace(/[^a-zA-Z0-9]/g, '_')}_info.txt`, appInfo);
-    });
-
-    try {
-      const content = await zip.generateAsync({ type: "blob" });
-      const url = window.URL.createObjectURL(content);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${sectionName.replace(/\s+/g, '_')}_Apps.zip`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      toast.success(`${sectionName} apps downloaded as ZIP file!`);
-    } catch (error) {
-      toast.error("Failed to create ZIP file");
-    }
+    // Redirect to PayPal payment page for ZIP download access
+    window.open("https://www.paypal.com/checkoutnow?token=your_zip_download_token", "_blank");
+    toast.info("Redirecting to PayPal for ZIP download access...");
   };
 
   const generateSocialMediaPosts = async () => {
+    if (!postFormData.website || !postFormData.keywords || !postFormData.description) {
+      toast.error("Please fill in all fields to generate posts!");
+      return;
+    }
+
     setIsGenerating(true);
     
-    const samplePosts = [
-      {
-        id: 1,
-        platform: "Instagram",
-        content: "🌟 Boost your Etsy sales with our traffic booster! Get more eyes on your products today. #EtsySeller #TrafficBoost #OnlineBusiness",
-        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=400&fit=crop",
-        engagement: "2.5K likes • 340 comments"
-      },
-      {
-        id: 2,
-        platform: "Facebook",
-        content: "💡 Ready to take your online store to the next level? Our AI-powered tools help you reach more customers and increase sales organically!",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop",
-        engagement: "1.8K reactions • 125 shares"
-      },
-      {
-        id: 3,
-        platform: "Twitter",
-        content: "🚀 Just launched a new campaign and already seeing 300% more traffic! The organic reach is incredible. #DigitalMarketing #Growth",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=400&fit=crop",
-        engagement: "892 retweets • 2.1K likes"
-      }
+    // Simulate AI generation based on user input
+    const basePrompts = [
+      `🚀 Transform your business with ${postFormData.keywords}! Visit ${postFormData.website} to discover ${postFormData.description}`,
+      `✨ New breakthrough in ${postFormData.keywords}! ${postFormData.description} - Check it out at ${postFormData.website}`,
+      `💡 Ready to revolutionize your approach to ${postFormData.keywords}? ${postFormData.description} Available at ${postFormData.website}`,
+      `🎯 Don't miss out on the latest ${postFormData.keywords} solutions! ${postFormData.description} Visit ${postFormData.website} now!`
     ];
+
+    const images = [
+      "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=400&fit=crop"
+    ];
+
+    const platforms = ["Instagram", "Facebook", "Twitter", "LinkedIn"];
+    const hashtags = postFormData.keywords.split(" ").map(keyword => `#${keyword.replace(/\s+/g, '')}`).join(" ");
+
+    const newPosts = platforms.map((platform, index) => ({
+      id: Date.now() + index,
+      platform,
+      content: `${basePrompts[index % basePrompts.length]} ${hashtags} #AI #Innovation #Business`,
+      image: images[index % images.length],
+      engagement: `${Math.floor(Math.random() * 3000 + 500)} likes • ${Math.floor(Math.random() * 500 + 50)} ${platform === 'Twitter' ? 'retweets' : 'shares'}`,
+      tags: hashtags
+    }));
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    setGeneratedPosts(samplePosts);
+    setGeneratedPosts(newPosts);
     setIsGenerating(false);
-    toast.success("Social media posts generated successfully!");
+    toast.success("Viral AI posts generated successfully!");
   };
 
   const launchOrganicCampaign = () => {
@@ -106,76 +102,88 @@ const AppHub = () => {
     toast.info("Redirecting to payment to start your organic campaign...");
   };
 
+  const handlePostFormChange = (field: string, value: string) => {
+    setPostFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const copyPostToClipboard = (content: string) => {
+    navigator.clipboard.writeText(content);
+    toast.success("Post copied to clipboard!");
+  };
+
   // AI Productivity Apps Section (20 apps)
   const productivityApps = [
-    { name: "AI Writing Assistant", icon: Edit3, description: "Advanced AI-powered writing and editing tool", rating: 4.9, reviews: "3.2k", price: "$19.99" },
+    { name: "AI Writing Assistant", icon: Edit3, description: "Advanced AI-powered writing and editing tool", rating: 4.9, reviews: "3.2k", price: "$9.99" },
     { name: "Smart Task Manager", icon: Calendar, description: "AI-driven task prioritization and scheduling", rating: 4.8, reviews: "2.1k" },
-    { name: "Voice Transcriber Pro", icon: Mic, description: "Real-time speech-to-text with AI enhancement", rating: 4.7, reviews: "1.8k", price: "$24.99" },
-    { name: "AI Email Composer", icon: Mail, description: "Generate professional emails with AI", rating: 4.8, reviews: "2.5k" },
+    { name: "Voice Transcriber Pro", icon: Mic, description: "Real-time speech-to-text with AI enhancement", rating: 4.7, reviews: "1.8k", price: "$12.99" },
+    { name: "AI Email Composer", icon: Mail, description: "Generate professional emails with AI", rating: 4.8, reviews: "2.5k", price: "$7.99" },
     { name: "Smart Notes Organizer", icon: FileText, description: "AI-powered note organization and search", rating: 4.6, reviews: "1.9k" },
-    { name: "AI Code Generator", icon: Code, description: "Generate code snippets with AI assistance", rating: 4.9, reviews: "3.5k", price: "$39.99" },
-    { name: "Meeting Summarizer", icon: Users, description: "AI-generated meeting summaries and action items", rating: 4.7, reviews: "2.2k", price: "$29.99" },
+    { name: "AI Code Generator", icon: Code, description: "Generate code snippets with AI assistance", rating: 4.9, reviews: "3.5k", price: "$19.99" },
+    { name: "Meeting Summarizer", icon: Users, description: "AI-generated meeting summaries and action items", rating: 4.7, reviews: "2.2k", price: "$14.99" },
     { name: "Smart Calendar AI", icon: Calendar, description: "Intelligent scheduling and time management", rating: 4.5, reviews: "1.7k" },
     { name: "AI Document Scanner", icon: Smartphone, description: "Scan and digitize documents with AI enhancement", rating: 4.6, reviews: "2.8k" },
-    { name: "Content Idea Generator", icon: Lightbulb, description: "AI-powered content brainstorming tool", rating: 4.8, reviews: "2.4k" },
-    { name: "AI Password Manager", icon: Lock, description: "Secure password generation and management", rating: 4.7, reviews: "3.1k", price: "$14.99" },
+    { name: "Content Idea Generator", icon: Lightbulb, description: "AI-powered content brainstorming tool", rating: 4.8, reviews: "2.4k", price: "$8.99" },
+    { name: "AI Password Manager", icon: Lock, description: "Secure password generation and management", rating: 4.7, reviews: "3.1k", price: "$6.99" },
     { name: "Smart Bookmark AI", icon: Link2, description: "AI-organized bookmark management system", rating: 4.5, reviews: "1.5k" },
     { name: "AI Expense Tracker", icon: CreditCard, description: "Automated expense categorization and tracking", rating: 4.6, reviews: "2.0k" },
-    { name: "Research Assistant AI", icon: Search, description: "AI-powered research and fact-checking tool", rating: 4.8, reviews: "2.7k", price: "$34.99" },
+    { name: "Research Assistant AI", icon: Search, description: "AI-powered research and fact-checking tool", rating: 4.8, reviews: "2.7k", price: "$16.99" },
     { name: "Smart Habit Tracker", icon: Target, description: "AI-driven habit formation and tracking", rating: 4.4, reviews: "1.6k" },
-    { name: "AI Language Translator", icon: Globe, description: "Real-time language translation with context", rating: 4.7, reviews: "3.0k", price: "$22.99" },
+    { name: "AI Language Translator", icon: Globe, description: "Real-time language translation with context", rating: 4.7, reviews: "3.0k", price: "$11.99" },
     { name: "Digital Wellness AI", icon: Monitor, description: "AI-powered digital health monitoring", rating: 4.5, reviews: "1.8k" },
-    { name: "AI Backup Manager", icon: Cloud, description: "Intelligent file backup and organization", rating: 4.6, reviews: "2.3k" },
+    { name: "AI Backup Manager", icon: Cloud, description: "Intelligent file backup and organization", rating: 4.6, reviews: "2.3k", price: "$9.99" },
     { name: "Smart Focus Timer", icon: Zap, description: "AI-optimized focus and productivity sessions", rating: 4.7, reviews: "2.1k" },
-    { name: "AI Project Planner", icon: Workflow, description: "Intelligent project planning and management", rating: 4.8, reviews: "2.6k", price: "$44.99" }
+    { name: "AI Project Planner", icon: Workflow, description: "Intelligent project planning and management", rating: 4.8, reviews: "2.6k", price: "$24.99" }
   ];
 
   // AI Creative Apps Section (20 apps)
   const creativeApps = [
-    { name: "AI Art Generator", icon: Palette, description: "Create stunning artwork with AI algorithms", rating: 4.9, reviews: "4.2k", price: "$29.99" },
-    { name: "Smart Photo Editor", icon: Image, description: "AI-enhanced photo editing and enhancement", rating: 4.8, reviews: "3.5k" },
-    { name: "AI Music Composer", icon: Music, description: "Generate original music with artificial intelligence", rating: 4.7, reviews: "2.8k", price: "$39.99" },
-    { name: "Video AI Studio", icon: Video, description: "AI-powered video editing and creation", rating: 4.8, reviews: "3.1k", price: "$49.99" },
+    { name: "AI Art Generator", icon: Palette, description: "Create stunning artwork with AI algorithms", rating: 4.9, reviews: "4.2k", price: "$14.99" },
+    { name: "Smart Photo Editor", icon: Image, description: "AI-enhanced photo editing and enhancement", rating: 4.8, reviews: "3.5k", price: "$12.99" },
+    { name: "AI Music Composer", icon: Music, description: "Generate original music with artificial intelligence", rating: 4.7, reviews: "2.8k", price: "$19.99" },
+    { name: "Video AI Studio", icon: Video, description: "AI-powered video editing and creation", rating: 4.8, reviews: "3.1k", price: "$24.99" },
     { name: "Logo Designer AI", icon: Layers, description: "Create professional logos with AI assistance", rating: 4.6, reviews: "2.4k" },
     { name: "AI Color Palette", icon: Palette, description: "Generate harmonious color schemes with AI", rating: 4.5, reviews: "1.9k" },
     { name: "Smart GIF Maker", icon: Video, description: "Create animated GIFs with AI optimization", rating: 4.7, reviews: "2.2k" },
-    { name: "AI Typography Tool", icon: Type, description: "Intelligent font pairing and typography design", rating: 4.6, reviews: "1.7k", price: "$24.99" },
-    { name: "3D Model Generator", icon: Layers, description: "Create 3D models with AI assistance", rating: 4.8, reviews: "2.9k", price: "$59.99" },
-    { name: "AI Sketch Enhancer", icon: PenTool, description: "Transform sketches into detailed artwork", rating: 4.7, reviews: "2.1k", price: "$34.99" },
+    { name: "AI Typography Tool", icon: Type, description: "Intelligent font pairing and typography design", rating: 4.6, reviews: "1.7k", price: "$8.99" },
+    { name: "3D Model Generator", icon: Layers, description: "Create 3D models with AI assistance", rating: 4.8, reviews: "2.9k", price: "$29.99" },
+    { name: "AI Sketch Enhancer", icon: PenTool, description: "Transform sketches into detailed artwork", rating: 4.7, reviews: "2.1k", price: "$16.99" },
     { name: "Background Remover AI", icon: Scissors, description: "Remove backgrounds with pixel-perfect precision", rating: 4.9, reviews: "3.8k" },
     { name: "AI Meme Generator", icon: Camera, description: "Create viral memes with AI humor intelligence", rating: 4.5, reviews: "2.6k" },
     { name: "Smart Filter Creator", icon: Filter, description: "Design custom filters with AI technology", rating: 4.6, reviews: "1.8k" },
-    { name: "AI Animation Studio", icon: Video, description: "Create animations with intelligent assistance", rating: 4.8, reviews: "2.7k", price: "$44.99" },
-    { name: "Voice Changer AI", icon: Headphones, description: "Transform voices with AI vocal effects", rating: 4.4, reviews: "2.0k", price: "$19.99" },
-    { name: "AI Mockup Generator", icon: Smartphone, description: "Create product mockups with AI placement", rating: 4.7, reviews: "2.3k" },
-    { name: "Story Illustrator AI", icon: FileText, description: "Generate illustrations for stories and content", rating: 4.6, reviews: "1.5k", price: "$32.99" },
+    { name: "AI Animation Studio", icon: Video, description: "Create animations with intelligent assistance", rating: 4.8, reviews: "2.7k", price: "$22.99" },
+    { name: "Voice Changer AI", icon: Headphones, description: "Transform voices with AI vocal effects", rating: 4.4, reviews: "2.0k", price: "$9.99" },
+    { name: "AI Mockup Generator", icon: Smartphone, description: "Create product mockups with AI placement", rating: 4.7, reviews: "2.3k", price: "$11.99" },
+    { name: "Story Illustrator AI", icon: FileText, description: "Generate illustrations for stories and content", rating: 4.6, reviews: "1.5k", price: "$15.99" },
     { name: "AI Pattern Maker", icon: Hash, description: "Create seamless patterns with AI generation", rating: 4.5, reviews: "1.6k" },
     { name: "Smart Collage Creator", icon: Image, description: "AI-assisted photo collage composition", rating: 4.7, reviews: "2.4k" },
-    { name: "AI Watermark Tool", icon: Shield, description: "Intelligent watermark creation and removal", rating: 4.6, reviews: "1.9k", price: "$16.99" }
+    { name: "AI Watermark Tool", icon: Shield, description: "Intelligent watermark creation and removal", rating: 4.6, reviews: "1.9k", price: "$7.99" }
   ];
 
   // AI Business Apps Section (20 apps)
   const businessApps = [
-    { name: "AI Sales Predictor", icon: TrendingUp, description: "Predict sales trends with machine learning", rating: 4.9, reviews: "2.1k", price: "$99.99" },
-    { name: "Customer Insight AI", icon: Users, description: "Deep customer behavior analysis and insights", rating: 4.8, reviews: "1.8k", price: "$79.99" },
-    { name: "AI Chatbot Builder", icon: Bot, description: "Create intelligent chatbots for customer service", rating: 4.7, reviews: "2.5k", price: "$59.99" },
+    { name: "AI Sales Predictor", icon: TrendingUp, description: "Predict sales trends with machine learning", rating: 4.9, reviews: "2.1k", price: "$39.99" },
+    { name: "Customer Insight AI", icon: Users, description: "Deep customer behavior analysis and insights", rating: 4.8, reviews: "1.8k", price: "$34.99" },
+    { name: "AI Chatbot Builder", icon: Bot, description: "Create intelligent chatbots for customer service", rating: 4.7, reviews: "2.5k", price: "$29.99" },
     { name: "Smart Invoice AI", icon: FileText, description: "Automated invoice generation and processing", rating: 4.6, reviews: "1.9k" },
-    { name: "AI Lead Generator", icon: Target, description: "Find and qualify leads with AI algorithms", rating: 4.8, reviews: "2.3k", price: "$89.99" },
-    { name: "Market Research AI", icon: BarChart3, description: "Comprehensive market analysis with AI insights", rating: 4.7, reviews: "1.7k", price: "$149.99" },
-    { name: "AI Inventory Manager", icon: Database, description: "Smart inventory tracking and optimization", rating: 4.5, reviews: "2.0k", price: "$69.99" },
-    { name: "Price Optimizer AI", icon: CreditCard, description: "Dynamic pricing strategies with AI", rating: 4.8, reviews: "1.5k", price: "$119.99" },
-    { name: "AI HR Assistant", icon: Users, description: "Streamline HR processes with intelligent automation", rating: 4.6, reviews: "1.8k", price: "$94.99" },
-    { name: "Business Plan AI", icon: FileText, description: "Generate comprehensive business plans with AI", rating: 4.7, reviews: "1.4k", price: "$49.99" },
-    { name: "AI Risk Analyzer", icon: Shield, description: "Identify and assess business risks intelligently", rating: 4.8, reviews: "1.2k", price: "$129.99" },
-    { name: "Smart CRM System", icon: Phone, description: "AI-powered customer relationship management", rating: 4.9, reviews: "2.8k", price: "$199.99" },
-    { name: "AI Competitor Tracker", icon: Eye, description: "Monitor competitors with intelligent analysis", rating: 4.6, reviews: "1.6k", price: "$74.99" },
-    { name: "Financial Forecast AI", icon: TrendingUp, description: "Predict financial outcomes with machine learning", rating: 4.8, reviews: "1.3k", price: "$159.99" },
+    { name: "AI Lead Generator", icon: Target, description: "Find and qualify leads with AI algorithms", rating: 4.8, reviews: "2.3k", price: "$32.99" },
+    { name: "Market Research AI", icon: BarChart3, description: "Comprehensive market analysis with AI insights", rating: 4.7, reviews: "1.7k", price: "$44.99" },
+    { name: "AI Inventory Manager", icon: Database, description: "Smart inventory tracking and optimization", rating: 4.5, reviews: "2.0k", price: "$27.99" },
+    { name: "Price Optimizer AI", icon: CreditCard, description: "Dynamic pricing strategies with AI", rating: 4.8, reviews: "1.5k", price: "$36.99" },
+    { name: "AI HR Assistant", icon: Users, description: "Streamline HR processes with intelligent automation", rating: 4.6, reviews: "1.8k", price: "$31.99" },
+    { name: "Business Plan AI", icon: FileText, description: "Generate comprehensive business plans with AI", rating: 4.7, reviews: "1.4k", price: "$24.99" },
+    { name: "AI Risk Analyzer", icon: Shield, description: "Identify and assess business risks intelligently", rating: 4.8, reviews: "1.2k", price: "$38.99" },
+    { name: "Smart CRM System", icon: Phone, description: "AI-powered customer relationship management", rating: 4.9, reviews: "2.8k", price: "$49.99" },
+    { name: "AI Competitor Tracker", icon: Eye, description: "Monitor competitors with intelligent analysis", rating: 4.6, reviews: "1.6k", price: "$28.99" },
+    { name: "Financial Forecast AI", icon: TrendingUp, description: "Predict financial outcomes with machine learning", rating: 4.8, reviews: "1.3k", price: "$42.99" },
     { name: "AI Meeting Scheduler", icon: Calendar, description: "Intelligent meeting coordination and optimization", rating: 4.5, reviews: "2.1k" },
-    { name: "Supply Chain AI", icon: Workflow, description: "Optimize supply chain with predictive analytics", rating: 4.7, reviews: "1.1k", price: "$299.99" },
-    { name: "AI Performance Tracker", icon: BarChart3, description: "Track and improve business performance metrics", rating: 4.6, reviews: "1.7k", price: "$84.99" },
-    { name: "Smart Contract AI", icon: FileText, description: "Generate and analyze contracts with AI", rating: 4.8, reviews: "1.0k", price: "$179.99" },
-    { name: "AI Location Finder", icon: MapPin, description: "Find optimal business locations with data analysis", rating: 4.4, reviews: "1.2k", price: "$124.99" },
-    { name: "Customer Retention AI", icon: Gift, description: "Improve customer retention with intelligent strategies", rating: 4.7, reviews: "1.9k", price: "$109.99" }
+    { name: "Supply Chain AI", icon: Workflow, description: "Optimize supply chain with predictive analytics", rating: 4.7, reviews: "1.1k", price: "$89.99" },
+    { name: "AI Performance Tracker", icon: BarChart3, description: "Track and improve business performance metrics", rating: 4.6, reviews: "1.7k", price: "$33.99" },
+    { name: "Smart Contract AI", icon: FileText, description: "Generate and analyze contracts with AI", rating: 4.8, reviews: "1.0k", price: "$54.99" },
+    { name: "AI Location Finder", icon: MapPin, description: "Find optimal business locations with data analysis", rating: 4.4, reviews: "1.2k", price: "$37.99" },
+    { name: "Customer Retention AI", icon: Gift, description: "Improve customer retention with intelligent strategies", rating: 4.7, reviews: "1.9k", price: "$41.99" }
   ];
 
   return (
@@ -195,7 +203,7 @@ const AppHub = () => {
           </p>
         </div>
 
-        {/* AI Social Media Post Generator Section */}
+        {/* Enhanced AI Social Media Post Generator Section */}
         <div className="mb-16">
           <Card className="glass-effect border-white/20 max-w-6xl mx-auto">
             <CardHeader className="text-center">
@@ -203,12 +211,46 @@ const AppHub = () => {
                 <Camera className="h-8 w-8 text-purple-400" />
                 <Edit3 className="h-8 w-8 text-blue-400" />
               </div>
-              <CardTitle className="text-2xl text-white">Social Media Post Generator</CardTitle>
+              <CardTitle className="text-2xl text-white">Viral AI Social Media Post Generator</CardTitle>
               <CardDescription className="text-white/70">
-                Generate engaging social media posts with AI-powered content and web images
+                Create viral social media posts with AI-powered content, images, and hashtags
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {/* User Input Form */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="space-y-2">
+                  <Label htmlFor="website" className="text-white font-medium">Your Website</Label>
+                  <Input
+                    id="website"
+                    placeholder="https://yourwebsite.com"
+                    value={postFormData.website}
+                    onChange={(e) => handlePostFormChange("website", e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="keywords" className="text-white font-medium">Keywords</Label>
+                  <Input
+                    id="keywords"
+                    placeholder="AI marketing tools business"
+                    value={postFormData.keywords}
+                    onChange={(e) => handlePostFormChange("keywords", e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-white font-medium">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Describe your product or service..."
+                    value={postFormData.description}
+                    onChange={(e) => handlePostFormChange("description", e.target.value)}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50 min-h-[80px]"
+                  />
+                </div>
+              </div>
+
               <div className="text-center mb-8">
                 <Button 
                   onClick={generateSocialMediaPosts}
@@ -216,12 +258,12 @@ const AppHub = () => {
                   className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3"
                 >
                   <Zap className="h-4 w-4 mr-2" />
-                  {isGenerating ? "Generating Posts..." : "Generate AI Posts"}
+                  {isGenerating ? "Generating Viral Posts..." : "Generate Viral AI Posts"}
                 </Button>
               </div>
 
               {generatedPosts.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {generatedPosts.map((post) => (
                     <Card key={post.id} className="bg-white/10 border-white/20">
                       <CardHeader>
@@ -236,17 +278,27 @@ const AppHub = () => {
                         <img 
                           src={post.image} 
                           alt="Generated post image"
-                          className="w-full h-40 object-cover rounded-lg mb-4"
+                          className="w-full h-32 object-cover rounded-lg mb-4"
                         />
-                        <p className="text-white/90 text-sm mb-4">{post.content}</p>
-                        <div className="text-white/60 text-xs">{post.engagement}</div>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="w-full mt-4 border-white/30 text-white hover:bg-white/10"
-                        >
-                          Use This Post
-                        </Button>
+                        <p className="text-white/90 text-xs mb-3 line-clamp-4">{post.content}</p>
+                        <div className="text-white/60 text-xs mb-2">{post.engagement}</div>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 border-white/30 text-white hover:bg-white/10 text-xs"
+                            onClick={() => copyPostToClipboard(post.content)}
+                          >
+                            Copy Post
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="border-white/30 text-white hover:bg-white/10"
+                          >
+                            <Share2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
@@ -256,7 +308,7 @@ const AppHub = () => {
           </Card>
         </div>
 
-        {/* AI Campaign Builder Section */}
+        {/* AI Campaign Builder Section - Keep unchanged */}
         <div className="mb-16">
           <Card className="glass-effect border-white/20 max-w-4xl mx-auto">
             <CardHeader className="text-center">
