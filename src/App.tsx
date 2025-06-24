@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +14,7 @@ import Disclaimer from "./pages/Disclaimer";
 import NotFound from "./pages/NotFound";
 import AboutUs from "./pages/AboutUs";
 import BacklinkGenerator from "./pages/BacklinkGenerator";
+import Payment from "./pages/Payment";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +35,7 @@ const App = () => (
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/payment" element={<Payment />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
