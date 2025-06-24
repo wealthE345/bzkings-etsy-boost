@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Star, Users, TrendingUp, Smartphone, Globe, Zap, Camera, Edit3, Share2 } from "lucide-react";
+import { Download, Star, Users, TrendingUp, Smartphone, Globe, Zap, Camera, Edit3, Share2, Shield, Search, Mail, Link2, BarChart3, Target, MessageSquare, Calendar, FileText, Image, Video, Music, Headphones, Monitor, Palette, Code, Database, Lock, Wifi, Cloud, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
@@ -63,10 +63,47 @@ const AppHub = () => {
   };
 
   const launchOrganicCampaign = () => {
-    // Redirect to payment page for the organic campaign
     navigate("/payment");
     toast.info("Redirecting to payment to start your organic campaign...");
   };
+
+  const freeApps = [
+    { name: "SEO Keyword Tracker", icon: Search, description: "Track your keyword rankings across all search engines", rating: 4.8, reviews: "2.1k" },
+    { name: "Traffic Analytics", icon: Globe, description: "Monitor your website traffic and user behavior", rating: 4.9, reviews: "1.8k" },
+    { name: "Social Media Scheduler", icon: TrendingUp, description: "Schedule and automate your social media posts", rating: 4.7, reviews: "3.2k" },
+    { name: "Email Marketing Tool", icon: Mail, description: "Create and send professional email campaigns", rating: 4.6, reviews: "2.5k" },
+    { name: "Backlink Checker", icon: Link2, description: "Monitor and analyze your website backlinks", rating: 4.8, reviews: "1.9k" },
+    { name: "Website Speed Test", icon: Zap, description: "Test and optimize your website loading speed", rating: 4.7, reviews: "2.8k" },
+    { name: "Content Generator", icon: FileText, description: "AI-powered content creation for blogs and posts", rating: 4.9, reviews: "3.5k" },
+    { name: "Image Optimizer", icon: Image, description: "Compress and optimize images for web", rating: 4.5, reviews: "1.7k" },
+    { name: "QR Code Generator", icon: Smartphone, description: "Create custom QR codes for marketing", rating: 4.6, reviews: "2.2k" },
+    { name: "Password Manager", icon: Lock, description: "Secure password storage and generation", rating: 4.8, reviews: "4.1k" },
+    { name: "Color Picker Pro", icon: Palette, description: "Advanced color selection and palette tools", rating: 4.7, reviews: "1.5k" },
+    { name: "Code Formatter", icon: Code, description: "Format and beautify your code snippets", rating: 4.6, reviews: "1.8k" },
+    { name: "Task Manager", icon: Calendar, description: "Organize and track your daily tasks", rating: 4.7, reviews: "2.9k" },
+    { name: "Video Converter", icon: Video, description: "Convert video files to different formats", rating: 4.5, reviews: "2.1k" },
+    { name: "Audio Editor", icon: Music, description: "Edit and enhance audio files", rating: 4.6, reviews: "1.6k" },
+    { name: "Screenshot Tool", icon: Monitor, description: "Capture and annotate screenshots", rating: 4.8, reviews: "3.3k" },
+    { name: "WiFi Analyzer", icon: Wifi, description: "Analyze and optimize WiFi networks", rating: 4.4, reviews: "1.4k" },
+    { name: "Cloud Storage Manager", icon: Cloud, description: "Manage files across multiple cloud services", rating: 4.7, reviews: "2.6k" },
+    { name: "System Monitor", icon: Settings, description: "Monitor system performance and resources", rating: 4.5, reviews: "1.9k" },
+    { name: "Text Editor Pro", icon: FileText, description: "Advanced text editing with syntax highlighting", rating: 4.8, reviews: "2.4k" },
+    { name: "URL Shortener", icon: Link2, description: "Create short, trackable links", rating: 4.6, reviews: "1.8k" },
+    { name: "Markdown Editor", icon: Edit3, description: "Write and preview markdown documents", rating: 4.7, reviews: "1.5k" }
+  ];
+
+  const premiumApps = [
+    { name: "Advanced Analytics Pro", icon: Users, description: "Complete business intelligence suite with AI insights", price: "$29.99", rating: 5.0, reviews: "500+" },
+    { name: "AI Marketing Suite", icon: Zap, description: "Complete marketing automation with AI-powered campaigns", price: "$49.99", rating: 4.9, reviews: "1.2k" },
+    { name: "E-commerce Optimizer", icon: TrendingUp, description: "Advanced e-commerce analytics and optimization", price: "$39.99", rating: 4.8, reviews: "800+" },
+    { name: "Professional SEO Toolkit", icon: Search, description: "Enterprise-grade SEO analysis and optimization", price: "$59.99", rating: 4.9, reviews: "950+" },
+    { name: "Social Media Pro", icon: Share2, description: "Advanced social media management and analytics", price: "$34.99", rating: 4.7, reviews: "1.1k" },
+    { name: "Video Marketing Studio", icon: Video, description: "Professional video editing and marketing tools", price: "$79.99", rating: 4.8, reviews: "650+" },
+    { name: "Email Automation Pro", icon: Mail, description: "Advanced email marketing with automation workflows", price: "$44.99", rating: 4.9, reviews: "870+" },
+    { name: "Conversion Optimizer", icon: Target, description: "A/B testing and conversion rate optimization", price: "$54.99", rating: 4.8, reviews: "720+" },
+    { name: "Customer Analytics", icon: BarChart3, description: "Deep customer behavior analysis and insights", price: "$64.99", rating: 4.7, reviews: "540+" },
+    { name: "AI Content Creator", icon: Edit3, description: "Advanced AI content generation and optimization", price: "$69.99", rating: 4.9, reviews: "890+" }
+  ];
 
   return (
     <div className="min-h-screen animated-bg">
@@ -87,85 +124,35 @@ const AppHub = () => {
 
         {/* Free Apps Section */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-white mb-8 text-center">Free Apps</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="glass-effect border-white/20 hover:border-green-300 transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <Smartphone className="h-8 w-8 text-green-400" />
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">Free</Badge>
-                </div>
-                <CardTitle className="text-white">SEO Keyword Tracker</CardTitle>
-                <CardDescription className="text-white/70">
-                  Track your keyword rankings across all search engines
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-white/80">4.8 (2.1k reviews)</span>
-                </div>
-                <Button 
-                  className="w-full bg-green-600 hover:bg-green-700"
-                  onClick={() => handleFreeAppDownload("SEO Keyword Tracker")}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download Free
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-effect border-white/20 hover:border-green-300 transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <Globe className="h-8 w-8 text-blue-400" />
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">Free</Badge>
-                </div>
-                <CardTitle className="text-white">Traffic Analytics</CardTitle>
-                <CardDescription className="text-white/70">
-                  Monitor your website traffic and user behavior
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-white/80">4.9 (1.8k reviews)</span>
-                </div>
-                <Button 
-                  className="w-full bg-green-600 hover:bg-green-700"
-                  onClick={() => handleFreeAppDownload("Traffic Analytics")}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download Free
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-effect border-white/20 hover:border-green-300 transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <TrendingUp className="h-8 w-8 text-purple-400" />
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">Free</Badge>
-                </div>
-                <CardTitle className="text-white">Social Media Scheduler</CardTitle>
-                <CardDescription className="text-white/70">
-                  Schedule and automate your social media posts
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-white/80">4.7 (3.2k reviews)</span>
-                </div>
-                <Button 
-                  className="w-full bg-green-600 hover:bg-green-700"
-                  onClick={() => handleFreeAppDownload("Social Media Scheduler")}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download Free
-                </Button>
-              </CardContent>
-            </Card>
+          <h2 className="text-2xl font-bold text-white mb-8 text-center">Free Apps ({freeApps.length} Available)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {freeApps.map((app, index) => (
+              <Card key={index} className="glass-effect border-white/20 hover:border-green-300 transition-all duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <app.icon className="h-8 w-8 text-green-400" />
+                    <Badge variant="secondary" className="bg-green-100 text-green-800">Free</Badge>
+                  </div>
+                  <CardTitle className="text-white text-sm">{app.name}</CardTitle>
+                  <CardDescription className="text-white/70 text-xs">
+                    {app.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <span className="text-white/80 text-sm">{app.rating} ({app.reviews} reviews)</span>
+                  </div>
+                  <Button 
+                    className="w-full bg-green-600 hover:bg-green-700 text-sm"
+                    onClick={() => handleFreeAppDownload(app.name)}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Free
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 
@@ -287,53 +274,32 @@ const AppHub = () => {
 
         {/* Premium Apps Section */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-8 text-center">Premium Apps</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="glass-effect border-white/20 hover:border-amber-300 transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <Users className="h-8 w-8 text-amber-400" />
-                  <Badge variant="secondary" className="bg-amber-100 text-amber-800">$29.99</Badge>
-                </div>
-                <CardTitle className="text-white">Advanced Analytics Pro</CardTitle>
-                <CardDescription className="text-white/70">
-                  Complete business intelligence suite with AI insights
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-white/80">5.0 (500+ reviews)</span>
-                </div>
-                <Button className="w-full bg-amber-600 hover:bg-amber-700">
-                  <Download className="h-4 w-4 mr-2" />
-                  Purchase & Download
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-effect border-white/20 hover:border-purple-300 transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <Zap className="h-8 w-8 text-purple-400" />
-                  <Badge variant="secondary" className="bg-purple-100 text-purple-800">$49.99</Badge>
-                </div>
-                <CardTitle className="text-white">AI Marketing Suite</CardTitle>
-                <CardDescription className="text-white/70">
-                  Complete marketing automation with AI-powered campaigns
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                  <span className="text-white/80">4.9 (1.2k reviews)</span>
-                </div>
-                <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                  <Download className="h-4 w-4 mr-2" />
-                  Purchase & Download
-                </Button>
-              </CardContent>
-            </Card>
+          <h2 className="text-2xl font-bold text-white mb-8 text-center">Premium Apps ({premiumApps.length} Available)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {premiumApps.map((app, index) => (
+              <Card key={index} className="glass-effect border-white/20 hover:border-amber-300 transition-all duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <app.icon className="h-8 w-8 text-amber-400" />
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-800">{app.price}</Badge>
+                  </div>
+                  <CardTitle className="text-white">{app.name}</CardTitle>
+                  <CardDescription className="text-white/70">
+                    {app.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <span className="text-white/80">{app.rating} ({app.reviews} reviews)</span>
+                  </div>
+                  <Button className="w-full bg-amber-600 hover:bg-amber-700">
+                    <Download className="h-4 w-4 mr-2" />
+                    Purchase & Download
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
